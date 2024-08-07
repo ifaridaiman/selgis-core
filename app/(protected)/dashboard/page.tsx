@@ -33,6 +33,14 @@ const DashboardPage = () => {
     setIsModalOpen(false);
   };
 
+  let mapData = [];
+  try {
+    mapData = JSON.parse(process.env.mapData || "[]");
+    console.log("mapData", mapData);
+  } catch (error) {
+    console.error("Failed to parse mapData:", error);
+  }
+
   useEffect(() => {
     const filtered = UrusanTeknikalMock.data.filter((item: any) =>
       item.namaPemaju.toLowerCase().includes(searchInput.toLowerCase())
@@ -67,7 +75,7 @@ const DashboardPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 mb-12">
         <div className="bg-gray-500 md:h-[40rem]">
           {/* Map Section */}
-          <MapContainer>
+          <MapContainer mapData={mapData}>
             <div></div>
           </MapContainer>
         </div>
