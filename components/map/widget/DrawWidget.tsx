@@ -54,6 +54,14 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
           });
 
           graphicLayer.add(labelGraphic);
+
+          // Log the polygon's geometry and rings to the console
+          const polygon = event.graphic.geometry as __esri.Polygon;
+          console.log('Polygon Drawn:', {
+            geometry: polygon.toJSON(),
+            rings: polygon.rings,
+            centroid: centroid.toJSON(),
+          });
         }
       });
 
@@ -78,6 +86,12 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
                 },
               });
               graphicHit.graphic.attributes.label = newLabel;
+
+              console.log('Sketch Info:', {
+                geometry: graphicHit.graphic.geometry.toJSON(),
+                label: newLabel,
+                attributes: graphicHit.graphic.attributes,
+              });
             }
           }
           

@@ -18,7 +18,7 @@ const FeatureLayerWidget:React.FC<FeatureLayerProps> = ({mapView,mapData}) => {
             mapData.forEach((layer: any) => {
                 console.log(layer);
                 const featureLayer = new FeatureLayer({
-                    url: `http://jpsselgis.selangor.gov.my/portal/sharing/rest/${layer.id}/FeatureServer`,
+                    url: `http://jpsselgis.selangor.gov.my/portal/sharing/rest/services/${layer.id}/FeatureServer/0`,
                     title: layer.title,
                 });
 
