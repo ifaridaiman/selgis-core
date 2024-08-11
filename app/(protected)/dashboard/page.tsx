@@ -81,8 +81,9 @@ const DashboardPage = () => {
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <h2 className="text-xl font-bold mb-4">Carian</h2>
+          
           <div className="mb-4">
-            <label className="block mb-2">No. Lot</label>
+            <label className="block mb-2">Nama Projek</label>
             <input
               type="text"
               className="border border-gray-300 rounded-md px-4 py-2 w-full"
