@@ -1,6 +1,22 @@
+'use client'
+import { AuthService } from "@/services/auth.service";
 import Image from "next/image";
+import { useForm, SubmitHandler } from "react-hook-form"
+
+type loginType = {
+  username: string,
+  password: string
+}
+
 
 export default function Home() {
+
+  const {register, handleSubmit, formState: {errors}} = useForm<loginType>()
+  const authService = new AuthService();
+
+  const onSubmit: SubmitHandler<loginType> = (data) => {
+    authService.login(data.username, data.password)
+  }
   return (
     <main className="flex w-screen h-screen">
       <div className="bg-[url('/assets/background/bg_login.jpg')] bg-cover h-full flex items-center w-1/3 p-8">
@@ -29,13 +45,14 @@ export default function Home() {
             <p className="font-medium text-xl">Pengguna Berdaftar</p>
           </div>
 
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-4">
               <label className="block mb-2">Nama Pengguna</label>
               <input
                 type="text"
                 className="border border-gray-300 rounded-md px-4 py-2 w-full"
                 placeholder="username@email.com"
+                {...register("username")}
               />
             </div>
             <div className="mb-4">
@@ -44,11 +61,12 @@ export default function Home() {
                 type="password"
                 className="border border-gray-300 rounded-md px-4 py-2 w-full"
                 placeholder="Masukkan Kata Laluan"
+                {...register("password")}
               />
             </div>
 
             <div className="mb-4">
-              <button className="border border-gray-300 rounded-md px-4 py-2 w-full bg-blue-600 text-white font-bold text-base">
+              <button type="submit" className="border border-gray-300 rounded-md px-4 py-2 w-full bg-blue-600 text-white font-bold text-base">
                 Daftar Masuk
               </button>
             </div>

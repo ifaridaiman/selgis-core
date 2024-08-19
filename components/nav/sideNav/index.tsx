@@ -2,7 +2,9 @@ import React from 'react'
 import Image from 'next/image'
 import { IoIosLogOut } from "react-icons/io";
 import { VscPreview } from "react-icons/vsc";
-const SideNav:React.FC = () => {
+import { useLogout } from '@/hooks/auth/useLogout';
+
+const   SideNav:React.FC = () => {
   return (
     <div className="bg-blue-600 text-white p-4 min-h-screen flex flex-col fixed top-0 left-0 ">
         {/* Logo Section */}
