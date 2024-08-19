@@ -2,6 +2,7 @@
 import { AuthService } from "@/services/auth.service";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form"
+import { useRouter } from "next/navigation"; 
 
 type loginType = {
   username: string,
@@ -13,9 +14,15 @@ export default function Home() {
 
   const {register, handleSubmit, formState: {errors}} = useForm<loginType>()
   const authService = new AuthService();
+  const router = useRouter();  // Initialize the useRouter hook
 
-  const onSubmit: SubmitHandler<loginType> = (data) => {
-    authService.login(data.username, data.password)
+  const onSubmit: SubmitHandler<loginType> = async (data) => {
+    const result = await authService.login(data.username, data.password);
+    if (result.token){
+      router.push('/dashboard')
+    }else{
+      alert(result.error || "Login failed. Please try again.")
+    }
   }
   return (
     <main className="flex w-screen h-screen">
@@ -66,9 +73,8 @@ export default function Home() {
             </div>
 
             <div className="mb-4">
-              <button type="submit" className="border border-gray-300 rounded-md px-4 py-2 w-full bg-blue-600 text-white font-bold text-base">
-                Daftar Masuk
-              </button>
+              <input type="submit" className="border border-gray-300 rounded-md px-4 py-2 w-full bg-blue-600 text-white font-bold text-base" value={'Log Masuk'} />
+                
             </div>
           </form>
         </div>
