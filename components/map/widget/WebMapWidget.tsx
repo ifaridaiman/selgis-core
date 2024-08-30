@@ -7,9 +7,11 @@ import esriConfig from "@arcgis/core/config";
 type WebMapWidgetProps = {
   mapData: Array<{ title: string, id: string, isEditing?: boolean, isExtent?: boolean }>;
   onMapViewReady: (mapView: MapView) => void;
+  listOfMukim: string[];
+  setListOfMukim: (listOfMukim: string[]) => void;
 };
 
-const WebMapWidget: React.FC<WebMapWidgetProps> = ({ mapData, onMapViewReady }) => {
+const WebMapWidget: React.FC<WebMapWidgetProps> = ({ mapData, onMapViewReady,listOfMukim, setListOfMukim }) => {
   const mapDiv = useRef<HTMLDivElement>(null);
   const portalEditingID: string[] = [];
   let portalExtentID: string | null = null;
@@ -23,7 +25,7 @@ const WebMapWidget: React.FC<WebMapWidgetProps> = ({ mapData, onMapViewReady }) 
   esriConfig.portalUrl = serverPortalRest;
 
   const webMap = new WebMap({
-    basemap: "streets-navigation-vector",
+    basemap: "satellite",
   });
 
   const checkIsAllLayerLoad = () => {
