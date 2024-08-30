@@ -7,31 +7,33 @@ import BasemapWidget from "./widget/BasemapWidget";
 import DrawWidget from "./widget/DrawWidget";
 import MapView from "@arcgis/core/views/MapView";
 import WebMapWidget from "./widget/WebMapWidget";
+import { useMapContext } from "./MapContext";
+import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 
 type MapContainerProps = {
   children: React.ReactNode;
   mapData: Array<{ title: string, id: string, isEditing?: boolean, isExtent?: boolean }>;
 };
 
-export let mapView: MapView | null = null;
 
 const MapContainer: React.FC<MapContainerProps> = ({ children, mapData }) => {
-  const [view, setView] = useState<MapView | null>(null);
 
+  const {mapView, setMapView} = useMapContext();
+  const [graphicsLayer, setGraphicsLayer] = useState<GraphicsLayer | null>(null);
+  
   const handleMapViewReady = (mapViewInstance: MapView) => {
-    mapView = mapViewInstance;
-    setView(mapViewInstance);
+    setMapView(mapViewInstance);
   };
 
   return (
     <>
       <WebMapWidget mapData={mapData} onMapViewReady={handleMapViewReady} />
-      {view && <HomeWidget mapView={view} />}
-      {view && <LayerListWidget mapView={view} />}
-      {view && <MeasureWidget mapView={view} />}
+      {mapView && <HomeWidget mapView={mapView} />}
+      {mapView && <LayerListWidget mapView={mapView} />}
+      {mapView && <MeasureWidget mapView={mapView} />}
       {/* {view && <FeatureLayerWidget mapView={view} mapData={mapData} />} */}
-      {view && <BasemapWidget mapView={view} />}
-      {view && <DrawWidget mapView={view} />}
+      {mapView && <BasemapWidget mapView={mapView} />}
+      {mapView && <DrawWidget mapView={mapView} />}
       {children}
     </>
   );

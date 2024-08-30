@@ -73,7 +73,7 @@ export default function Home() {
             </div>
 
             <div className="mb-4">
-              <input type="submit" className="border border-gray-300 rounded-md px-4 py-2 w-full bg-blue-600 text-white font-bold text-base" value={'Log Masuk'} />
+              <input type="submit" className="border border-gray-300 rounded-md px-4 py-2 w-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-base" value={'Log Masuk'} />
                 
             </div>
           </form>

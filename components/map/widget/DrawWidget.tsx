@@ -13,12 +13,15 @@ type DrawWidgetProps = {
 
 const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
   const drawDiv = useRef<Sketch | null>(null);
-  const graphicLayer = new GraphicsLayer();
-  const [editingGraphic, setEditingGraphic] = useState<Graphic | null>(null);
+  const graphicLayer = new GraphicsLayer({ title: 'Sketch Layer' });
+  const [isLayersLoaded, setIsLayersLoaded] = useState(false);
 
   useEffect(() => {
+    
+
     if (!drawDiv.current && mapView) {
       mapView.map.add(graphicLayer);
+      
 
       drawDiv.current = new Sketch({
         view: mapView,
