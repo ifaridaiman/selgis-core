@@ -12,30 +12,20 @@ import { TablePaginate } from "@/components/table/TablePaginate";
 import { BiLayerPlus } from "react-icons/bi";
 import dynamic from "next/dynamic";
 import { useMapContext } from "@/components/map/MapContext";
-import DaerahList from "@/components/form/DaerahList";
+import { IoTrashBinOutline, IoPencilOutline, IoDocumentAttachOutline } from 'react-icons/io5';
 
-const MapContainer = dynamic(() => import('@/components/map/MapContainer'), {
+const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
   ssr: false,
   loading: () => <p>Loading...</p>,
 });
 
 const DashboardPage = () => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isModalTitle, setIsModalTitle] = useState<string>("");
+  
   const [searchInput, setSearchInput] = useState<string>("");
-  const [filteredData, setFilteredData] = useState(UrusanTeknikalMock.data);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const { lotNumber, setLotNumber, listOfLot, listOfMukim, listOfDaerah } = useMapContext();
+  const [filteredLotList, setFilteredLotList] = useState<any[]>([]);
 
-  const { lotNumber, setLotNumber } = useMapContext();
-
-  const openModalAttachment = (namaPemaju: string) => {
-    setIsModalOpen(true);
-    setIsModalTitle(namaPemaju);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
 
   let mapData = [];
   try {
@@ -43,16 +33,20 @@ const DashboardPage = () => {
   } catch (error) {
     console.error("Failed to parse mapData:", error);
   }
-
+  
   useEffect(() => {
-    const filtered = UrusanTeknikalMock.data.filter((item: any) =>
-      item.namaPemaju.toLowerCase().includes(searchInput.toLowerCase())
-    );
-    setFilteredData(filtered);
+    if (lotNumber) {
+      const filtered = listOfLot.filter((item) =>
+        item.No_Lot.toLowerCase().includes(lotNumber.toLowerCase())
+      );
+      setFilteredLotList(filtered);
+    } else {
+      setFilteredLotList(listOfLot);
+    }
     setCurrentPage(1); // Reset to the first page on new search
-  }, [searchInput]);
+  }, [lotNumber, listOfLot]);
 
-  const paginatedData = getPaginatedData(filteredData, currentPage);
+  const paginatedData = getPaginatedData(filteredLotList, currentPage);
 
   const handleNextPage = () => {
     if (currentPage < paginatedData.totalPages) {
@@ -66,86 +60,146 @@ const DashboardPage = () => {
     }
   };
 
+  // var findValue = (arrValue,field,fieldReturn,value)=>{
+  //   let dataReturn = [];
+  //   arrValue.forEach(element => {
+  //     if(element[field] == value){
+  //       dataReturn = element[fieldReturn];
+  //     }
+  //   });
+  //   return dataReturn;
+  // };
+
+  // var geoms = findValue(arrValueDaerah,"value","geoms",value);
+
 
   return (
     <>
       <div className=" mb-6 flex justify-between items-center w-full">
         <h2 className="text-black font-bold text-2xl">Dashboard</h2>
-        <Link className="flex justify-center items-center gap-2 bg-blue-500 py-2 px-3 rounded-md text-white" href={'/register'} ><BiLayerPlus className="text-base" /> Daftar Projek</Link>
+        <Link
+          className="flex justify-center items-center gap-2 bg-blue-500 py-2 px-3 rounded-md text-white"
+          href={"/register"}
+        >
+          <BiLayerPlus className="text-base" /> Daftar Projek
+        </Link>
       </div>
-        <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 mb-12">
-          <div className="bg-gray-500 md:h-[40rem]">
-            {/* Map Section */}
-            <MapContainer mapData={mapData}>
-              <div></div>
-            </MapContainer>
-          </div>
-          <div className="bg-white rounded-lg shadow p-4">
-            <h2 className="text-xl font-bold mb-4">Carian</h2>
-            
-            <div className="mb-4">
-              <label className="block mb-2">No. Lot</label>
-              <input
-                type="text"
-                className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                value={lotNumber}
-                onChange={(e) => setLotNumber(e.target.value)}
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block mb-2">Daerah</label>
-              {/* <DaerahList /> */}
-              <input
-                type="text"
-                className="border border-gray-300 rounded-md px-4 py-2 w-full"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block mb-2">Mukim</label>
-              <input
-                type="text"
-                className="border border-gray-300 rounded-md px-4 py-2 w-full"
-              />
-            </div>
-            <div className="mb-4">
-              <input
-                type="submit"
-                className="border border-gray-300 rounded-md px-4 py-2 w-full bg-blue-600 text-blue-50 font-bold hover:bg-blue-700 transition-all duration-100 ease-linear"
-                value={"Carian"}
-              />
-            </div>
-          </div>
+      <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 mb-12">
+        <div className="bg-gray-500 md:h-[40rem]">
+          {/* Map Section */}
+          <MapContainer mapData={mapData}>
+            <div></div>
+          </MapContainer>
         </div>
-        <div className="bg-white p-7 rounded-lg">
-          <div className="flex justify-between mb-4">
-            <Link
-              href="/pengguna/projek"
-              className="bg-blue-500 text-white py-2 px-4 rounded-md flex gap-4 items-center justify-center"
-            >
-              <span>
-                <RiFunctionAddLine />
-              </span>
-              Daftar Projek
-            </Link>
+        <div className="bg-white rounded-lg shadow p-4">
+          <h2 className="text-xl font-bold mb-4">Carian</h2>
+
+          <div className="mb-4">
+            <label className="block mb-2">No. Lot</label>
             <input
               type="text"
-              placeholder="Carian"
-              className="border border-gray-300 rounded-md px-4 py-2 w-1/4"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
+              className="border border-gray-300 rounded-md px-4 py-2 w-full"
+              value={lotNumber}
+              onChange={(e) => setLotNumber(e.target.value)}
             />
           </div>
+          <div className="mb-4">
+            <label className="block mb-2">Daerah</label>
+            <select className="border border-gray-300 rounded-md px-4 py-2 w-full">
+              <option value="">-- Pilih Daerah --</option>
+              {listOfDaerah.map((item, index) => (
+                <option key={index} value={item}>
+                  {item}
+                </option>
+              ))}
+              </select>
 
-          <Table>
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2">Mukim</label>
+            <select className="border border-gray-300 rounded-md px-4 py-2 w-full">
+              <option value="">-- Pilih Mukim --</option>
+              {listOfMukim.map((item, index) => (
+                <option key={index} value={item}>
+                  {item}
+                </option>
+              ))}
+              </select>
+            
+          </div>
+          <div className="mb-4">
+            <input
+              type="submit"
+              className="border border-gray-300 rounded-md px-4 py-2 w-full bg-blue-600 text-blue-50 font-bold hover:bg-blue-700 transition-all duration-100 ease-linear"
+              value={"Carian"}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="bg-white p-7 rounded-lg">
+        <div className="flex justify-between mb-4">
+          <Link
+            href="/pengguna/projek"
+            className="bg-blue-500 text-white py-2 px-4 rounded-md flex gap-4 items-center justify-center"
+          >
+            <span>
+              <RiFunctionAddLine />
+            </span>
+            Daftar Projek
+          </Link>
+          <input
+            type="text"
+            placeholder="Carian"
+            className="border border-gray-300 rounded-md px-4 py-2 w-1/4"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+          />
+        </div>
+
+
+
+        <Table>
             <TableHeader />
             <tbody>
-              {paginatedData.data.map((item: any, index: number) => (
-                <TableRow
-                  key={index}
-                  item={item}
-                  openModalAttachment={openModalAttachment}
-                />
-              ))}
+            {paginatedData ? paginatedData.data.map((item: any, index: number) => {
+              return (
+                <tr key={index} className='border-b border-gray-300 odd:bg-white even:bg-gray-100'>
+                  <td className='py-4 px-4'>{item.No_Lot}</td>
+                  <td className='py-4 px-4 text-center'>{item.Nama_Daerah}</td>
+                  <td className='py-4 px-4 text-center'>{item.Nama_Mukim}</td>
+                  <td className='py-4 px-4 text-center'>
+                    <div className='flex items-center text-xl justify-center'>
+                      <button
+                        className='p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full'
+                        title='Delete Item'
+                      >
+                        <IoTrashBinOutline />
+                      </button>
+                      <button
+                        className='p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full'
+                        title='Update Item'
+                      >
+                        <IoPencilOutline />
+                      </button>
+                      {/* <button
+                        className='p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full'
+                        onClick={() => openModalAttachment(item.namaPemaju)}
+                        title='Project File Attachment'
+                      >
+                        <IoDocumentAttachOutline />
+                      </button> */}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })
+            :
+            <tr>
+              <td colSpan={4} className='text-center py-4'>No data available</td>
+            </tr>
+          }
+
+              
             </tbody>
           </Table>
           <TablePaginate
@@ -154,8 +208,8 @@ const DashboardPage = () => {
             handlePreviousPage={handlePreviousPage}
             handleNextPage={handleNextPage}
           />
-        </div>
-      {isModalOpen && <Modal title={isModalTitle} closeModal={closeModal} />}
+      </div>
+      {/* {isModalOpen && <Modal title={isModalTitle} closeModal={closeModal} />} */}
     </>
   );
 };

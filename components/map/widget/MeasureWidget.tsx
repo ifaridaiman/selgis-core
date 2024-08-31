@@ -14,7 +14,7 @@ const MeasureWidget:React.FC<MeasureWidgetProps> = ({mapView}) => {
         if (!measureDiv.current && mapView) {
             measureDiv.current = new Measurement({
                 view: mapView,
-                activeTool: 'distance'
+                activeTool: 'distance',
             })
 
             const measureExpand = new Expand({

@@ -18,7 +18,7 @@ type MapContainerProps = {
 
 const MapContainer: React.FC<MapContainerProps> = ({ children, mapData }) => {
 
-  const {mapView, setMapView} = useMapContext();
+  const {mapView, setMapView, listOfMukim, setListOfMukim, listOfLot, setListOfLot, listOfDaerah, setListOfDaerah} = useMapContext();
   const [graphicsLayer, setGraphicsLayer] = useState<GraphicsLayer | null>(null);
   
   const handleMapViewReady = (mapViewInstance: MapView) => {
@@ -27,7 +27,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ children, mapData }) => {
 
   return (
     <>
-      <WebMapWidget mapData={mapData} onMapViewReady={handleMapViewReady} />
+      <WebMapWidget mapData={mapData} onMapViewReady={handleMapViewReady} listOfMukim={listOfMukim} setListOfMukim={setListOfMukim} listOfLot={listOfLot} setListOfLot={setListOfLot} listOfDaerah={listOfDaerah} setListOfDaerah={setListOfDaerah} />
       {mapView && <HomeWidget mapView={mapView} />}
       {mapView && <LayerListWidget mapView={mapView} />}
       {mapView && <MeasureWidget mapView={mapView} />}

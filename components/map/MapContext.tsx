@@ -6,6 +6,12 @@ type MapContextType = {
   setMapView: (view: MapView | null) => void;
   lotNumber: string;
   setLotNumber: (lotNumber: string) => void;
+  listOfDaerah: string[];	
+  setListOfDaerah: (listOfDaerah: string[]) => void;
+  listOfMukim: string[];
+  setListOfMukim: (listOfMukim: string[]) => void;
+  listOfLot: any[];
+  setListOfLot: (listOfLot: any[]) => void;
   // Add any other state you want to share across the components
 };
 
@@ -27,10 +33,13 @@ export let mapView: MapView | null = null;
 
 export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
   const [mapView, setMapView] = useState<MapView | null>(null);
+  const [listOfMukim, setListOfMukim] = useState<string[]>([]);
   const [lotNumber, setLotNumber] = useState<string>('')
+  const [listOfLot, setListOfLot] = useState<any[]>([])
+  const [listOfDaerah, setListOfDaerah] = useState<string[]>([])
 
   return (
-    <MapContext.Provider value={{ mapView, setMapView, lotNumber, setLotNumber }}>
+    <MapContext.Provider value={{ mapView, setMapView, lotNumber, setLotNumber, listOfMukim, setListOfMukim, listOfLot, setListOfLot, listOfDaerah, setListOfDaerah }}>
       {children}
     </MapContext.Provider>
   );

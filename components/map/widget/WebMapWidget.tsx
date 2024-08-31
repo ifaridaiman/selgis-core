@@ -3,15 +3,34 @@ import WebMap from "@arcgis/core/WebMap";
 import MapView from "@arcgis/core/views/MapView";
 import GroupLayer from "@arcgis/core/layers/GroupLayer";
 import esriConfig from "@arcgis/core/config";
+import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 
 type WebMapWidgetProps = {
-  mapData: Array<{ title: string, id: string, isEditing?: boolean, isExtent?: boolean }>;
+  mapData: Array<{
+    title: string;
+    id: string;
+    isEditing?: boolean;
+    isExtent?: boolean;
+  }>;
   onMapViewReady: (mapView: MapView) => void;
   listOfMukim: string[];
   setListOfMukim: (listOfMukim: string[]) => void;
+  listOfDaerah: string[];
+  setListOfDaerah: (listOfDaerah: string[]) => void;
+  listOfLot: any[];
+  setListOfLot: (listOfLot: any[]) => void;
 };
 
-const WebMapWidget: React.FC<WebMapWidgetProps> = ({ mapData, onMapViewReady,listOfMukim, setListOfMukim }) => {
+const WebMapWidget: React.FC<WebMapWidgetProps> = ({
+  mapData,
+  onMapViewReady,
+  listOfMukim,
+  setListOfMukim,
+  listOfLot,
+  setListOfLot,
+  listOfDaerah,
+  setListOfDaerah,
+}) => {
   const mapDiv = useRef<HTMLDivElement>(null);
   const portalEditingID: string[] = [];
   let portalExtentID: string | null = null;
@@ -39,6 +58,40 @@ const WebMapWidget: React.FC<WebMapWidgetProps> = ({ mapData, onMapViewReady,lis
   const addToFeatService = (item: any) => {
     console.log("Adding to feature service", item);
   };
+
+  const symbolGraphicCarian = {
+    type: "simple-fill", // autocasts as new SimpleFillSymbol()
+    color: [128, 10, 204, 0.5],
+    style: "solid",
+    outline: {
+      // autocasts as new SimpleLineSymbol()
+      color: "gray",
+      width: 1,
+    },
+  };
+
+  const lotLayer = new FeatureLayer({
+    source: listOfLot, // array of graphics objects
+    objectIdField: "OBJECTID",
+    fields: [
+      {
+        name: "OBJECTID",
+        type: "oid",
+      },
+      {
+        name: "Lot No",
+        type: "string",
+      },
+      {
+        name: "Daerah",
+        type: "string",
+      },
+      {
+        name: "Mukim",
+        type: "string",
+      },
+    ],
+  });
 
   const loadLayerFromPortal = () => {
     checkIsAllLayerLoad();
@@ -92,7 +145,56 @@ const WebMapWidget: React.FC<WebMapWidgetProps> = ({ mapData, onMapViewReady,lis
           webMap.add(groupLayer);
         }
       });
+
     });
+  };
+
+  const queryLotKadasterLayer = async  () => {
+
+    try{
+      // Find the GroupLayer for Lot Kadaster
+      const lotKadasterLayer = allGroupLayer.find(layer => layer.title === "Lot Kadaster");
+
+      if (!lotKadasterLayer) {
+        console.error("Lot Kadaster layer not found");
+        return;
+      }
+
+      // Assuming the first sublayer is the FeatureLayer we want to query
+      const featureLayer = lotKadasterLayer.layers.getItemAt(0) as FeatureLayer;
+
+      if (!featureLayer) {
+        console.error("FeatureLayer not found within Lot Kadaster layer");
+        return;
+      }
+
+      const resultLotList = await featureLayer.queryFeatures({
+        where: "1=1", // Modify this query as needed
+        outFields: ["*"], // Retrieve all fields
+        returnGeometry: true // Include geometry in the results
+      })
+
+      console.log(resultLotList.features)
+
+
+      const lotList = resultLotList.features.map((feature) => feature.attributes);
+      setListOfLot(lotList);
+
+      const mukimLists = resultLotList.features.map((feature) => feature.attributes.Nama_Mukim);
+      const mukimListUnique = [...new Set(mukimLists)];
+      console.log("Mukim List:", mukimListUnique);
+      setListOfMukim(mukimListUnique)
+
+      const daerahLists = resultLotList.features.map((feature) => feature.attributes.Nama_Daerah);
+      const daerahListUnique = [...new Set(daerahLists)];
+      console.log("Daerah List:", daerahListUnique);
+      setListOfDaerah(daerahListUnique)
+      
+        
+    }catch(err){
+      console.error("Error querying Lot Kadaster:", err);
+    }
+    
   };
 
   useEffect(() => {
@@ -107,13 +209,19 @@ const WebMapWidget: React.FC<WebMapWidgetProps> = ({ mapData, onMapViewReady,lis
           zoom: 8,
         });
 
-        mapView.when(() => {
-          console.log("Map is ready");
-          loadLayerFromPortal(); // Load layers from portal when the map is ready
-          onMapViewReady(mapView);
-        }).catch((error) => {
-          console.log("Error initializing map: ", error);
-        });
+        mapView
+          .when( async () => {
+            console.log("Map is ready");
+            loadLayerFromPortal(); // Load layers from portal when the map is ready
+            onMapViewReady(mapView);
+
+            setTimeout(queryLotKadasterLayer,2000)
+
+            // Query the Lot Kadaster layer
+          })
+          .catch((error) => {
+            console.log("Error initializing map: ", error);
+          });
       } catch (err) {
         console.error("Error loading map: ", err);
       }

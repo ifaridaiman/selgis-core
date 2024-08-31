@@ -1,29 +1,35 @@
-'use client'
+"use client";
 import { AuthService } from "@/services/auth.service";
 import Image from "next/image";
-import { useForm, SubmitHandler } from "react-hook-form"
-import { useRouter } from "next/navigation"; 
+import { useForm, SubmitHandler } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 type loginType = {
-  username: string,
-  password: string
-}
-
+  username: string;
+  password: string;
+};
 
 export default function Home() {
-
-  const {register, handleSubmit, formState: {errors}} = useForm<loginType>()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<loginType>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const authService = new AuthService();
-  const router = useRouter();  // Initialize the useRouter hook
+  const router = useRouter(); // Initialize the useRouter hook
 
   const onSubmit: SubmitHandler<loginType> = async (data) => {
+    setIsLoading(true);
     const result = await authService.login(data.username, data.password);
-    if (result.token){
-      router.push('/dashboard')
-    }else{
-      alert(result.error || "Login failed. Please try again.")
+    setIsLoading(false);
+    if (result.token) {
+      router.push("/dashboard");
+    } else {
+      alert(result.error || "Login failed. Please try again.");
     }
-  }
+  };
   return (
     <main className="flex w-screen h-screen">
       <div className="bg-[url('/assets/background/bg_login.jpg')] bg-cover h-full flex items-center w-1/3 p-8">
@@ -73,8 +79,13 @@ export default function Home() {
             </div>
 
             <div className="mb-4">
-              <input type="submit" className="border border-gray-300 rounded-md px-4 py-2 w-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-base" value={'Log Masuk'} />
-                
+              <button
+                type="submit"
+                className="border border-gray-300 rounded-md px-4 py-2 w-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-base"
+                disabled={isLoading}
+              >
+                {isLoading ? "Loading..." : "Log Masuk"}
+              </button>
             </div>
           </form>
         </div>
