@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { RiFunctionAddLine } from "react-icons/ri";
 import Link from "next/link";
 import { UrusanTeknikalMock } from "@/mock/urusanTeknikal.mock";
-import { getPaginatedData } from "@/hooks/usePaginateData";
 import { Table } from "@/components/table/Table";
 import { TableHeader } from "@/components/table/TableHeader";
 import TableRow from "@/components/table/TableRow";
@@ -12,7 +11,13 @@ import { TablePaginate } from "@/components/table/TablePaginate";
 import { BiLayerPlus } from "react-icons/bi";
 import dynamic from "next/dynamic";
 import { useMapContext } from "@/components/map/MapContext";
-import { IoTrashBinOutline, IoPencilOutline, IoDocumentAttachOutline } from 'react-icons/io5';
+import {
+  IoTrashBinOutline,
+  IoPencilOutline,
+  IoDocumentAttachOutline,
+} from "react-icons/io5";
+import { useTable } from "@/hooks/dashboard/useTable";
+import { useDashboard } from "@/hooks/dashboard/useDashboard";
 
 const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
   ssr: false,
@@ -20,12 +25,13 @@ const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
 });
 
 const DashboardPage = () => {
-  
   const [searchInput, setSearchInput] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const { lotNumber, setLotNumber, listOfLot, listOfMukim, listOfDaerah } = useMapContext();
   const [filteredLotList, setFilteredLotList] = useState<any[]>([]);
 
+  const {handleRowSelect, handleSelectAll, selectedRows, handlePaginatedData } = useTable();
+  const {handleChangeDaerah} = useDashboard();
 
   let mapData = [];
   try {
@@ -33,7 +39,7 @@ const DashboardPage = () => {
   } catch (error) {
     console.error("Failed to parse mapData:", error);
   }
-  
+
   useEffect(() => {
     if (lotNumber) {
       const filtered = listOfLot.filter((item) =>
@@ -46,7 +52,7 @@ const DashboardPage = () => {
     setCurrentPage(1); // Reset to the first page on new search
   }, [lotNumber, listOfLot]);
 
-  const paginatedData = getPaginatedData(filteredLotList, currentPage);
+  const paginatedData = handlePaginatedData(filteredLotList, currentPage);
 
   const handleNextPage = () => {
     if (currentPage < paginatedData.totalPages) {
@@ -60,6 +66,10 @@ const DashboardPage = () => {
     }
   };
 
+  const handleSelectAllChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleSelectAll(paginatedData.data, e.target.checked);
+};
+
   // var findValue = (arrValue,field,fieldReturn,value)=>{
   //   let dataReturn = [];
   //   arrValue.forEach(element => {
@@ -71,7 +81,6 @@ const DashboardPage = () => {
   // };
 
   // var geoms = findValue(arrValueDaerah,"value","geoms",value);
-
 
   return (
     <>
@@ -105,15 +114,15 @@ const DashboardPage = () => {
           </div>
           <div className="mb-4">
             <label className="block mb-2">Daerah</label>
-            <select className="border border-gray-300 rounded-md px-4 py-2 w-full">
+            <select className="border border-gray-300 rounded-md px-4 py-2 w-full"
+            onChange={handleChangeDaerah}>
               <option value="">-- Pilih Daerah --</option>
               {listOfDaerah.map((item, index) => (
                 <option key={index} value={item}>
                   {item}
                 </option>
               ))}
-              </select>
-
+            </select>
           </div>
           <div className="mb-4">
             <label className="block mb-2">Mukim</label>
@@ -124,8 +133,7 @@ const DashboardPage = () => {
                   {item}
                 </option>
               ))}
-              </select>
-            
+            </select>
           </div>
           <div className="mb-4">
             <input
@@ -156,58 +164,76 @@ const DashboardPage = () => {
           />
         </div>
 
-
-
         <Table>
-            <TableHeader />
-            <tbody>
-            {paginatedData ? paginatedData.data.map((item: any, index: number) => {
-              return (
-                <tr key={index} className='border-b border-gray-300 odd:bg-white even:bg-gray-100'>
-                  <td className='py-4 px-4'>{item.No_Lot}</td>
-                  <td className='py-4 px-4 text-center'>{item.Nama_Daerah}</td>
-                  <td className='py-4 px-4 text-center'>{item.Nama_Mukim}</td>
-                  <td className='py-4 px-4 text-center'>
-                    <div className='flex items-center text-xl justify-center'>
-                      <button
-                        className='p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full'
-                        title='Delete Item'
-                      >
-                        <IoTrashBinOutline />
-                      </button>
-                      <button
-                        className='p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full'
-                        title='Update Item'
-                      >
-                        <IoPencilOutline />
-                      </button>
-                      {/* <button
+          <thead>
+            <tr>
+              <th className="rounded-tl-xl bg-gray-300">
+                <input type="checkbox" onChange={handleSelectAllChange} />	
+              </th>
+              <th className="py-4 px-4 bg-gray-300 text-left">
+                No Lot
+              </th>
+              <th className="py-4 px-4 bg-gray-300">Mukim</th>
+              <th className="py-4 px-4 bg-gray-300">Daerah</th>
+              <th className="py-4 px-4 bg-gray-300 rounded-tr-xl">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {paginatedData ? (
+              paginatedData.data.map((item: any, index: number) => {
+                const isChecked = selectedRows.includes(index);
+                return (
+                  <tr
+                    key={index}
+                    className="border-b border-gray-300 odd:bg-white even:bg-gray-100"
+                  >
+                    <td className="text-center" ><input type="checkbox" checked={isChecked} onChange={() => handleRowSelect(index)} /></td>
+                    <td className="py-4 px-4">{item.No_Lot}</td>
+                    <td className="py-4 px-4 text-center">
+                      {item.Nama_Daerah}
+                    </td>
+                    <td className="py-4 px-4 text-center">{item.Nama_Mukim}</td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="flex items-center text-xl justify-center">
+                        <button
+                          className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
+                          title="Delete Item"
+                        >
+                          <IoTrashBinOutline />
+                        </button>
+                        <button
+                          className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
+                          title="Update Item"
+                        >
+                          <IoPencilOutline />
+                        </button>
+                        {/* <button
                         className='p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full'
                         onClick={() => openModalAttachment(item.namaPemaju)}
                         title='Project File Attachment'
                       >
                         <IoDocumentAttachOutline />
                       </button> */}
-                    </div>
-                  </td>
-                </tr>
-              );
-            })
-            :
-            <tr>
-              <td colSpan={4} className='text-center py-4'>No data available</td>
-            </tr>
-          }
-
-              
-            </tbody>
-          </Table>
-          <TablePaginate
-            currentPage={paginatedData.currentPage}
-            totalPages={paginatedData.totalPages}
-            handlePreviousPage={handlePreviousPage}
-            handleNextPage={handleNextPage}
-          />
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan={4} className="text-center py-4">
+                  No data available
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </Table>
+        <TablePaginate
+          currentPage={paginatedData.currentPage}
+          totalPages={paginatedData.totalPages}
+          handlePreviousPage={handlePreviousPage}
+          handleNextPage={handleNextPage}
+        />
       </div>
       {/* {isModalOpen && <Modal title={isModalTitle} closeModal={closeModal} />} */}
     </>

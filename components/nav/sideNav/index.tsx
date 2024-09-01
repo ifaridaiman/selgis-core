@@ -3,8 +3,10 @@ import Image from 'next/image'
 import { IoIosLogOut } from "react-icons/io";
 import { VscPreview } from "react-icons/vsc";
 import { useLogout } from '@/hooks/auth/useLogout';
+import { useNav } from '@/hooks/useNav';
 
 const   SideNav:React.FC = () => {
+  const {handleDashboard, handleUlasanTeknikal} = useNav();
   return (
     <div className="bg-blue-600 text-white p-4 min-h-screen flex flex-col fixed top-0 left-0 ">
         {/* Logo Section */}
@@ -23,11 +25,11 @@ const   SideNav:React.FC = () => {
         <div className="flex flex-col justify-between flex-grow">
           {/* Menu Section */}
           <div>
-            <div className="flex items-center text-white mb-4 gap-4 text-base hover:bg-black hover:rounded-lg transition-all duration-300 ease-in-out py-2 px-4">
+            <div onClick={handleDashboard} className="flex items-center text-white mb-4 gap-4 text-base hover:bg-black hover:rounded-lg transition-all duration-300 ease-in-out py-2 px-4">
               <span className='text-xl'><VscPreview/></span>
               <span className='text-base'>Dashboard</span>
             </div>
-            <div className="flex items-center text-white mb-4 gap-4 text-base hover:bg-black hover:rounded-lg transition-all duration-300 ease-in-out py-2 px-4">
+            <div onClick={handleUlasanTeknikal} className="flex items-center text-white mb-4 gap-4 text-base hover:bg-black hover:rounded-lg transition-all duration-300 ease-in-out py-2 px-4">
               <span className='text-xl'><VscPreview/></span>
               <span className='text-base'>Ulasan Teknikal</span>
             </div>

@@ -4,6 +4,7 @@ import MapView from "@arcgis/core/views/MapView";
 import GroupLayer from "@arcgis/core/layers/GroupLayer";
 import esriConfig from "@arcgis/core/config";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+import { useMapContext } from "../MapContext";
 
 type WebMapWidgetProps = {
   mapData: Array<{
@@ -13,23 +14,11 @@ type WebMapWidgetProps = {
     isExtent?: boolean;
   }>;
   onMapViewReady: (mapView: MapView) => void;
-  listOfMukim: string[];
-  setListOfMukim: (listOfMukim: string[]) => void;
-  listOfDaerah: string[];
-  setListOfDaerah: (listOfDaerah: string[]) => void;
-  listOfLot: any[];
-  setListOfLot: (listOfLot: any[]) => void;
 };
 
 const WebMapWidget: React.FC<WebMapWidgetProps> = ({
   mapData,
   onMapViewReady,
-  listOfMukim,
-  setListOfMukim,
-  listOfLot,
-  setListOfLot,
-  listOfDaerah,
-  setListOfDaerah,
 }) => {
   const mapDiv = useRef<HTMLDivElement>(null);
   const portalEditingID: string[] = [];
@@ -42,6 +31,8 @@ const WebMapWidget: React.FC<WebMapWidgetProps> = ({
   // Set custom portal URL
   const serverPortalRest = "http://jpsselgis.selangor.gov.my/portal/sharing/rest";
   esriConfig.portalUrl = serverPortalRest;
+
+  const {setListOfMukim, listOfLot, setListOfLot, setListOfDaerah} = useMapContext();
 
   const webMap = new WebMap({
     basemap: "satellite",
