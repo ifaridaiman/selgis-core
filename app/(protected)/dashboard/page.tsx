@@ -146,7 +146,7 @@ const DashboardPage = () => {
       </div>
       <div className="bg-white p-7 rounded-lg">
         <div className="flex justify-between mb-4">
-          <Link
+          {/* <Link
             href="/pengguna/projek"
             className="bg-blue-500 text-white py-2 px-4 rounded-md flex gap-4 items-center justify-center"
           >
@@ -161,7 +161,7 @@ const DashboardPage = () => {
             className="border border-gray-300 rounded-md px-4 py-2 w-1/4"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-          />
+          /> */}
         </div>
 
         <Table>
