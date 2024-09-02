@@ -18,6 +18,9 @@ import {
 } from "react-icons/io5";
 import { useTable } from "@/hooks/dashboard/useTable";
 import { useDashboard } from "@/hooks/dashboard/useDashboard";
+import { useNewProjek } from "@/hooks/dashboard/useNewProjek";
+import { IoIosCloseCircleOutline } from "react-icons/io";
+
 
 const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
   ssr: false,
@@ -25,13 +28,20 @@ const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
 });
 
 const DashboardPage = () => {
-  const [searchInput, setSearchInput] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const { lotNumber, setLotNumber, listOfLot, listOfMukim, listOfDaerah } = useMapContext();
+  const { lotNumber, setLotNumber, listOfLot, listOfMukim, listOfDaerah } =
+    useMapContext();
   const [filteredLotList, setFilteredLotList] = useState<any[]>([]);
+  const [showDaftarProject, setShowDaftarProject] = useState<boolean>(true);
 
-  const {handleRowSelect, handleSelectAll, selectedRows, handlePaginatedData } = useTable();
-  const {handleChangeDaerah} = useDashboard();
+  const { nextStep, prevStep, currentStep } = useNewProjek();
+  const {
+    handleRowSelect,
+    handleSelectAll,
+    selectedRows,
+    handlePaginatedData,
+  } = useTable();
+  const { handleChangeDaerah } = useDashboard();
 
   let mapData = [];
   try {
@@ -68,7 +78,7 @@ const DashboardPage = () => {
 
   const handleSelectAllChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleSelectAll(paginatedData.data, e.target.checked);
-};
+  };
 
   // var findValue = (arrValue,field,fieldReturn,value)=>{
   //   let dataReturn = [];
@@ -86,12 +96,12 @@ const DashboardPage = () => {
     <>
       <div className=" mb-6 flex justify-between items-center w-full">
         <h2 className="text-black font-bold text-2xl">Dashboard</h2>
-        <Link
+        <button
           className="flex justify-center items-center gap-2 bg-blue-500 py-2 px-3 rounded-md text-white"
-          href={"/register"}
+          onClick={() => setShowDaftarProject(!showDaftarProject)}
         >
           <BiLayerPlus className="text-base" /> Daftar Projek
-        </Link>
+        </button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 mb-12">
         <div className="bg-gray-500 md:h-[40rem]">
@@ -114,8 +124,10 @@ const DashboardPage = () => {
           </div>
           <div className="mb-4">
             <label className="block mb-2">Daerah</label>
-            <select className="border border-gray-300 rounded-md px-4 py-2 w-full"
-            onChange={handleChangeDaerah}>
+            <select
+              className="border border-gray-300 rounded-md px-4 py-2 w-full"
+              onChange={handleChangeDaerah}
+            >
               <option value="">-- Pilih Daerah --</option>
               {listOfDaerah.map((item, index) => (
                 <option key={index} value={item}>
@@ -168,11 +180,9 @@ const DashboardPage = () => {
           <thead>
             <tr>
               <th className="rounded-tl-xl bg-gray-300">
-                <input type="checkbox" onChange={handleSelectAllChange} />	
+                <input type="checkbox" onChange={handleSelectAllChange} />
               </th>
-              <th className="py-4 px-4 bg-gray-300 text-left">
-                No Lot
-              </th>
+              <th className="py-4 px-4 bg-gray-300 text-left">No Lot</th>
               <th className="py-4 px-4 bg-gray-300">Mukim</th>
               <th className="py-4 px-4 bg-gray-300">Daerah</th>
               <th className="py-4 px-4 bg-gray-300 rounded-tr-xl">Action</th>
@@ -187,7 +197,13 @@ const DashboardPage = () => {
                     key={index}
                     className="border-b border-gray-300 odd:bg-white even:bg-gray-100"
                   >
-                    <td className="text-center" ><input type="checkbox" checked={isChecked} onChange={() => handleRowSelect(index)} /></td>
+                    <td className="text-center">
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() => handleRowSelect(index)}
+                      />
+                    </td>
                     <td className="py-4 px-4">{item.No_Lot}</td>
                     <td className="py-4 px-4 text-center">
                       {item.Nama_Daerah}
@@ -236,6 +252,163 @@ const DashboardPage = () => {
         />
       </div>
       {/* {isModalOpen && <Modal title={isModalTitle} closeModal={closeModal} />} */}
+      {showDaftarProject && (
+        <div
+          className={`w-[350px] bg-blue-600 fixed top-0 right-0 min-h-screen p-4`}
+        >
+          <div className="flex justify-between items-center mb-6">
+      
+            <p className="text-white text-xl font-bold ">Daftar Projek</p>
+            <button onClick={() => setShowDaftarProject(!showDaftarProject)} className="text-white hover:text-gray-400 duration-100 transition-all" title="Close Panel">
+              <IoIosCloseCircleOutline />
+            </button>
+          </div>
+          
+          <div>
+            {currentStep == 1 && (
+              <div id="step-1">
+                <div className="mb-4">
+                  <label className="block mb-2 text-white">No. Lot</label>
+                  <input
+                    type="text"
+                    className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                    value={lotNumber}
+                    onChange={(e) => setLotNumber(e.target.value)}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block mb-2 text-white">Mukim</label>
+                  <input
+                    type="text"
+                    className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                    value={lotNumber}
+                    onChange={(e) => setLotNumber(e.target.value)}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block mb-2 text-white">Daerah</label>
+                  <input
+                    type="text"
+                    className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                    value={lotNumber}
+                    onChange={(e) => setLotNumber(e.target.value)}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block mb-2 text-white">Koordinat X</label>
+                  <input
+                    type="text"
+                    className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                    value={lotNumber}
+                    onChange={(e) => setLotNumber(e.target.value)}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block mb-2 text-white">Koordinat Y</label>
+                  <input
+                    type="text"
+                    className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                    value={lotNumber}
+                    onChange={(e) => setLotNumber(e.target.value)}
+                  />
+                </div>
+              </div>
+            )}
+
+            {currentStep == 2 && (
+              <div id="step-2">
+                <div className="mb-4">
+                  <label className="block mb-2 text-white">Tajuk Projek</label>
+                  <input
+                    type="text"
+                    className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                    value={lotNumber}
+                    onChange={(e) => setLotNumber(e.target.value)}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block mb-2 text-white">
+                    Jenis Permohonan
+                  </label>
+                  <input
+                    type="text"
+                    className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                    value={lotNumber}
+                    onChange={(e) => setLotNumber(e.target.value)}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block mb-2 text-white">No. Fail</label>
+                  <input
+                    type="text"
+                    className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                    value={lotNumber}
+                    onChange={(e) => setLotNumber(e.target.value)}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block mb-2 text-white">Status</label>
+                  <input
+                    type="text"
+                    className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                    value={lotNumber}
+                    onChange={(e) => setLotNumber(e.target.value)}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block mb-2 text-white">Bahagian</label>
+                  <input
+                    type="text"
+                    className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                    value={lotNumber}
+                    onChange={(e) => setLotNumber(e.target.value)}
+                  />
+                </div>
+              </div>
+            )}
+
+            {currentStep == 3 && (
+              <div id="step-3">
+                <div className="mb-4">
+                  <label className="block mb-2 text-white">Catatan</label>
+                  <textarea className="border border-gray-300 rounded-md px-4 py-2 w-full"/>
+                </div>
+                <div className="mb-4">
+                  <label className="block mb-2 text-white">Attachment</label>
+                  <input
+                    type="file"
+                    className="border border-gray-300 rounded-md px-4 py-2 w-full bg-white "
+                    value={lotNumber}
+                    onChange={(e) => setLotNumber(e.target.value)}
+                  />
+                </div>
+                
+              </div>
+            )}
+
+            <div className="flex justify-between mt-4">
+              <button
+                onClick={prevStep}
+                className={`bg-gray-400 text-white py-2 px-4 rounded-md ${
+                  currentStep === 1 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                disabled={currentStep === 1}
+              >
+                {`Kembali`}
+              </button>
+              <button
+                onClick={nextStep}
+                className={`bg-blue-500 text-white py-2 px-4 rounded-md ${
+                  currentStep === 3 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                disabled={currentStep === 3}
+              >
+                {currentStep === 3 ? "Daftar" : "Seterusnya"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
