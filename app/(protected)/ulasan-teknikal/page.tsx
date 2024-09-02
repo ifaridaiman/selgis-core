@@ -21,13 +21,12 @@ import { useDashboard } from "@/hooks/dashboard/useDashboard";
 import { useNewProjek } from "@/hooks/dashboard/useNewProjek";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 
-
 const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
   ssr: false,
   loading: () => <p>Loading...</p>,
 });
 
-const DashboardPage = () => {
+const UlasanTeknikalPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const { lotNumber, setLotNumber, listOfLot, listOfMukim, listOfDaerah } =
     useMapContext();
@@ -95,7 +94,7 @@ const DashboardPage = () => {
   return (
     <>
       <div className=" mb-6 flex justify-between items-center w-full">
-        <h2 className="text-black font-bold text-2xl">Dashboard</h2>
+        <h2 className="text-black font-bold text-2xl">Ulasan Teknikal</h2>
         <button
           className="flex justify-center items-center gap-2 bg-blue-500 hover:bg-blue-600 transition-all duration-75 py-2 px-3 rounded-md text-white"
           onClick={() => setShowDaftarProject(!showDaftarProject)}
@@ -111,8 +110,16 @@ const DashboardPage = () => {
           </MapContainer>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-xl font-bold mb-4">Carian</h2>
-
+          <h2 className="text-xl font-bold mb-4">Ulasan Projek: {}</h2>
+          <div className="mb-4">
+            <label className="block mb-2">Jenis Permohonan</label>
+            <input
+              type="text"
+              className="border border-gray-300 rounded-md px-4 py-2 w-full"
+              value={lotNumber}
+              onChange={(e) => setLotNumber(e.target.value)}
+            />
+          </div>
           <div className="mb-4">
             <label className="block mb-2">No. Lot</label>
             <input
@@ -146,6 +153,23 @@ const DashboardPage = () => {
                 </option>
               ))}
             </select>
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2">Status</label>
+            <input
+              type="text"
+              className="border border-gray-300 rounded-md px-4 py-2 w-full"
+              value={lotNumber}
+              onChange={(e) => setLotNumber(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2">Lampiran</label>
+            <div>
+                <div className="flex justify-between items-center border border-gray-300 p-1 rounded">
+                    <p>{`test semarak`}</p>
+                </div>
+            </div>
           </div>
           <div className="mb-4">
             <input
@@ -257,13 +281,16 @@ const DashboardPage = () => {
           className={`w-[350px] bg-blue-600 fixed top-0 right-0 min-h-screen p-4`}
         >
           <div className="flex justify-between items-center mb-6">
-      
             <p className="text-white text-xl font-bold ">Daftar Projek</p>
-            <button onClick={() => setShowDaftarProject(!showDaftarProject)} className="text-white hover:text-gray-400 duration-100 transition-all" title="Close Panel">
+            <button
+              onClick={() => setShowDaftarProject(!showDaftarProject)}
+              className="text-white hover:text-gray-400 duration-100 transition-all"
+              title="Close Panel"
+            >
               <IoIosCloseCircleOutline />
             </button>
           </div>
-          
+
           <div>
             {currentStep == 1 && (
               <div id="step-1">
@@ -371,7 +398,7 @@ const DashboardPage = () => {
               <div id="step-3">
                 <div className="mb-4">
                   <label className="block mb-2 text-white">Catatan</label>
-                  <textarea className="border border-gray-300 rounded-md px-4 py-2 w-full"/>
+                  <textarea className="border border-gray-300 rounded-md px-4 py-2 w-full" />
                 </div>
                 <div className="mb-4">
                   <label className="block mb-2 text-white">Attachment</label>
@@ -382,7 +409,6 @@ const DashboardPage = () => {
                     onChange={(e) => setLotNumber(e.target.value)}
                   />
                 </div>
-                
               </div>
             )}
 
@@ -398,23 +424,22 @@ const DashboardPage = () => {
               </button>
               {currentStep === 3 ? (
                 <button
-                onClick={nextStep}
-                className={`bg-blue-500 text-white py-2 px-4 rounded-md`}
-              >
-                {"Daftar"}
-              </button>
+                  onClick={nextStep}
+                  className={`bg-blue-500 text-white py-2 px-4 rounded-md`}
+                >
+                  {"Daftar"}
+                </button>
               ) : (
                 <button
-                onClick={nextStep}
-                className={`bg-blue-500 text-white py-2 px-4 rounded-md ${
-                  currentStep === 3 ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-                disabled={currentStep === 3}
-              >
-                {"Seterusnya"}
-              </button>
+                  onClick={nextStep}
+                  className={`bg-blue-500 text-white py-2 px-4 rounded-md ${
+                    currentStep === 3 ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  disabled={currentStep === 3}
+                >
+                  {"Seterusnya"}
+                </button>
               )}
-              
             </div>
           </div>
         </div>
@@ -423,4 +448,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default UlasanTeknikalPage;
