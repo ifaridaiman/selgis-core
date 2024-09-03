@@ -8,7 +8,7 @@ const UlasanContainer = () => {
         <div className='w-full h-full'>
             {/* if no data */}
             <div className='flex flex-col justify-center items-center py-16'>
-                <Image src="assets/icons/noData.svg" width={80} height={80} alt="No Data" />
+                <Image src="assets/icons/noData.svg" width={50} height={50} alt="No Data" />
                 <p>Tiada Data Ulasan</p>
             </div>
         </div>
@@ -16,7 +16,7 @@ const UlasanContainer = () => {
         <div className='py-4'>
             <div className='flex justify-between items-center w-full'>
                 <div className='flex flex-col w-3/4'>
-                    <input type='text' placeholder='Tulis Ulasan' className='border border-gray-300 rounded-t-md px-4 py-2 w-full bg-gray-400 focus:bg-gray-50 placeholder-gray-50'/>
+                    <input type='text' placeholder='Tulis Ulasan' className='border border-gray-300 rounded-t-md px-4 py-2 w-full bg-gray-100 focus:bg-gray-50 placeholder-gray-600'/>
                     <input type='file' className='border border-gray-300 rounded-b-md px-4 py-2 w-full'/>
                 </div>
                 <div className=''>

@@ -2,11 +2,7 @@
 import Modal from "@/components/modal";
 import React, { useState, useEffect } from "react";
 import { RiFunctionAddLine } from "react-icons/ri";
-import Link from "next/link";
-import { UrusanTeknikalMock } from "@/mock/urusanTeknikal.mock";
 import { Table } from "@/components/table/Table";
-import { TableHeader } from "@/components/table/TableHeader";
-import TableRow from "@/components/table/TableRow";
 import { TablePaginate } from "@/components/table/TablePaginate";
 import { BiLayerPlus } from "react-icons/bi";
 import dynamic from "next/dynamic";
@@ -20,6 +16,7 @@ import { useTable } from "@/hooks/dashboard/useTable";
 import { useDashboard } from "@/hooks/dashboard/useDashboard";
 import { useNewProjek } from "@/hooks/dashboard/useNewProjek";
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import UlasanContainer from "@/components/ulasan/UlasanContainer";
 
 const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
   ssr: false,
@@ -165,20 +162,25 @@ const UlasanTeknikalPage = () => {
           </div>
           <div className="mb-4">
             <label className="block mb-2">Lampiran</label>
-            <div>
-                <div className="flex justify-between items-center border border-gray-300 p-1 rounded">
+            <div className="rounded border border-gray-300 p-2 max-h-24 h-24 overflow-auto">
+                <div className="flex justify-between items-center border border-gray-300 p-1 rounded mb-2">
+                    <p>{`test semarak`}</p>
+                </div>
+                <div className="flex justify-between items-center border border-gray-300 p-1 rounded mb-2">
+                    <p>{`test semarak`}</p>
+                </div>
+                <div className="flex justify-between items-center border border-gray-300 p-1 rounded mb-2">
                     <p>{`test semarak`}</p>
                 </div>
             </div>
           </div>
-          <div className="mb-4">
-            <input
-              type="submit"
-              className="border border-gray-300 rounded-md px-4 py-2 w-full bg-blue-600 text-blue-50 font-bold hover:bg-blue-700 transition-all duration-100 ease-linear"
-              value={"Carian"}
-            />
-          </div>
+          
         </div>
+      </div>
+
+      <div className=" mb-6 flex justify-between items-center w-full">
+        <h2 className="text-black font-bold text-2xl">Ulasan</h2>
+        
       </div>
       <div className="bg-white p-7 rounded-lg">
         <div className="flex justify-between mb-4">
@@ -199,83 +201,10 @@ const UlasanTeknikalPage = () => {
             onChange={(e) => setSearchInput(e.target.value)}
           /> */}
         </div>
+        <UlasanContainer/>
 
-        <Table>
-          <thead>
-            <tr>
-              <th className="rounded-tl-xl bg-gray-300">
-                <input type="checkbox" onChange={handleSelectAllChange} />
-              </th>
-              <th className="py-4 px-4 bg-gray-300 text-left">No Lot</th>
-              <th className="py-4 px-4 bg-gray-300">Mukim</th>
-              <th className="py-4 px-4 bg-gray-300">Daerah</th>
-              <th className="py-4 px-4 bg-gray-300 rounded-tr-xl">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedData ? (
-              paginatedData.data.map((item: any, index: number) => {
-                const isChecked = selectedRows.includes(index);
-                return (
-                  <tr
-                    key={index}
-                    className="border-b border-gray-300 odd:bg-white even:bg-gray-100"
-                  >
-                    <td className="text-center">
-                      <input
-                        type="checkbox"
-                        checked={isChecked}
-                        onChange={() => handleRowSelect(index)}
-                      />
-                    </td>
-                    <td className="py-4 px-4">{item.No_Lot}</td>
-                    <td className="py-4 px-4 text-center">
-                      {item.Nama_Daerah}
-                    </td>
-                    <td className="py-4 px-4 text-center">{item.Nama_Mukim}</td>
-                    <td className="py-4 px-4 text-center">
-                      <div className="flex items-center text-xl justify-center">
-                        <button
-                          className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
-                          title="Delete Item"
-                        >
-                          <IoTrashBinOutline />
-                        </button>
-                        <button
-                          className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
-                          title="Update Item"
-                        >
-                          <IoPencilOutline />
-                        </button>
-                        {/* <button
-                        className='p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full'
-                        onClick={() => openModalAttachment(item.namaPemaju)}
-                        title='Project File Attachment'
-                      >
-                        <IoDocumentAttachOutline />
-                      </button> */}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })
-            ) : (
-              <tr>
-                <td colSpan={4} className="text-center py-4">
-                  No data available
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </Table>
-        <TablePaginate
-          currentPage={paginatedData.currentPage}
-          totalPages={paginatedData.totalPages}
-          handlePreviousPage={handlePreviousPage}
-          handleNextPage={handleNextPage}
-        />
+        
       </div>
-      {/* {isModalOpen && <Modal title={isModalTitle} closeModal={closeModal} />} */}
       {showDaftarProject && (
         <div
           className={`w-[350px] bg-blue-600 fixed top-0 right-0 min-h-screen p-4`}

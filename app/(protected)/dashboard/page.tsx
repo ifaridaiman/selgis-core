@@ -20,6 +20,8 @@ import { useTable } from "@/hooks/dashboard/useTable";
 import { useDashboard } from "@/hooks/dashboard/useDashboard";
 import { useNewProjek } from "@/hooks/dashboard/useNewProjek";
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import TabContainer from "@/components/tab/TabContainer";
+import Tab from "@/components/tab/Tab";
 
 
 const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
@@ -156,26 +158,8 @@ const DashboardPage = () => {
           </div>
         </div>
       </div>
-      <div className="bg-white p-7 rounded-lg">
-        <div className="flex justify-between mb-4">
-          {/* <Link
-            href="/pengguna/projek"
-            className="bg-blue-500 text-white py-2 px-4 rounded-md flex gap-4 items-center justify-center"
-          >
-            <span>
-              <RiFunctionAddLine />
-            </span>
-            Daftar Projek
-          </Link>
-          <input
-            type="text"
-            placeholder="Carian"
-            className="border border-gray-300 rounded-md px-4 py-2 w-1/4"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-          /> */}
-        </div>
-
+      <TabContainer>
+        <Tab label="Jadual Carian">
         <Table>
           <thead>
             <tr>
@@ -250,8 +234,84 @@ const DashboardPage = () => {
           handlePreviousPage={handlePreviousPage}
           handleNextPage={handleNextPage}
         />
-      </div>
-      {/* {isModalOpen && <Modal title={isModalTitle} closeModal={closeModal} />} */}
+        </Tab>
+        <Tab label="Jadual Ulasan">
+        <Table>
+          <thead>
+            <tr>
+              <th className="rounded-tl-xl bg-gray-300">
+                <input type="checkbox" onChange={handleSelectAllChange} />
+              </th>
+              <th className="py-4 px-4 bg-gray-300 text-left">Nama Projek</th>
+              <th className="py-4 px-4 bg-gray-300">Jenis Permohonan</th>
+              <th className="py-4 px-4 bg-gray-300">Daerah</th>
+              <th className="py-4 px-4 bg-gray-300">Mukim</th>
+              <th className="py-4 px-4 bg-gray-300">Status</th>
+              <th className="py-4 px-4 bg-gray-300 rounded-tr-xl">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {paginatedData ? (
+              paginatedData.data.map((item: any, index: number) => {
+                const isChecked = selectedRows.includes(index);
+                return (
+                  <tr
+                    key={index}
+                    className="border-b border-gray-300 odd:bg-white even:bg-gray-100"
+                  >
+                    <td className="text-center">
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() => handleRowSelect(index)}
+                      />
+                    </td>
+                    <td className="py-4 px-4">{'nama projek'}</td>
+                    <td className="py-4 px-4 text-center">{'jenis permohonan'}</td>
+                    <td className="py-4 px-4 text-center">
+                      {item.Nama_Daerah}
+                    </td>
+                    <td className="py-4 px-4 text-center">{item.Nama_Mukim}</td>
+                    
+                    <td className="py-4 px-4 text-center">{'status'}</td>
+                    <td className="py-4 px-4 text-center">
+                      <div className="flex items-center text-xl justify-center">
+                        <button
+                          className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
+                          title="Delete Item"
+                        >
+                          <IoTrashBinOutline />
+                        </button>
+                        <button
+                          className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
+                          title="Update Item"
+                        >
+                          <IoPencilOutline />
+                        </button>
+                        {/* <button
+                        className='p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full'
+                        onClick={() => openModalAttachment(item.namaPemaju)}
+                        title='Project File Attachment'
+                      >
+                        <IoDocumentAttachOutline />
+                      </button> */}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan={4} className="text-center py-4">
+                  No data available
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </Table>
+        </Tab>
+      </TabContainer>
+      
       {showDaftarProject && (
         <div
           className={`w-[350px] bg-blue-600 fixed top-0 right-0 min-h-screen p-4`}

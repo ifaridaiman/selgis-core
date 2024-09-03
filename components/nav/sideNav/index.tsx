@@ -25,11 +25,11 @@ const   SideNav:React.FC = () => {
         <div className="flex flex-col justify-between flex-grow">
           {/* Menu Section */}
           <div>
-            <div onClick={handleDashboard} className="flex items-center text-white mb-4 gap-4 text-base hover:bg-black hover:rounded-lg transition-all duration-300 ease-in-out py-2 px-4">
+            <div onClick={handleDashboard} className="flex items-center cursor-pointer text-white mb-4 gap-4 text-base hover:bg-black hover:rounded-lg transition-all duration-300 ease-in-out py-2 px-4">
               <span className='text-xl'><VscPreview/></span>
               <span className='text-base'>Dashboard</span>
             </div>
-            <div onClick={handleUlasanTeknikal} className="flex items-center text-white mb-4 gap-4 text-base hover:bg-black hover:rounded-lg transition-all duration-300 ease-in-out py-2 px-4">
+            <div onClick={handleUlasanTeknikal} className="flex items-center cursor-pointer text-white mb-4 gap-4 text-base hover:bg-black hover:rounded-lg transition-all duration-300 ease-in-out py-2 px-4">
               <span className='text-xl'><VscPreview/></span>
               <span className='text-base'>Ulasan Teknikal</span>
             </div>
