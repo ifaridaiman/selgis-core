@@ -25,15 +25,17 @@ const MapContainer: React.FC<MapContainerProps> = ({ children, mapData }) => {
     setMapView(mapViewInstance);
   };
 
+  
+
   return (
     <>
       <WebMapWidget mapData={mapData} onMapViewReady={handleMapViewReady}/>
-      {mapView && <HomeWidget mapView={mapView} />}
+      {/* {mapView && <HomeWidget mapView={mapView} />}
       {mapView && <LayerListWidget mapView={mapView} />}
       {mapView && <MeasureWidget mapView={mapView} />}
-      {/* {view && <FeatureLayerWidget mapView={view} mapData={mapData} />} */}
-      {mapView && <BasemapWidget mapView={mapView} />}
-      {mapView && <DrawWidget mapView={mapView} />}
+      {mapView && <FeatureLayerWidget mapView={mapView} mapData={mapData} />}
+      {mapView && <BasemapWidget mapView={mapView} />} */}
+      {/* {mapView && <DrawWidget mapView={mapView} />} */}
       {children}
     </>
   );

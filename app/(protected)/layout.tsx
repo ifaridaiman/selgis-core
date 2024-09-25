@@ -12,7 +12,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     // <div className="grid min-h-screen w-full md:grid-cols-[200px_1fr] lg:grid-cols-[220px_1fr] bg-gray-100">
     <MapProvider>
-      <div className="flex min-h-screen w-ful bg-gray-100">
+      <div className="flex min-h-screen w-full bg-gray-100">
         <SideNav />
 
         <div className="ml-64 p-4 overflow-auto w-full">{children}</div>

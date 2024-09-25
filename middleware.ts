@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
 // 1. Specify protected and public routes
-const protectedRoutes = ['/dashboard'];
+const protectedRoutes = ['/halaman-utama'];
 const publicRoutes = ['/'];
 
 export default async function middleware(req: NextRequest) {
@@ -23,7 +23,7 @@ export default async function middleware(req: NextRequest) {
 
     // 5. If authenticated and on a public route, optionally redirect to a dashboard or another page
     if (isPublicRoute && token) {
-        return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
+        return NextResponse.redirect(new URL('/halaman-utama', req.nextUrl));
     }
 
     // 6. Allow the request to proceed

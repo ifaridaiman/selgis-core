@@ -12,5 +12,9 @@ export const useNewProjek = () => {
         setCurrentStep((prevStep) => (prevStep > 0 ? prevStep - 1 : prevStep));
     };
 
+    const scrollStep = () => {
+        
+    };
+
     return { currentStep, nextStep, prevStep };
 }

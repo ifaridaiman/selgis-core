@@ -21,7 +21,7 @@ const FeatureLayerWidget:React.FC<FeatureLayerProps> = ({mapView,mapData}) => {
                     url: `http://jpsselgis.selangor.gov.my/portal/sharing/rest/services/${layer.id}/FeatureServer/0`,
                     title: layer.title,
                 });
-
+                console.log("feature layer created", featureLayer.title);
                 mapView.map.add(featureLayer);
             });
         }

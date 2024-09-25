@@ -1,28 +1,18 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import MapView from "@arcgis/core/views/MapView";
-import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
-import WebMap from "@arcgis/core/WebMap";
-
-export type lotAttributes = {
-  OBJECTID: number;
-  No_Lot: string;
-  Nama_Mukim: string;
-  Nama_Daerah: string;
-};
 
 type MapContextType = {
   mapView: MapView | null;
   setMapView: (view: MapView | null) => void;
   lotNumber: string;
   setLotNumber: (lotNumber: string) => void;
-  listOfDaerah: string[];
+  listOfDaerah: string[];	
   setListOfDaerah: (listOfDaerah: string[]) => void;
   listOfMukim: string[];
   setListOfMukim: (listOfMukim: string[]) => void;
   listOfLot: any[];
   setListOfLot: (listOfLot: any[]) => void;
   zoomToDaerah: (daerah: string) => void;
-  graphicLayer: GraphicsLayer;
   // Add any other state you want to share across the components
 };
 
@@ -45,9 +35,9 @@ export let mapView: MapView | null = null;
 export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
   const [mapView, setMapView] = useState<MapView | null>(null);
   const [listOfMukim, setListOfMukim] = useState<string[]>([]);
-  const [lotNumber, setLotNumber] = useState<string>("");
-  const [listOfLot, setListOfLot] = useState<lotAttributes[]>([]);
-  const [listOfDaerah, setListOfDaerah] = useState<string[]>([]);
+  const [lotNumber, setLotNumber] = useState<string>('')
+  const [listOfLot, setListOfLot] = useState<any[]>([])
+  const [listOfDaerah, setListOfDaerah] = useState<string[]>([])
 
   const zoomToDaerah = (daerah: string) => {
     if (mapView) {
@@ -71,31 +61,8 @@ export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
     }
   };
 
-  
-  const graphicLayer = new GraphicsLayer({
-    title: "Sketch Layer",
-  });
-
-
-  
-
   return (
-    <MapContext.Provider
-      value={{
-        mapView,
-        setMapView,
-        lotNumber,
-        setLotNumber,
-        listOfMukim,
-        setListOfMukim,
-        listOfLot,
-        setListOfLot,
-        listOfDaerah,
-        setListOfDaerah,
-        zoomToDaerah,
-        graphicLayer,
-      }}
-    >
+    <MapContext.Provider value={{ mapView, setMapView, lotNumber, setLotNumber, listOfMukim, setListOfMukim, listOfLot, setListOfLot, listOfDaerah, setListOfDaerah, zoomToDaerah }}>
       {children}
     </MapContext.Provider>
   );

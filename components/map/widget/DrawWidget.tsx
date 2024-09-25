@@ -6,6 +6,8 @@ import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
 import Graphic from '@arcgis/core/Graphic';
 import TextSymbol from '@arcgis/core/symbols/TextSymbol';
 import Point from '@arcgis/core/geometry/Point';
+import { title } from 'process';
+import { useMapContext } from '../MapContext';
 
 type DrawWidgetProps = {
   mapView: MapView;
@@ -13,16 +15,13 @@ type DrawWidgetProps = {
 
 const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
   const drawDiv = useRef<Sketch | null>(null);
-  const graphicLayer = new GraphicsLayer({ title: 'Sketch Layer' });
-  const [isLayersLoaded, setIsLayersLoaded] = useState(false);
+  const {graphicLayer} = useMapContext();
 
   useEffect(() => {
     
 
     if (!drawDiv.current && mapView) {
-      mapView.map.add(graphicLayer);
       
-
       drawDiv.current = new Sketch({
         view: mapView,
         layer: graphicLayer,
@@ -32,6 +31,8 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
 
       drawDiv.current.on('create', (event) => {
         if (event.state === 'complete' && event.graphic.geometry.type === 'polygon') {
+          console.log('Polygon Drawn:', event.graphic.geometry.toJSON());
+          console.log("graphicLayer", graphicLayer);  
           // Calculate the centroid of the polygon
           const centroid = event.graphic.geometry.extent.center;
 
@@ -112,7 +113,7 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
 
       mapView.ui.add(drawExpand, 'top-right');
     }
-  }, [mapView]);
+  }, [mapView, graphicLayer]);
 
   return null;
 };

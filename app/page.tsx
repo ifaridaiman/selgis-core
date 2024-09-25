@@ -25,7 +25,7 @@ export default function Home() {
     const result = await authService.login(data.username, data.password);
     setIsLoading(false);
     if (result.token) {
-      router.push("/dashboard");
+      router.push("/halaman-utama");
     } else {
       alert(result.error || "Login failed. Please try again.");
     }

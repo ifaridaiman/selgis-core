@@ -4,7 +4,8 @@ import MapView from "@arcgis/core/views/MapView";
 import GroupLayer from "@arcgis/core/layers/GroupLayer";
 import esriConfig from "@arcgis/core/config";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import { useMapContext } from "../MapContext";
+import { lotAttributes, useMapContext } from "../MapContext";
+import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 
 type WebMapWidgetProps = {
   mapData: Array<{
@@ -29,10 +30,20 @@ const WebMapWidget: React.FC<WebMapWidgetProps> = ({
   let mapImagePortalExtent: any = null;
 
   // Set custom portal URL
-  const serverPortalRest = "http://jpsselgis.selangor.gov.my/portal/sharing/rest";
+  const serverPortalRest =
+    "http://jpsselgis.selangor.gov.my/portal/sharing/rest";
   esriConfig.portalUrl = serverPortalRest;
 
-  const {setListOfMukim, listOfLot, setListOfLot, setListOfDaerah} = useMapContext();
+  const {
+    setListOfMukim,
+    listOfLot,
+    setListOfLot,
+    listOfDaerah,
+    listOfMukim,
+    setListOfDaerah,
+    graphicLayer,
+    setMapView
+  } = useMapContext();
 
   const webMap = new WebMap({
     basemap: "satellite",
@@ -136,56 +147,76 @@ const WebMapWidget: React.FC<WebMapWidgetProps> = ({
           webMap.add(groupLayer);
         }
       });
-
     });
   };
 
-  const queryLotKadasterLayer = async  () => {
-
-    try{
+  const queryLotKadasterLayer = async () => {
+    try {
       // Find the GroupLayer for Lot Kadaster
-      const lotKadasterLayer = allGroupLayer.find(layer => layer.title === "Lot Kadaster");
+      const lotKadasterLayer = allGroupLayer.find(
+        (layer) => layer.title === "Lot Kadaster"
+      );
 
       if (!lotKadasterLayer) {
         console.error("Lot Kadaster layer not found");
         return;
       }
 
-      // Assuming the first sublayer is the FeatureLayer we want to query
-      const featureLayer = lotKadasterLayer.layers.getItemAt(0) as FeatureLayer;
+      let lotListing = [];
+      let daerahListing = [];
+      let mukimsListing = [];
 
-      if (!featureLayer) {
-        console.error("FeatureLayer not found within Lot Kadaster layer");
-        return;
+      // Iterate through all sublayers and query each one
+      for (let i = 0; i < lotKadasterLayer.layers.length; i++) {
+        const featureLayer = lotKadasterLayer.layers.getItemAt(
+          i
+        ) as FeatureLayer;
+
+        if (!featureLayer) {
+          console.error(
+            `FeatureLayer not found within Lot Kadaster layer at index ${i}`
+          );
+          continue;
+        }
+
+        const resultLotList = await featureLayer.queryFeatures({
+          where: "1=1", // Modify this query as needed
+          outFields: ["*"], // Retrieve all fields
+          returnGeometry: true, // Include geometry in the results
+        });
+
+        console.log(`Results for sublayer ${i}:`, resultLotList.features);
+
+        const lotList = resultLotList.features.map(
+          (feature) => feature.attributes
+        );
+        console.log(`Lot List for sublayer ${i}:`, lotList);
+        lotListing.push(lotList);
+        // setListOfLot((prevList) => [...prevList, ...lotList]);
+
+        const mukimLists = resultLotList.features.map(
+          (feature) => feature.attributes.Nama_Mukim
+        );
+        const mukimListUnique = [...new Set(mukimLists)];
+        console.log(`Mukim List for sublayer ${i}:`, mukimListUnique);
+        mukimsListing.push(mukimListUnique);
+        // setListOfMukim(prevList) => [...prevList, ...mukimListUnique];);
+
+        const daerahLists = resultLotList.features.map(
+          (feature) => feature.attributes.Nama_Daerah
+        );
+        const daerahListUnique = [...new Set(daerahLists)];
+        console.log(`Daerah List for sublayer ${i}:`, daerahListUnique);
+        daerahListing.push(daerahListUnique);
+        // setListOfDaerah(prevList) => [...prevList, ...daerahListUnique]);
       }
-
-      const resultLotList = await featureLayer.queryFeatures({
-        where: "1=1", // Modify this query as needed
-        outFields: ["*"], // Retrieve all fields
-        returnGeometry: true // Include geometry in the results
-      })
-
-      console.log(resultLotList.features)
-
-
-      const lotList = resultLotList.features.map((feature) => feature.attributes);
-      setListOfLot(lotList);
-
-      const mukimLists = resultLotList.features.map((feature) => feature.attributes.Nama_Mukim);
-      const mukimListUnique = [...new Set(mukimLists)];
-      console.log("Mukim List:", mukimListUnique);
-      setListOfMukim(mukimListUnique)
-
-      const daerahLists = resultLotList.features.map((feature) => feature.attributes.Nama_Daerah);
-      const daerahListUnique = [...new Set(daerahLists)];
-      console.log("Daerah List:", daerahListUnique);
-      setListOfDaerah(daerahListUnique)
-      
-        
-    }catch(err){
+      console.log("Lot Listing:", lotListing.flat());
+      setListOfLot(lotListing.flat());
+      setListOfMukim(mukimsListing.flat());
+      setListOfDaerah(daerahListing.flat());
+    } catch (err) {
       console.error("Error querying Lot Kadaster:", err);
     }
-    
   };
 
   useEffect(() => {
@@ -193,26 +224,38 @@ const WebMapWidget: React.FC<WebMapWidgetProps> = ({
 
     const initMap = async () => {
       try {
-        const mapView = new MapView({
+        const view = new MapView({
           container: mapDiv.current as HTMLDivElement,
           map: webMap,
           center: [101.6869, 3.139],
           zoom: 8,
         });
 
-        mapView
-          .when( async () => {
+        view
+          .when(async () => {
             console.log("Map is ready");
-            loadLayerFromPortal(); // Load layers from portal when the map is ready
-            onMapViewReady(mapView);
 
-            setTimeout(queryLotKadasterLayer,2000)
+            setMapView(view);
+            await loadLayerFromPortal(); // Load layers from portal when the map is ready
 
+
+            onMapViewReady(view);
+
+            setTimeout(queryLotKadasterLayer, 2000);
+
+            view.map.add(graphicLayer);
             // Query the Lot Kadaster layer
           })
           .catch((error) => {
             console.log("Error initializing map: ", error);
           });
+
+        // view.map.allLayers.on("change", (event) => {
+        //   if (event.added.length > 6) {
+        //     console.log("Ape ni", event.added[0].title);
+            
+        //   }
+        // });
       } catch (err) {
         console.error("Error loading map: ", err);
       }

@@ -7,6 +7,7 @@ const useTab = () => {
 
     const handleTabClick = (index: number) => {
         setActiveTab(index)
+        console.log('Tab clicked', index)
     }
 
     return {activeTab, handleTabClick}

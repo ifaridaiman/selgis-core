@@ -10,7 +10,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ children }) => {
   const { activeTab, handleTabClick } = useTab();
 
   return (
-    <div>
+    <div id="tab-container">
       <div className="flex gap-2">
         {React.Children.map(children, (child, index) => {
           if (React.isValidElement(child)) {
