@@ -63,12 +63,11 @@ const UlasanTeknikalPage = () => {
     <>
       <div className=" mb-6 flex justify-between items-center w-full">
         <h2 className="text-black font-bold text-2xl">Ulasan Teknikal</h2>
-        <button
+        {/* <button
           className="flex justify-center items-center gap-2 bg-blue-500 hover:bg-blue-600 transition-all duration-75 py-2 px-3 rounded-md text-blue-100"
-          onClick={() => setShowDaftarProject(!showDaftarProject)}
         >
           <BiLayerPlus className="text-base" /> Daftar Projek
-        </button>
+        </button> */}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 mb-12">
         <div className="bg-gray-500 md:h-[40rem]">
@@ -93,8 +92,7 @@ const UlasanTeknikalPage = () => {
                 <input
                   type="text"
                   className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                  value={lotNumber}
-                  onChange={(e) => setLotNumber(e.target.value)}
+                  
                 />
               </div>
               <div className="mb-4">
@@ -147,8 +145,7 @@ const UlasanTeknikalPage = () => {
                 <input
                   type="text"
                   className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                  value={lotNumber}
-                  onChange={(e) => setLotNumber(e.target.value)}
+                  
                 />
               </div>
               <div className="mb-4">
@@ -158,8 +155,7 @@ const UlasanTeknikalPage = () => {
                 <input
                   type="text"
                   className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                  value={lotNumber}
-                  onChange={(e) => setLotNumber(e.target.value)}
+                  
                 />
               </div>
               <div className="mb-4">
@@ -167,8 +163,7 @@ const UlasanTeknikalPage = () => {
                 <input
                   type="text"
                   className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                  value={lotNumber}
-                  onChange={(e) => setLotNumber(e.target.value)}
+                  
                 />
               </div>
               <div className="mb-4">
@@ -176,8 +171,7 @@ const UlasanTeknikalPage = () => {
                 <input
                   type="text"
                   className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                  value={lotNumber}
-                  onChange={(e) => setLotNumber(e.target.value)}
+                  
                 />
               </div>
               <div className="mb-4">
@@ -185,8 +179,7 @@ const UlasanTeknikalPage = () => {
                 <input
                   type="text"
                   className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                  value={lotNumber}
-                  onChange={(e) => setLotNumber(e.target.value)}
+                  
                 />
               </div>
             </div>
@@ -204,7 +197,6 @@ const UlasanTeknikalPage = () => {
             </button>
             {currentStep === 2 ? (
               <button
-                onClick={nextStep}
                 className={`bg-blue-500 text-blue-200 py-2 px-4 rounded-md`}
               >
                 {"Daftar"}
@@ -229,7 +221,7 @@ const UlasanTeknikalPage = () => {
       </div>
       <div className="bg-white p-7 rounded-lg">
         <div className="flex justify-between mb-4"></div>
-        {/* <UlasanContainer /> */}
+        <UlasanContainer />
       </div>
     </>
   );

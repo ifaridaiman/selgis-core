@@ -25,6 +25,7 @@ import TabContainer from "@/components/tab/TabContainer";
 import Tab from "@/components/tab/Tab";
 import { MdOutlineDocumentScanner } from "react-icons/md";
 import { useNav } from "@/hooks/useNav";
+import { toast, Bounce } from "react-toastify";
 
 const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
   ssr: false,
@@ -64,6 +65,22 @@ const DashboardPage = () => {
           item.No_Lot.toLowerCase().includes(lotNumber.toLowerCase())
         );
       });
+
+      console.log("Filtered: ",filtered.length);
+      if(filtered.length == 0){
+        toast.error('Rekod tidak ditemui', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+          });
+      }
+
       setFilteredLotList(filtered);
     } else {
       setFilteredLotList(listOfLot);
@@ -354,6 +371,7 @@ const DashboardPage = () => {
           </Table>
         </Tab>
       </TabContainer>
+      
     </>
   );
 };

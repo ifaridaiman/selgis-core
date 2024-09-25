@@ -2,17 +2,17 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import { LuFileEdit } from "react-icons/lu";
-import useUlasanStorage from "./hooks/useUlasanStorage";
+// import useUlasanStorage from "./hooks/useUlasanStorage";
 
 const UlasanContainer = () => {
   const [inputValue, setInputValue] = useState("");
   const [folderName, setFolderName] = useState("");
 
-  const { ulasanItems, addUlasan } = useUlasanStorage("ulasanKey");
+  // const { ulasanItems, addUlasan } = useUlasanStorage("ulasanKey");
 
   const handleAddUlasan = () => {
     if (inputValue.trim() && folderName.trim()) {
-      addUlasan(inputValue, folderName);
+      // addUlasan(inputValue, folderName);
       setInputValue(""); // Clear the input field after adding
       setFolderName(""); // Clear the folder input field after adding
     }
@@ -20,7 +20,7 @@ const UlasanContainer = () => {
   return (
     <div className="w-full h-full flex flex-col">
       <div className="w-full h-full">
-        {ulasanItems.length === 0 ? (
+        {/* {ulasanItems.length === 0 ? ( */}
           <div className="flex flex-col justify-center items-center py-16">
             <Image
               src="assets/icons/noData.svg"
@@ -30,7 +30,7 @@ const UlasanContainer = () => {
             />
             <p>Tiada Data Ulasan</p>
           </div>
-        ) : (
+        {/* ) : (
           <div className="p-4">
             <ul>
               {ulasanItems.map((item, index) => (
@@ -41,7 +41,7 @@ const UlasanContainer = () => {
               ))}
             </ul>
           </div>
-        )}
+        )} */}
       </div>
       <hr />
       <div className="py-4">
