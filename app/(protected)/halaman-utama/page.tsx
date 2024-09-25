@@ -32,6 +32,31 @@ const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
   loading: () => <p>Loading...</p>,
 });
 
+const HomeWidget = dynamic(() => import("@/components/map/widget/HomeWidget"), {
+  ssr: false,
+  loading: () => <p>Loading...</p>,
+});
+
+const LayerListWidget = dynamic(() => import("@/components/map/widget/LayerListWidget"), {
+  ssr: false,
+  loading: () => <p>Loading...</p>,
+});
+
+const MeasureWidget = dynamic(() => import("@/components/map/widget/MeasureWidget"), {
+  ssr: false,
+  loading: () => <p>Loading...</p>,
+});
+
+const FeatureLayerWidget = dynamic(() => import("@/components/map/widget/FeatureLayerWidget"), {
+  ssr: false,
+  loading: () => <p>Loading...</p>,
+});
+
+const BasemapWidget = dynamic(() => import("@/components/map/widget/BasemapWidget"), {
+  ssr: false,
+  loading: () => <p>Loading...</p>,
+});
+
 const DashboardPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const { lotNumber, setLotNumber, listOfLot, listOfMukim, listOfDaerah } =
@@ -131,6 +156,7 @@ const DashboardPage = () => {
   // };
 
   // var geoms = findValue(arrValueDaerah,"value","geoms",value);
+  const { mapView} = useMapContext();
 
   return (
     <>
@@ -146,7 +172,13 @@ const DashboardPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 mb-12">
         <div className="bg-gray-500 md:h-[40rem]">
           <MapContainer mapData={mapData}>
-            <div></div>
+          {mapView && <HomeWidget mapView={mapView} />}
+            {mapView && <LayerListWidget mapView={mapView} />}
+            {mapView && <MeasureWidget mapView={mapView} />}
+            {mapView && (
+              <FeatureLayerWidget mapView={mapView} mapData={mapData} />
+            )}
+            {mapView && <BasemapWidget mapView={mapView} />}
           </MapContainer>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
