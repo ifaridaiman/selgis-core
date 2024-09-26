@@ -29,6 +29,8 @@ const WebMapWidget: React.FC<WebMapWidgetProps> = ({
   let countFeatAdd = 0;
   let mapImagePortalExtent: any = null;
 
+  let geoLot = [];
+
   // Set custom portal URL
   const serverPortalRest =
     "http://jpsselgis.selangor.gov.my/portal/sharing/rest";
@@ -228,7 +230,7 @@ const WebMapWidget: React.FC<WebMapWidgetProps> = ({
           container: mapDiv.current as HTMLDivElement,
           map: webMap,
           center: [101.6869, 3.139],
-          zoom: 8,
+          zoom: 9,
         });
 
         view
