@@ -10,6 +10,15 @@ export type lotAttributes = {
   Nama_Daerah: string;
 };
 
+export type CiptaUlasanFormType = {
+  noLot: string;
+  daerah: string;
+  mukim: string;
+  kordinatX: string;
+  kordinatY: string;
+  tajukProjek: string;
+};
+
 type MapContextType = {
   mapView: MapView | null;
   setMapView: (view: MapView | null) => void;
@@ -23,6 +32,9 @@ type MapContextType = {
   setListOfLot: (listOfLot: any[]) => void;
   zoomToDaerah: (daerah: string) => void;
   graphicLayer: GraphicsLayer;
+  ciptaUlasanForm: CiptaUlasanFormType;
+  setCiptaUlasanForm: (form: CiptaUlasanFormType) => void;
+
   // Add any other state you want to share across the components
 };
 
@@ -48,6 +60,14 @@ export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
   const [lotNumber, setLotNumber] = useState<string>("");
   const [listOfLot, setListOfLot] = useState<lotAttributes[]>([]);
   const [listOfDaerah, setListOfDaerah] = useState<string[]>([]);
+  const [ciptaUlasanForm, setCiptaUlasanForm] = useState<CiptaUlasanFormType>({
+    noLot: "",
+    daerah: "",
+    mukim: "",
+    kordinatX: "",
+    kordinatY: "",
+    tajukProjek: "",
+  })
 
   const zoomToDaerah = (daerah: string) => {
     if (mapView) {
@@ -94,6 +114,8 @@ export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
         setListOfDaerah,
         zoomToDaerah,
         graphicLayer,
+        ciptaUlasanForm,
+        setCiptaUlasanForm
       }}
     >
       {children}

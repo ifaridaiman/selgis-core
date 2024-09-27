@@ -6,6 +6,7 @@ import { useMapContext } from "@/components/map/MapContext";
 import { useDashboard } from "@/hooks/dashboard/useDashboard";
 import { useNewProjek } from "@/hooks/dashboard/useNewProjek";
 import UlasanContainer from "@/components/ulasan/UlasanContainer";
+import { CiptaUlasanFormType } from "@/components/map/MapContext";
 const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
   ssr: false,
   loading: () => <p>Loading...</p>,
@@ -57,7 +58,16 @@ const UlasanTeknikalPage = () => {
     console.error("Failed to parse mapData:", error);
   }
 
-  const { mapView} = useMapContext();
+  const { mapView, ciptaUlasanForm, setCiptaUlasanForm} = useMapContext();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setCiptaUlasanForm({
+      ...ciptaUlasanForm, // Spread the current state to retain other field values
+      [name]: value,      // Update only the specific field by its name
+    });
+  };
 
   return (
     <>
@@ -92,7 +102,8 @@ const UlasanTeknikalPage = () => {
                 <input
                   type="text"
                   className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                  
+                  value={ciptaUlasanForm.noLot || ""}
+                  onChange={handleInputChange} // Update the form state on change
                 />
               </div>
               <div className="mb-4">
@@ -126,6 +137,8 @@ const UlasanTeknikalPage = () => {
                 <input
                   type="text"
                   className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                  value={ciptaUlasanForm.kordinatX}
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="mb-4">
@@ -133,6 +146,8 @@ const UlasanTeknikalPage = () => {
                 <input
                   type="text"
                   className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                  value={ciptaUlasanForm.kordinatY}
+                  onChange={handleInputChange}
                 />
               </div>
             </div>

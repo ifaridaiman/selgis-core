@@ -19,7 +19,6 @@ type MapContainerProps = {
 const MapContainer: React.FC<MapContainerProps> = ({ children, mapData }) => {
 
   const {mapView, setMapView} = useMapContext();
-  const [graphicsLayer, setGraphicsLayer] = useState<GraphicsLayer | null>(null);
   
   const handleMapViewReady = (mapViewInstance: MapView) => {
     setMapView(mapViewInstance);

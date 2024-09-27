@@ -4,6 +4,9 @@ import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type loginType = {
   username: string;
@@ -27,7 +30,8 @@ export default function Home() {
     if (result.token) {
       router.push("/halaman-utama");
     } else {
-      alert(result.error || "Login failed. Please try again.");
+      toast.error(result.error || "Login failed. Please try again.");
+      // alert(result.error || "Login failed. Please try again.");
     }
   };
   return (
@@ -90,6 +94,18 @@ export default function Home() {
           </form>
         </div>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </main>
   );
 }

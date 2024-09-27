@@ -37,25 +37,37 @@ const HomeWidget = dynamic(() => import("@/components/map/widget/HomeWidget"), {
   loading: () => <p>Loading...</p>,
 });
 
-const LayerListWidget = dynamic(() => import("@/components/map/widget/LayerListWidget"), {
-  ssr: false,
-  loading: () => <p>Loading...</p>,
-});
+const LayerListWidget = dynamic(
+  () => import("@/components/map/widget/LayerListWidget"),
+  {
+    ssr: false,
+    loading: () => <p>Loading...</p>,
+  }
+);
 
-const MeasureWidget = dynamic(() => import("@/components/map/widget/MeasureWidget"), {
-  ssr: false,
-  loading: () => <p>Loading...</p>,
-});
+const MeasureWidget = dynamic(
+  () => import("@/components/map/widget/MeasureWidget"),
+  {
+    ssr: false,
+    loading: () => <p>Loading...</p>,
+  }
+);
 
-const FeatureLayerWidget = dynamic(() => import("@/components/map/widget/FeatureLayerWidget"), {
-  ssr: false,
-  loading: () => <p>Loading...</p>,
-});
+const FeatureLayerWidget = dynamic(
+  () => import("@/components/map/widget/FeatureLayerWidget"),
+  {
+    ssr: false,
+    loading: () => <p>Loading...</p>,
+  }
+);
 
-const BasemapWidget = dynamic(() => import("@/components/map/widget/BasemapWidget"), {
-  ssr: false,
-  loading: () => <p>Loading...</p>,
-});
+const BasemapWidget = dynamic(
+  () => import("@/components/map/widget/BasemapWidget"),
+  {
+    ssr: false,
+    loading: () => <p>Loading...</p>,
+  }
+);
 
 const DashboardPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -83,33 +95,33 @@ const DashboardPage = () => {
   }
 
   useEffect(() => {
-    if (lotNumber) {
-      const filtered = listOfLot.filter((item) => {
-        return (
-          item.No_Lot &&
-          item.No_Lot.toLowerCase().includes(lotNumber.toLowerCase())
-        );
-      });
+    // if (lotNumber) {
+    //   const filtered = listOfLot.filter((item) => {
+    //     return (
+    //       item.No_Lot &&
+    //       item.No_Lot.toLowerCase().includes(lotNumber.toLowerCase())
+    //     );
+    //   });
 
-      console.log("Filtered: ",filtered.length);
-      if(filtered.length == 0){
-        toast.error('Rekod tidak ditemui', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Bounce,
-          });
-      }
+    //   console.log("Filtered: ",filtered.length);
+    //   if(filtered.length == 0){
+    //     toast.error('Rekod tidak ditemui', {
+    //       position: "top-right",
+    //       autoClose: 5000,
+    //       hideProgressBar: false,
+    //       closeOnClick: true,
+    //       pauseOnHover: true,
+    //       draggable: true,
+    //       progress: undefined,
+    //       theme: "colored",
+    //       transition: Bounce,
+    //       });
+    //   }
 
-      setFilteredLotList(filtered);
-    } else {
-      setFilteredLotList(listOfLot);
-    }
+    //   setFilteredLotList(filtered);
+    // } else {
+    setFilteredLotList(listOfLot);
+    // }
     setCurrentPage(1); // Reset to the first page on new search
   }, [lotNumber, listOfLot]);
 
@@ -132,13 +144,34 @@ const DashboardPage = () => {
   };
 
   const handleFormCarianSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    if (lotNumber) {
+    e.preventDefault();
+    console.log("Form Carian Submit");
+    const form = e.target as HTMLFormElement;
+    let lotNumber = form.lotNumber.value;
+    if (lotNumber && lotNumber.length > 0) {
+      console.log("Lot Number: ", lotNumber);
       const filtered = listOfLot.filter((item) => {
         return (
           item.No_Lot &&
           item.No_Lot.toLowerCase().includes(lotNumber.toLowerCase())
         );
       });
+
+      if(filtered.length == 0){
+        toast.error('Rekod tidak ditemui', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+          });
+      }
+
+      setFilteredLotList(filtered);
     }
   };
 
@@ -156,7 +189,7 @@ const DashboardPage = () => {
   // };
 
   // var geoms = findValue(arrValueDaerah,"value","geoms",value);
-  const { mapView} = useMapContext();
+  const { mapView } = useMapContext();
 
   return (
     <>
@@ -172,7 +205,7 @@ const DashboardPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 mb-12">
         <div className="bg-gray-500 md:h-[40rem]">
           <MapContainer mapData={mapData}>
-          {mapView && <HomeWidget mapView={mapView} />}
+            {mapView && <HomeWidget mapView={mapView} />}
             {mapView && <LayerListWidget mapView={mapView} />}
             {mapView && <MeasureWidget mapView={mapView} />}
             {mapView && (
@@ -187,6 +220,7 @@ const DashboardPage = () => {
             <div className="mb-4">
               <label className="block mb-2">No. Lot</label>
               <input
+                name="lotNumber"
                 type="text"
                 className="border border-gray-300 rounded-md px-4 py-2 w-full"
                 value={lotNumber}
@@ -196,6 +230,7 @@ const DashboardPage = () => {
             <div className="mb-4">
               <label className="block mb-2">Daerah</label>
               <select
+                name="daerah"
                 className="border border-gray-300 rounded-md px-4 py-2 w-full"
                 onChange={handleChangeDaerah}
               >
@@ -209,7 +244,10 @@ const DashboardPage = () => {
             </div>
             <div className="mb-4">
               <label className="block mb-2">Mukim</label>
-              <select className="border border-gray-300 rounded-md px-4 py-2 w-full">
+              <select
+                name="mukim"
+                className="border border-gray-300 rounded-md px-4 py-2 w-full"
+              >
                 <option value="">-- Pilih Mukim --</option>
                 {listOfMukim.map((item, index) => (
                   <option key={index} value={item}>
@@ -356,6 +394,7 @@ const DashboardPage = () => {
                       <td className="py-4 px-4 text-center">
                         {item.Nama_Mukim}
                       </td>
+                      <td>{item.geometry}</td>
 
                       <td className="py-4 px-4 text-center">{"status"}</td>
                       <td className="py-4 px-4 text-center">
@@ -366,6 +405,7 @@ const DashboardPage = () => {
                             onClick={() => handleSampleDocument()}
                           >
                             <MdOutlineDocumentScanner />
+                            {item.geometry}
                           </button>
                           <button
                             className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
@@ -403,7 +443,6 @@ const DashboardPage = () => {
           </Table>
         </Tab>
       </TabContainer>
-      
     </>
   );
 };
