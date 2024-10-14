@@ -3,7 +3,7 @@ BEGIN TRY
 BEGIN TRAN;
 
 -- CreateTable
-CREATE TABLE [sde].[Projek] (
+CREATE TABLE [dbo].[Projek] (
     [id] NVARCHAR(1000) NOT NULL,
     [lotNumber] NVARCHAR(1000) NOT NULL,
     [daerah] NVARCHAR(1000) NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE [sde].[Projek] (
 );
 
 -- CreateTable
-CREATE TABLE [sde].[Ulasan] (
+CREATE TABLE [dbo].[Ulasan] (
     [id] INT NOT NULL IDENTITY(1,1),
     [projekId] NVARCHAR(1000) NOT NULL,
     [ulasan] NVARCHAR(1000) NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE [sde].[Ulasan] (
 );
 
 -- AddForeignKey
-ALTER TABLE [sde].[Ulasan] ADD CONSTRAINT [Ulasan_projekId_fkey] FOREIGN KEY ([projekId]) REFERENCES [sde].[Projek]([id]) ON DELETE NO ACTION ON UPDATE CASCADE;
+ALTER TABLE [dbo].[Ulasan] ADD CONSTRAINT [Ulasan_projekId_fkey] FOREIGN KEY ([projekId]) REFERENCES [dbo].[Projek]([id]) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 COMMIT TRAN;
 
