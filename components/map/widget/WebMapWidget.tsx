@@ -25,6 +25,7 @@ const WebMapWidget: React.FC<WebMapWidgetProps> = ({
   const portalEditingID: string[] = [];
   let portalExtentID: string | null = null;
   const allGroupLayer: GroupLayer[] = [];
+  const {setAllGroupLayers} = useMapContext();
   let countLayerLoad = 0;
   let countFeatAdd = 0;
   let mapImagePortalExtent: any = null;
@@ -149,11 +150,17 @@ const WebMapWidget: React.FC<WebMapWidgetProps> = ({
           webMap.add(groupLayer);
         }
       });
+
+      if(allGroupLayer.length > 0){
+        console.log("All Group Layers", allGroupLayer.length);
+        setAllGroupLayers(allGroupLayer);
+      }
     });
   };
 
   const queryLotKadasterLayer = async () => {
     try {
+      console.log("Querying Lot Kadaster layer");
       // Find the GroupLayer for Lot Kadaster
       const lotKadasterLayer = allGroupLayer.find(
         (layer) => layer.title === "Lot Kadaster"
@@ -164,63 +171,169 @@ const WebMapWidget: React.FC<WebMapWidgetProps> = ({
         return;
       }
 
-      let lotListing = [];
-      let daerahListing = [];
-      let mukimsListing = [];
+      let lotListing: any[] = [];
+      let daerahSet = new Set();
+      let mukimsSet = new Set();
 
-      // Iterate through all sublayers and query each one
-      for (let i = 0; i < lotKadasterLayer.layers.length; i++) {
-        const featureLayer = lotKadasterLayer.layers.getItemAt(
-          i
-        ) as FeatureLayer;
+      const featureLayerPromises = lotKadasterLayer.layers.map(async (featureLayer, i) => {
+        const layer = featureLayer as FeatureLayer;
 
-        if (!featureLayer) {
-          console.error(
-            `FeatureLayer not found within Lot Kadaster layer at index ${i}`
-          );
-          continue;
-        }
-
-        const resultLotList = await featureLayer.queryFeatures({
+        const resultLotList = await layer.queryFeatures({
           where: "1=1", // Modify this query as needed
-          outFields: ["*"], // Retrieve all fields
+          outFields: ["Nama_Mukim", "Nama_Daera", "No_Lot"], // Retrieve all fields
           returnGeometry: true, // Include geometry in the results
         });
-
         console.log(`Results for sublayer ${i}:`, resultLotList.features);
+        resultLotList.features.forEach((feature) => {
+          lotListing.push({attributes: feature.attributes, geometry: feature.geometry.toJSON()});
 
-        const lotList = resultLotList.features.map(
-          (feature) => feature.attributes
-        );
-        console.log(`Lot List for sublayer ${i}:`, lotList);
-        lotListing.push(lotList);
-        // setListOfLot((prevList) => [...prevList, ...lotList]);
+          mukimsSet.add(feature.attributes.Nama_Mukim);
+          daerahSet.add(feature.attributes.Nama_Daerah);
+        });
+      });
 
-        const mukimLists = resultLotList.features.map(
-          (feature) => feature.attributes.Nama_Mukim
-        );
-        const mukimListUnique = [...new Set(mukimLists)];
-        console.log(`Mukim List for sublayer ${i}:`, mukimListUnique);
-        mukimsListing.push(mukimListUnique);
-        // setListOfMukim(prevList) => [...prevList, ...mukimListUnique];);
+      await Promise.all(featureLayerPromises);
 
-        const daerahLists = resultLotList.features.map(
-          (feature) => feature.attributes.Nama_Daerah
-        );
-        const daerahListUnique = [...new Set(daerahLists)];
-        console.log(`Daerah List for sublayer ${i}:`, daerahListUnique);
-        daerahListing.push(daerahListUnique);
-        // setListOfDaerah(prevList) => [...prevList, ...daerahListUnique]);
-      }
-      console.log("Lot Listing:", lotListing.flat());
-      setListOfLot(lotListing.flat());
-      setListOfMukim(mukimsListing.flat());
-      setListOfDaerah(daerahListing.flat());
+      const mukimList: string[] = Array.from(mukimsSet) as string[];
+      const daerahList: string[] = Array.from(daerahSet) as string[];
+
+      // Log the results (optional)
+      console.log("Final Lot Listing:", lotListing);
+      console.log("Unique Mukims:", mukimList);
+      console.log("Unique Daerah:", daerahList);
+
+      // Update state once with the final listings
+      setListOfLot(lotListing);
+      setListOfMukim(mukimList);
+      setListOfDaerah(daerahList);
+
+      // Iterate through all sublayers and query each one
+      // for (let i = 0; i < lotKadasterLayer.layers.length; i++) {
+      //   const featureLayer = lotKadasterLayer.layers.getItemAt(
+      //     i
+      //   ) as FeatureLayer;
+
+      //   if (!featureLayer) {
+      //     console.error(
+      //       `FeatureLayer not found within Lot Kadaster layer at index ${i}`
+      //     );
+      //     continue;
+      //   }
+
+      //   const resultLotList = await featureLayer.queryFeatures({
+      //     where: "1=1", // Modify this query as needed
+      //     outFields: ["*"], // Retrieve all fields
+      //     returnGeometry: true, // Include geometry in the results
+      //   });
+
+      //   console.log(`Results for sublayer ${i}:`, resultLotList.features);
+
+      //   const lotList = resultLotList.features.map(
+      //     (feature) => feature.attributes
+      //   );
+      //   console.log(`Lot List for sublayer ${i}:`, lotList);
+      //   lotListing.push(lotList);
+      //   // setListOfLot((prevList) => [...prevList, ...lotList]);
+
+      //   const mukimLists = resultLotList.features.map(
+      //     (feature) => feature.attributes.Nama_Mukim
+      //   );
+      //   const mukimListUnique = [...new Set(mukimLists)];
+      //   console.log(`Mukim List for sublayer ${i}:`, mukimListUnique);
+      //   mukimsListing.push(mukimListUnique);
+      //   // setListOfMukim(prevList) => [...prevList, ...mukimListUnique];);
+
+      //   const daerahLists = resultLotList.features.map(
+      //     (feature) => feature.attributes.Nama_Daerah
+      //   );
+      //   const daerahListUnique = [...new Set(daerahLists)];
+      //   console.log(`Daerah List for sublayer ${i}:`, daerahListUnique);
+      //   daerahListing.push(daerahListUnique);
+      //   // setListOfDaerah(prevList) => [...prevList, ...daerahListUnique]);
+      // }
+      // console.log("Lot Listing:", lotListing.flat());
+      // setListOfLot(lotListing.flat());
+      // setListOfMukim(mukimsListing.flat());
+      // setListOfDaerah(daerahListing.flat());
     } catch (err) {
       console.error("Error querying Lot Kadaster:", err);
     }
   };
 
+  
+
+  // const queryLotKadasterLayer = async () => {
+  //   try {
+  //     // Find the GroupLayer for Lot Kadaster
+  //     const lotKadasterLayer = allGroupLayer.find(
+  //       (layer) => layer.title === "Lot Kadaster"
+  //     );
+  
+  //     if (!lotKadasterLayer) {
+  //       console.error("Lot Kadaster layer not found");
+  //       return;
+  //     }
+  
+  //     let lotListing: { attributes: any; geometry: any }[] = [];
+  //     let daerahListing: string[] = [];
+  //     let mukimsListing: string[] = [];
+  
+  //     // Iterate through all sublayers and query each one
+  //     for (let i = 0; i < lotKadasterLayer.layers.length; i++) {
+  //       const featureLayer = lotKadasterLayer.layers.getItemAt(i) as FeatureLayer;
+  
+  //       if (!featureLayer) {
+  //         console.error(`FeatureLayer not found within Lot Kadaster layer at index ${i}`);
+  //         continue;
+  //       }
+  
+  //       const resultLotList = await featureLayer.queryFeatures({
+  //         where: "1=1", // Modify this query as needed
+  //         outFields: ["*"], // Retrieve all fields
+  //         returnGeometry: true, // Include geometry in the results
+  //       });
+  
+  //       console.log(`Results for sublayer ${i}:`, resultLotList.features);
+  
+  //       // Loop through each feature and get its attributes and geometry
+  //       resultLotList.features.forEach((feature) => {
+  //         const lotAttributes = feature.attributes; // Access attributes (e.g., lot number, daerah, mukim)
+  //         const lotGeometry = feature.geometry; // Access geometry (polygon, etc.)
+  
+  //         console.log(`Lot Geometry for sublayer ${i}:`, lotGeometry);
+  //         lotListing.push({
+  //           attributes: lotAttributes,
+  //           geometry: lotGeometry.toJSON(), // Convert geometry to JSON format
+  //         });
+  
+  //         // Optional: Extract additional properties such as Daerah and Mukim
+  //         const mukim = lotAttributes.Nama_Mukim;
+  //         const daerah = lotAttributes.Nama_Daerah;
+  
+  //         mukimsListing.push(mukim);
+  //         daerahListing.push(daerah);
+  //       });
+  //     }
+  
+  //     // Remove duplicates from Daerah and Mukim listings
+  //     const uniqueMukims = [...new Set(mukimsListing)];
+  //     const uniqueDaerah = [...new Set(daerahListing)];
+  
+  //     // Log the results
+  //     console.log("Lot Listing with Geometry:", lotListing);
+  //     console.log("Unique Mukims:", uniqueMukims);
+  //     console.log("Unique Daerah:", uniqueDaerah);
+  
+  //     // Update state with the results
+  //     setListOfLot(lotListing); // Update the lot listing with geometry
+  //     setListOfMukim(uniqueMukims);
+  //     setListOfDaerah(uniqueDaerah);
+  
+  //   } catch (err) {
+  //     console.error("Error querying Lot Kadaster:", err);
+  //   }
+  // };
+  
   useEffect(() => {
     if (!mapDiv.current) return;
 

@@ -8,12 +8,14 @@ import dynamic from "next/dynamic";
 import { useMapContext } from "@/components/map/MapContext";
 import { IoPencilOutline } from "react-icons/io5";
 import { FaMagnifyingGlassLocation } from "react-icons/fa6";
-
+import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
 import { useTable } from "@/hooks/dashboard/useTable";
 import { useDashboard } from "@/hooks/dashboard/useDashboard";
 import TabContainer from "@/components/tab/TabContainer";
 import Tab from "@/components/tab/Tab";
+import Graphic from "@arcgis/core/Graphic";
 import { toast, Bounce } from "react-toastify";
+import  FeatureLayer  from "@arcgis/core/layers/FeatureLayer";
 
 const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
   ssr: false,
@@ -59,10 +61,10 @@ const BasemapWidget = dynamic(
 
 const DashboardPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const { lotNumber, setLotNumber, listOfLot, listOfMukim, listOfDaerah } =
+  const { lotNumber, setLotNumber, listOfLot, listOfMukim, listOfDaerah, allGroupLayers, mapView, graphicLayer } =
     useMapContext();
   const [filteredLotList, setFilteredLotList] = useState<any[]>([]);
-
+  
   const {
     handleRowSelect,
     handleSelectAll,
@@ -112,8 +114,8 @@ const DashboardPage = () => {
       console.log("Lot Number: ", lotNumber);
       const filtered = listOfLot.filter((item) => {
         return (
-          item.No_Lot &&
-          item.No_Lot.toLowerCase().includes(lotNumber.toLowerCase())
+          item.attributes.No_Lot &&
+          item.attributes.No_Lot.toLowerCase().includes(lotNumber.toLowerCase())
         );
       });
 
@@ -135,21 +137,54 @@ const DashboardPage = () => {
     }
   };
 
-  const handleZoomtoLayer = (lotNumber: string) => {
-    console.log("Zoom to layer", lotNumber);
-  };
-  // var findValue = (arrValue,field,fieldReturn,value)=>{
-  //   let dataReturn = [];
-  //   arrValue.forEach(element => {
-  //     if(element[field] == value){
-  //       dataReturn = element[fieldReturn];
-  //     }
-  //   });
-  //   return dataReturn;
-  // };
+  
 
-  // var geoms = findValue(arrValueDaerah,"value","geoms",value);
-  const { mapView } = useMapContext();
+  const handleZoomtoLayer = (rings: number[][][])  => {
+
+    if(!mapView) return;
+
+    console.log("Rings: ", rings);
+
+    if (rings && rings.length > 0) {
+      // Construct polygon geometry using the rings provided
+      const polygon = {
+        type: "polygon", // autocasts as new Polygon()
+        rings: rings,
+        spatialReference: { wkid: 4326 }, // Assuming your data is in WGS84 (wkid: 4326)
+      };
+
+      const fillSymbol = new SimpleFillSymbol({
+        color: [227, 139, 79, 0.8], // RGBA color
+        outline: {
+          color: [255, 255, 255],
+          width: 1,
+        },
+      });
+
+      // Create a graphic and add it to the graphic layer
+      const polygonGraphic = new Graphic({
+        geometry: polygon,
+        symbol: fillSymbol,
+      });
+  
+      graphicLayer.removeAll(); // Clear any existing graphics before adding a new one
+      graphicLayer.add(polygonGraphic);
+
+      // Zoom to the polygon geometry
+      mapView.goTo({
+        target: polygon,
+        zoom: 18, // Adjust zoom level based on your needs
+      }).catch((error) => {
+        console.error("Error zooming to the layer:", error);
+      });
+    } else {
+      console.error("Rings are not available for the selected lot");
+    }
+  };
+
+  
+  
+  
 
   return (
     <>
@@ -256,13 +291,14 @@ const DashboardPage = () => {
                           onChange={() => handleRowSelect(index)}
                         />
                       </td>
-                      <td className="py-4 px-4">{item.No_Lot}</td>
+                      <td className="py-4 px-4">{item.attributes.No_Lot}</td>
                       <td className="py-4 px-4 text-center">
-                        {item.Nama_Daerah}
+                        {item.attributes.Nama_Mukim}
                       </td>
                       <td className="py-4 px-4 text-center">
-                        {item.Nama_Mukim}
+                        {item.attributes.Nama_Daerah}
                       </td>
+                      
                       <td className="py-4 px-4 text-center">
                         <div className="flex items-center text-xl justify-center">
                           {/* <button
@@ -274,7 +310,7 @@ const DashboardPage = () => {
                           <button
                             className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
                             title="Zoom to Lot"
-                            onClick={() => handleZoomtoLayer(item.No_Lot)}
+                            onClick={() => handleZoomtoLayer(item.geometry?.rings)}
                           >
                             <FaMagnifyingGlassLocation />
                           </button>

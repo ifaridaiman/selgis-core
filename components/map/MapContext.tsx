@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 import MapView from "@arcgis/core/views/MapView";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import WebMap from "@arcgis/core/WebMap";
+import GroupLayer from "@arcgis/core/layers/GroupLayer";
 
 export type lotAttributes = {
   OBJECTID: number;
@@ -44,6 +45,8 @@ type MapContextType = {
   graphicLayer: GraphicsLayer;
   ciptaUlasanForm: CiptaUlasanFormType;
   setCiptaUlasanForm: (form: CiptaUlasanFormType) => void;
+  allGroupLayers: GroupLayer[]; // Add this to hold all group layers
+  setAllGroupLayers: React.Dispatch<React.SetStateAction<GroupLayer[]>>;
 
   // Add any other state you want to share across the components
 };
@@ -83,7 +86,12 @@ export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
     bahagian:"",
     ulasan:"",
     folderPath: "",
+    xMax: 0,
+    xMin: 0,
+    yMax: 0,
+    yMin: 0,
   })
+  const [allGroupLayers, setAllGroupLayers] = useState<GroupLayer[]>([]);
 
   const zoomToDaerah = (daerah: string) => {
     if (mapView) {
@@ -131,7 +139,9 @@ export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
         zoomToDaerah,
         graphicLayer,
         ciptaUlasanForm,
-        setCiptaUlasanForm
+        setCiptaUlasanForm,
+        allGroupLayers,
+        setAllGroupLayers
       }}
     >
       {children}
