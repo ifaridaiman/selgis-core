@@ -180,7 +180,7 @@ const WebMapWidget: React.FC<WebMapWidgetProps> = ({
 
         const resultLotList = await layer.queryFeatures({
           where: "1=1", // Modify this query as needed
-          outFields: ["Nama_Mukim", "Nama_Daera", "No_Lot"], // Retrieve all fields
+          outFields: ["*"], // Retrieve all fields
           returnGeometry: true, // Include geometry in the results
         });
         console.log(`Results for sublayer ${i}:`, resultLotList.features);

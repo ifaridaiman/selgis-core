@@ -59,19 +59,35 @@ const BasemapWidget = dynamic(
   }
 );
 
+import { senaraiDaerahKodMukim } from "@/contents/fieldInput";
+import Polygon from "@arcgis/core/geometry/Polygon";
+
+
 const DashboardPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selectedDaerah, setSelectedDaerah] = useState("");
+  const [filteredMukim, setFilteredMukim] = useState<{ kodMukim: string; namaMukim: string }[]>([]);
   const { lotNumber, setLotNumber, listOfLot, listOfMukim, listOfDaerah, allGroupLayers, mapView, graphicLayer } =
     useMapContext();
   const [filteredLotList, setFilteredLotList] = useState<any[]>([]);
   
+  const handleChangeDaerah = (e: React.FormEvent<HTMLSelectElement>) => {
+    const selected = (e.target as HTMLSelectElement).value;
+    setSelectedDaerah(selected);
+
+    const daerahData = senaraiDaerahKodMukim.find((daerah) => daerah.daerah === selected);
+
+    setFilteredMukim(daerahData ? daerahData.senaraiMukim : []);
+    
+  };
+
   const {
     handleRowSelect,
     handleSelectAll,
     selectedRows,
     handlePaginatedData,
   } = useTable();
-  const { handleChangeDaerah } = useDashboard();
+  // const { handleChangeDaerah } = useDashboard();
 
   let mapData = [];
   try {
@@ -147,11 +163,10 @@ const DashboardPage = () => {
 
     if (rings && rings.length > 0) {
       // Construct polygon geometry using the rings provided
-      const polygon = {
-        type: "polygon", // autocasts as new Polygon()
+      const polygon = new Polygon( {
         rings: rings,
-        spatialReference: { wkid: 4326 }, // Assuming your data is in WGS84 (wkid: 4326)
-      };
+        spatialReference: { wkid: 3857 }, // Assuming your data is in WGS84 (wkid: 4326)
+      });
 
       const fillSymbol = new SimpleFillSymbol({
         color: [227, 139, 79, 0.8], // RGBA color
@@ -171,10 +186,7 @@ const DashboardPage = () => {
       graphicLayer.add(polygonGraphic);
 
       // Zoom to the polygon geometry
-      mapView.goTo({
-        target: polygon,
-        zoom: 18, // Adjust zoom level based on your needs
-      }).catch((error) => {
+      mapView.goTo(polygon.extent).catch((error) => {
         console.error("Error zooming to the layer:", error);
       });
     } else {
@@ -230,11 +242,20 @@ const DashboardPage = () => {
                 onChange={handleChangeDaerah}
               >
                 <option value="">-- Pilih Daerah --</option>
-                {listOfDaerah.map((item, index) => (
-                  <option key={index} value={item}>
-                    {item}
-                  </option>
-                ))}
+                {senaraiDaerahKodMukim.map(
+                  (daerah: {
+                    daerah: string;
+                    kodDaerah: string;
+                    senaraiMukim: {
+                      kodMukim: string;
+                      namaMukim: string;
+                    }[];
+                  }) => (
+                    <option key={daerah.daerah} value={daerah.daerah}>
+                      {daerah.daerah}
+                    </option>
+                  )
+                )}
               </select>
             </div>
             <div className="mb-4">
@@ -244,9 +265,9 @@ const DashboardPage = () => {
                 className="border border-gray-300 rounded-md px-4 py-2 w-full"
               >
                 <option value="">-- Pilih Mukim --</option>
-                {listOfMukim.map((item, index) => (
-                  <option key={index} value={item}>
-                    {item}
+                {filteredMukim.map((mukim, index) => (
+                  <option key={index} value={mukim.namaMukim}>
+                    {mukim.namaMukim}
                   </option>
                 ))}
               </select>
@@ -296,7 +317,7 @@ const DashboardPage = () => {
                         {item.attributes.Nama_Mukim}
                       </td>
                       <td className="py-4 px-4 text-center">
-                        {item.attributes.Nama_Daerah}
+                        {item.attributes.Nama_Daerah || item.attributes.Nama_Daera}
                       </td>
                       
                       <td className="py-4 px-4 text-center">
@@ -314,12 +335,12 @@ const DashboardPage = () => {
                           >
                             <FaMagnifyingGlassLocation />
                           </button>
-                          <button
+                          {/* <button
                             className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
                             title="Update Item"
                           >
                             <IoPencilOutline />
-                          </button>
+                          </button> */}
 
                           {/* <button
                         className='p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full'
