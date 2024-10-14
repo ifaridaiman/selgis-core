@@ -19,6 +19,10 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
 
   let kordinatX = "";
   let kordinatY = "";
+  let xmin = 0;
+  let ymin = 0;
+  let xmax = 0;
+  let ymax = 0;
 
   useEffect(() => {
     if (!drawDiv.current && mapView) {
@@ -47,6 +51,8 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
 
           // Calculate the centroid of the polygon
           const centroid = event.graphic.geometry.extent.center;
+          const polygon = event.graphic.geometry as __esri.Polygon;
+          const extent = polygon.extent;
 
           // Create a text symbol to label the polygon
           const textSymbol = new TextSymbol({
@@ -71,6 +77,11 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
 
           graphicLayer.add(labelGraphic);
 
+          xmin = extent.xmin;
+          ymin = extent.ymin;
+          xmax = extent.xmax;
+          ymax = extent.ymax;
+
           if (centroid.spatialReference.wkid !== 4326) {
             const centroidWGS84 =
               webMercatorUtils.webMercatorToGeographic(centroid);
@@ -87,11 +98,20 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
               kordinatX: kordinatX,
               kordinatY: kordinatY,
               tajukProjek: "", // Assuming tajukProjek is set elsewhere
+              jenisPermohonan: "", // Assuming jenisPermohonan is set elsewhere
+              noFail: "", // Assuming noFail is set elsewhere
+              status: "", // Assuming status is set elsewhere
+              bahagian: "", // Assuming bahagian is set elsewhere
+              ulasan: "", // Assuming ulasan is set elsewhere
+              folderPath: "", // Assuming folderPath is set elsewhere
+              xMin: xmin,
+              yMin: ymin,
+              xMax: xmax,
+              yMax: ymax,
             });
           }
 
           // Log the polygon's geometry and rings to the console
-          const polygon = event.graphic.geometry as __esri.Polygon;
           console.log("Polygon Drawn:", {
             geometry: polygon.toJSON(),
             rings: polygon.rings,
@@ -132,12 +152,22 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
               graphicHit.graphic.attributes.label = newLabel;
 
               setCiptaUlasanForm({
-                lotNumber: newLabel, // Set the updated label as the lotNumber field
-                daerah: "", // Assuming daerah is set elsewhere
-                mukim: "", // Assuming mukim is set elsewhere
-                kordinatX: kordinatX, // Re-use the previously set coordinate
-                kordinatY: kordinatY, // Re-use the previously set coordinate
-                tajukProjek: "", // Assuming tajukProjek is set elsewhere
+                lotNumber: "", // Keep this empty initially
+              daerah: "", // Assuming daerah is set elsewhere
+              mukim: "", // Assuming mukim is set elsewhere
+              kordinatX: kordinatX,
+              kordinatY: kordinatY,
+              tajukProjek: "", // Assuming tajukProjek is set elsewhere
+              jenisPermohonan: "", // Assuming jenisPermohonan is set elsewhere
+              noFail: "", // Assuming noFail is set elsewhere
+              status: "", // Assuming status is set elsewhere
+              bahagian: "", // Assuming bahagian is set elsewhere
+              ulasan: "", // Assuming ulasan is set elsewhere
+              folderPath: "", // Assuming folderPath is set elsewhere
+              xMin: xmin,
+              yMin: ymin,
+              xMax: xmax,
+              yMax: ymax,
               });
 
               console.log("Sketch Info:", {

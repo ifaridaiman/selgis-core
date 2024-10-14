@@ -23,6 +23,10 @@ export type CiptaUlasanFormType = {
   bahagian: string;
   ulasan: string;
   folderPath: string;
+  xMin?: number;
+  xMax?: number;
+  yMin?: number;
+  yMax?: number;
 };
 
 type MapContextType = {
