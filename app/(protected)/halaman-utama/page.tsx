@@ -371,6 +371,22 @@ const DashboardPage = () => {
           />
         </Tab>
         <Tab label="Jadual Ulasan">
+        <table className="w-full">
+      <thead>
+        <tr>
+          <th className="rounded-tl-xl bg-gray-300">
+            <input type="checkbox" />
+          </th>
+          <th className="py-4 px-4 bg-gray-300 text-left">Nama Projek</th>
+          <th className="py-4 px-4 bg-gray-300">Jenis Permohonan</th>
+          <th className="py-4 px-4 bg-gray-300">Daerah</th>
+          <th className="py-4 px-4 bg-gray-300">Mukim</th>
+          <th className="py-4 px-4 bg-gray-300">Bahagian</th>
+          <th className="py-4 px-4 bg-gray-300">Status</th>
+          <th className="py-4 px-4 bg-gray-300 rounded-tr-xl">Action</th>
+        </tr>
+      </thead>
+      </table>
           <JadualUlasanTable />
         </Tab>
       </TabContainer>
