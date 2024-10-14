@@ -34,8 +34,8 @@ async function main() {
     //         }
     //     }
     // });
-
-    console.log("Seeded projek with ulasans:", projek);
+    console.log("test abcs")
+    // console.log("Seeded projek with ulasans:", projek);
 }
 
 main()
