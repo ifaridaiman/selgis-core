@@ -171,7 +171,7 @@ const UlasanTeknikalPage = () => {
                 </div>
                 <form onSubmit={handleFormCiptaUlasan}>
                   <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
                       <label
                         className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         htmlFor="tajukProjek"
@@ -190,7 +190,7 @@ const UlasanTeknikalPage = () => {
                     </div>
                   </div>
                   <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
                       <div>
                         <label
                           className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
@@ -223,7 +223,7 @@ const UlasanTeknikalPage = () => {
                     </div>
                   </div>
                   <div className="">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start">
+                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start mb-4">
                       <label
                         className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         htmlFor="kordinatX"
@@ -242,7 +242,7 @@ const UlasanTeknikalPage = () => {
                     </div>
                   </div>
                   <div className="">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start">
+                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-starts mb-4">
                       <label
                         className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         htmlFor="kordinatY"
@@ -261,7 +261,7 @@ const UlasanTeknikalPage = () => {
                     </div>
                   </div>
                   <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
                       <label
                         className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         htmlFor="lotNumber"
@@ -280,7 +280,7 @@ const UlasanTeknikalPage = () => {
                     </div>
                   </div>
                   <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
                       <label
                         className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         htmlFor="daerah"
@@ -314,7 +314,7 @@ const UlasanTeknikalPage = () => {
                     </div>
                   </div>
                   <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
                       <label
                         className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         htmlFor="mukim"
@@ -339,7 +339,7 @@ const UlasanTeknikalPage = () => {
                     </div>
                   </div>
                   <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
                       <label
                         className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         htmlFor="bahagian"
@@ -364,7 +364,7 @@ const UlasanTeknikalPage = () => {
                     </div>
                   </div>
                   <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5  mb-4">
                       <label
                         className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         htmlFor="jenisPermohonan"
@@ -390,7 +390,7 @@ const UlasanTeknikalPage = () => {
                     </div>
                   </div>
                   <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
                       <label
                         className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         htmlFor="noFail"
@@ -408,7 +408,7 @@ const UlasanTeknikalPage = () => {
                     </div>
                   </div>
                   <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
                       <label
                         className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         htmlFor="status"
@@ -434,7 +434,7 @@ const UlasanTeknikalPage = () => {
                   </div>
 
                   <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
                       <label
                         className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         htmlFor="ulasan"
