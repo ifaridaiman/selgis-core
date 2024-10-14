@@ -12,6 +12,11 @@ const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
   ),
 });
 
+const SearchCoordinate = dynamic(() => import("@/components/map/widget/SearchCoordinate"), {
+  ssr: false,
+  loading: () => <p>Loading...</p>,
+});
+
 const HomeWidget = dynamic(() => import("@/components/map/widget/HomeWidget"), {
   ssr: false,
   loading: () => <p>Loading...</p>,
@@ -202,7 +207,7 @@ const UlasanTeknikalPage = () => {
                           Sketch untuk mendapatkan kordinat
                         </div>
                       </div>
-                      <div className="mt-1 sm:self-center flex items-center">
+                      <div className="mt-1 sm:self-center flex items-center md:w-[50rem]">
                         <div className="w-full md:h-[30rem] border border-gray-400">
                           <MapContainer mapData={mapData}>
                             {mapView && <HomeWidget mapView={mapView} />}
@@ -216,7 +221,7 @@ const UlasanTeknikalPage = () => {
                             )}
                             {mapView && <BasemapWidget mapView={mapView} />}
                             {mapView && <DrawWidget mapView={mapView} />}
-                            {/* {mapView && <SearchCoordinate mapView={mapView} />} */}
+                            {mapView && <SearchCoordinate mapView={mapView} />}
                           </MapContainer>
                         </div>
                       </div>
