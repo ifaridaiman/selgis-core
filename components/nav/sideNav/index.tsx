@@ -2,6 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 import { IoIosLogOut } from "react-icons/io";
 import { VscPreview } from "react-icons/vsc";
+import { TfiDashboard } from "react-icons/tfi";
 import { useLogout } from '@/hooks/auth/useLogout';
 import { useNav } from '@/hooks/useNav';
 
@@ -29,6 +30,10 @@ const   SideNav:React.FC = () => {
             <div onClick={handleDashboard} className="flex items-center cursor-pointer text-white mb-4 gap-4 text-base hover:bg-black hover:rounded-lg transition-all duration-300 ease-in-out py-2 px-4">
               <span className='text-xl'><VscPreview/></span>
               <span className='text-base'>Halaman Utama</span>
+            </div>
+            <div className="flex items-center cursor-pointer text-white mb-4 gap-4 text-base hover:bg-black hover:rounded-lg transition-all duration-300 ease-in-out py-2 px-4">
+              <span className='text-xl'><TfiDashboard/></span>
+              <span className='text-base'>Dashboard</span>
             </div>
             {/* <div onClick={handleUlasanTeknikal} className="flex items-center cursor-pointer text-white mb-4 gap-4 text-base hover:bg-black hover:rounded-lg transition-all duration-300 ease-in-out py-2 px-4">
               <span className='text-xl'><VscPreview/></span>
