@@ -62,7 +62,6 @@ export const POST = async (request: NextRequest) => {
             }
         });
 
-
         return NextResponse.json(newProjek);
     } catch (err) {
         console.error('Error creating projek and ulasans:', err);
