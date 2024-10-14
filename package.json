@@ -6,20 +6,7 @@
     "dev": "next dev --experimental-https",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "postinstall": "prisma migrate deploy"
-  },
-  "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
-  },
-  "build": {
-    "env": {
-      "SKIP_PRISMA": "true"
-    },
-    "ignore": [
-      "node_modules/@prisma/client",
-      "prisma"
-    ]
+    "lint": "next lint"
   },
   "dependencies": {
     "@arcgis/core": "^4.29.10",
