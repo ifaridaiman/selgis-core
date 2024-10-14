@@ -62,7 +62,7 @@ const UlasanTeknikalPage = () => {
   const [filteredJenisPermohonan, setFilteredJenisPermohonan] = useState<{ label: string; value: string }[]>([]);
   const [filteredStatus, setFilteredStatus] = useState<{ label: string; value: string }[]>([]);
 
-  const { mapView, ciptaUlasanForm, setCiptaUlasanForm } = useMapContext();
+  const { mapView, ciptaUlasanForm, setCiptaUlasanForm, lotNumber, setLotNumber, listOfLot, listOfMukim, listOfDaerah } = useMapContext();
 
   const handleChangeDaerah = (e: React.FormEvent<HTMLSelectElement>) => {
     const selected = (e.target as HTMLSelectElement).value;
@@ -176,7 +176,7 @@ const UlasanTeknikalPage = () => {
                         className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         htmlFor="tajukProjek"
                       >
-                        {`Nama Project`} <span className="text-red-500">*</span>
+                        {`Nama Projek`} <span className="text-red-500">*</span>
                       </label>{" "}
                       <div className="mt-1 sm:self-center flex items-center">
                         <input
@@ -196,7 +196,7 @@ const UlasanTeknikalPage = () => {
                           className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                           htmlFor="location"
                         >
-                          {`Location`} <span className="text-red-500">*</span>
+                          {`Lokasi Lot`} <span className="text-red-500">*</span>
                         </label>{" "}
                         <div className="mt-1 text-sm text-gray-500">
                           Sketch untuk mendapatkan kordinat

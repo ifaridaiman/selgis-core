@@ -152,7 +152,7 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
               graphicHit.graphic.attributes.label = newLabel;
 
               setCiptaUlasanForm({
-                lotNumber: "", // Keep this empty initially
+                lotNumber: newLabel, // Keep this empty initially
               daerah: "", // Assuming daerah is set elsewhere
               mukim: "", // Assuming mukim is set elsewhere
               kordinatX: kordinatX,
