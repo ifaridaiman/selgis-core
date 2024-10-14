@@ -5,7 +5,9 @@ import Expand from "@arcgis/core/widgets/Expand";
 import Graphic from "@arcgis/core/Graphic";
 import TextSymbol from "@arcgis/core/symbols/TextSymbol";
 import { useMapContext } from "../MapContext";
-import { set } from "react-hook-form";
+import * as webMercatorUtils from "@arcgis/core/geometry/support/webMercatorUtils.js";
+import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+import Query from "@arcgis/core/rest/support/Query";
 
 type DrawWidgetProps = {
   mapView: MapView;
@@ -29,18 +31,20 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
       drawDiv.current = new Sketch({
         view: mapView,
         layer: graphicLayer,
-        tooltipOptions: {},
         availableCreateTools: ["polygon", "point"],
+        creationMode: "update",
       });
 
-      drawDiv.current.on("create", (event) => {
+      drawDiv.current.on("create", async (event) => {
         if (
           event.state === "complete" &&
           event.graphic.geometry.type === "polygon"
         ) {
+
           console.log("Polygon Drawn:", event.graphic.geometry.toJSON());
 
           console.log("graphicLayer", graphicLayer);
+
           // Calculate the centroid of the polygon
           const centroid = event.graphic.geometry.extent.center;
 
@@ -67,17 +71,24 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
 
           graphicLayer.add(labelGraphic);
 
-           kordinatX = centroid.x.toString();
-           kordinatY = centroid.y.toString();
+          if (centroid.spatialReference.wkid !== 4326) {
+            const centroidWGS84 =
+              webMercatorUtils.webMercatorToGeographic(centroid);
+            const centroidWGS84Json = centroidWGS84.toJSON();
+            console.log("Centroid WGS84:", centroidWGS84.toJSON());
+            console.log("Centroid WGS84 X:", centroidWGS84Json.x);
+            kordinatX = centroidWGS84Json.x;
+            kordinatY = centroidWGS84Json.y;
 
-          setCiptaUlasanForm({
-            noLot: "", // Keep this empty initially
-            daerah: "", // Assuming daerah is set elsewhere
-            mukim: "",  // Assuming mukim is set elsewhere
-            kordinatX: kordinatX,
-            kordinatY: kordinatY,
-            tajukProjek: "", // Assuming tajukProjek is set elsewhere
-          });
+            setCiptaUlasanForm({
+              lotNumber: "", // Keep this empty initially
+              daerah: "", // Assuming daerah is set elsewhere
+              mukim: "", // Assuming mukim is set elsewhere
+              kordinatX: kordinatX,
+              kordinatY: kordinatY,
+              tajukProjek: "", // Assuming tajukProjek is set elsewhere
+            });
+          }
 
           // Log the polygon's geometry and rings to the console
           const polygon = event.graphic.geometry as __esri.Polygon;
@@ -121,9 +132,9 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
               graphicHit.graphic.attributes.label = newLabel;
 
               setCiptaUlasanForm({
-                noLot: newLabel, // Set the updated label as the noLot field
-                daerah: "",  // Assuming daerah is set elsewhere
-                mukim: "",   // Assuming mukim is set elsewhere
+                lotNumber: newLabel, // Set the updated label as the lotNumber field
+                daerah: "", // Assuming daerah is set elsewhere
+                mukim: "", // Assuming mukim is set elsewhere
                 kordinatX: kordinatX, // Re-use the previously set coordinate
                 kordinatY: kordinatY, // Re-use the previously set coordinate
                 tajukProjek: "", // Assuming tajukProjek is set elsewhere

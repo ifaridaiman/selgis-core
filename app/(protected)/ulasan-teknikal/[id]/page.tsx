@@ -2,8 +2,7 @@
 import Modal from "@/components/modal";
 import React, { useState, useEffect } from "react";
 import { RiFunctionAddLine } from "react-icons/ri";
-import { Table } from "@/components/table/Table";
-import { TablePaginate } from "@/components/table/TablePaginate";
+
 import { BiLayerPlus } from "react-icons/bi";
 import dynamic from "next/dynamic";
 import { useMapContext } from "@/components/map/MapContext";

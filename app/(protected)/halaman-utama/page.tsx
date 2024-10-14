@@ -1,30 +1,18 @@
 "use client";
-import Modal from "@/components/modal";
+import JadualUlasanTable from "@/features/halamanUtama/jadualUlasan";
 import React, { useState, useEffect } from "react";
-import { RiFunctionAddLine } from "react-icons/ri";
 import Link from "next/link";
-import { UrusanTeknikalMock } from "@/mock/urusanTeknikal.mock";
-import { Table } from "@/components/table/Table";
-import { TableHeader } from "@/components/table/TableHeader";
-import TableRow from "@/components/table/TableRow";
 import { TablePaginate } from "@/components/table/TablePaginate";
 import { BiLayerPlus } from "react-icons/bi";
 import dynamic from "next/dynamic";
 import { useMapContext } from "@/components/map/MapContext";
-import {
-  IoTrashBinOutline,
-  IoPencilOutline,
-  IoDocumentAttachOutline,
-} from "react-icons/io5";
+import { IoPencilOutline } from "react-icons/io5";
 import { FaMagnifyingGlassLocation } from "react-icons/fa6";
 
 import { useTable } from "@/hooks/dashboard/useTable";
 import { useDashboard } from "@/hooks/dashboard/useDashboard";
-import { useNewProjek } from "@/hooks/dashboard/useNewProjek";
 import TabContainer from "@/components/tab/TabContainer";
 import Tab from "@/components/tab/Tab";
-import { MdOutlineDocumentScanner } from "react-icons/md";
-import { useNav } from "@/hooks/useNav";
 import { toast, Bounce } from "react-toastify";
 
 const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
@@ -74,11 +62,7 @@ const DashboardPage = () => {
   const { lotNumber, setLotNumber, listOfLot, listOfMukim, listOfDaerah } =
     useMapContext();
   const [filteredLotList, setFilteredLotList] = useState<any[]>([]);
-  const [showDaftarProject, setShowDaftarProject] = useState<boolean>(false);
 
-  const { handleSampleDocument } = useNav();
-
-  const { nextStep, prevStep, currentStep } = useNewProjek();
   const {
     handleRowSelect,
     handleSelectAll,
@@ -95,37 +79,13 @@ const DashboardPage = () => {
   }
 
   useEffect(() => {
-    // if (lotNumber) {
-    //   const filtered = listOfLot.filter((item) => {
-    //     return (
-    //       item.No_Lot &&
-    //       item.No_Lot.toLowerCase().includes(lotNumber.toLowerCase())
-    //     );
-    //   });
-
-    //   console.log("Filtered: ",filtered.length);
-    //   if(filtered.length == 0){
-    //     toast.error('Rekod tidak ditemui', {
-    //       position: "top-right",
-    //       autoClose: 5000,
-    //       hideProgressBar: false,
-    //       closeOnClick: true,
-    //       pauseOnHover: true,
-    //       draggable: true,
-    //       progress: undefined,
-    //       theme: "colored",
-    //       transition: Bounce,
-    //       });
-    //   }
-
-    //   setFilteredLotList(filtered);
-    // } else {
     setFilteredLotList(listOfLot);
-    // }
     setCurrentPage(1); // Reset to the first page on new search
   }, [lotNumber, listOfLot]);
 
   const paginatedData = handlePaginatedData(filteredLotList, currentPage);
+
+  // const ulasanData = handlePaginatedData(ulasanDataFetch, currentPage);
 
   const handleNextPage = () => {
     if (currentPage < paginatedData.totalPages) {
@@ -157,8 +117,8 @@ const DashboardPage = () => {
         );
       });
 
-      if(filtered.length == 0){
-        toast.error('Rekod tidak ditemui', {
+      if (filtered.length == 0) {
+        toast.error("Rekod tidak ditemui", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -168,7 +128,7 @@ const DashboardPage = () => {
           progress: undefined,
           theme: "colored",
           transition: Bounce,
-          });
+        });
       }
 
       setFilteredLotList(filtered);
@@ -268,7 +228,7 @@ const DashboardPage = () => {
       </div>
       <TabContainer>
         <Tab label="Jadual Carian">
-          <Table>
+          <table className="w-full">
             <thead>
               <tr>
                 <th className="rounded-tl-xl bg-gray-300">
@@ -345,7 +305,7 @@ const DashboardPage = () => {
                 </tr>
               )}
             </tbody>
-          </Table>
+          </table>
           <TablePaginate
             currentPage={paginatedData.currentPage}
             totalPages={paginatedData.totalPages}
@@ -354,93 +314,7 @@ const DashboardPage = () => {
           />
         </Tab>
         <Tab label="Jadual Ulasan">
-          <Table>
-            <thead>
-              <tr>
-                <th className="rounded-tl-xl bg-gray-300">
-                  <input type="checkbox" onChange={handleSelectAllChange} />
-                </th>
-                <th className="py-4 px-4 bg-gray-300 text-left">Nama Projek</th>
-                <th className="py-4 px-4 bg-gray-300">Jenis Permohonan</th>
-                <th className="py-4 px-4 bg-gray-300">Daerah</th>
-                <th className="py-4 px-4 bg-gray-300">Mukim</th>
-                <th className="py-4 px-4 bg-gray-300">Status</th>
-                <th className="py-4 px-4 bg-gray-300 rounded-tr-xl">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginatedData ? (
-                paginatedData.data.map((item: any, index: number) => {
-                  const isChecked = selectedRows.includes(index);
-                  return (
-                    <tr
-                      key={index}
-                      className="border-b border-gray-300 odd:bg-white even:bg-gray-100"
-                    >
-                      <td className="text-center">
-                        <input
-                          type="checkbox"
-                          checked={isChecked}
-                          onChange={() => handleRowSelect(index)}
-                        />
-                      </td>
-                      <td className="py-4 px-4">{"nama projek"}</td>
-                      <td className="py-4 px-4 text-center">
-                        {"jenis permohonan"}
-                      </td>
-                      <td className="py-4 px-4 text-center">
-                        {item.Nama_Daerah}
-                      </td>
-                      <td className="py-4 px-4 text-center">
-                        {item.Nama_Mukim}
-                      </td>
-                      <td>{item.geometry}</td>
-
-                      <td className="py-4 px-4 text-center">{"status"}</td>
-                      <td className="py-4 px-4 text-center">
-                        <div className="flex items-center text-xl justify-center">
-                          <button
-                            className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
-                            title="Open Report"
-                            onClick={() => handleSampleDocument()}
-                          >
-                            <MdOutlineDocumentScanner />
-                            {item.geometry}
-                          </button>
-                          <button
-                            className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
-                            title="Delete Item"
-                          >
-                            <IoTrashBinOutline />
-                          </button>
-                          <button
-                            className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
-                            title="Update Item"
-                          >
-                            <IoPencilOutline />
-                          </button>
-
-                          {/* <button
-                        className='p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full'
-                        onClick={() => openModalAttachment(item.namaPemaju)}
-                        title='Project File Attachment'
-                      >
-                        <IoDocumentAttachOutline />
-                      </button> */}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td colSpan={4} className="text-center py-4">
-                    No data available
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </Table>
+          <JadualUlasanTable />
         </Tab>
       </TabContainer>
     </>

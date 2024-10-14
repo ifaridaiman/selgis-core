@@ -11,12 +11,18 @@ export type lotAttributes = {
 };
 
 export type CiptaUlasanFormType = {
-  noLot: string;
+  lotNumber: string;
   daerah: string;
   mukim: string;
   kordinatX: string;
   kordinatY: string;
   tajukProjek: string;
+  jenisPermohonan: string;
+  noFail: string;
+  status: string;
+  bahagian: string;
+  ulasan: string;
+  folderPath: string;
 };
 
 type MapContextType = {
@@ -61,12 +67,18 @@ export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
   const [listOfLot, setListOfLot] = useState<lotAttributes[]>([]);
   const [listOfDaerah, setListOfDaerah] = useState<string[]>([]);
   const [ciptaUlasanForm, setCiptaUlasanForm] = useState<CiptaUlasanFormType>({
-    noLot: "",
+    lotNumber: "",
     daerah: "",
     mukim: "",
     kordinatX: "",
     kordinatY: "",
     tajukProjek: "",
+    jenisPermohonan:"",
+    noFail:"",
+    status:"",
+    bahagian:"",
+    ulasan:"",
+    folderPath: "",
   })
 
   const zoomToDaerah = (daerah: string) => {

@@ -14,7 +14,6 @@ const MeasureWidget:React.FC<MeasureWidgetProps> = ({mapView}) => {
         if (!measureDiv.current && mapView) {
             measureDiv.current = new Measurement({
                 view: mapView,
-                activeTool: 'distance',
             })
 
             const measureExpand = new Expand({
@@ -24,6 +23,16 @@ const MeasureWidget:React.FC<MeasureWidgetProps> = ({mapView}) => {
                 expanded: false,
                 content: measureDiv.current,
                 group: "expandable-widgets"
+            });
+
+            measureExpand.watch("expanded", (isExpanded) => {
+                if (isExpanded) {
+                    if (measureDiv.current) {
+                        measureDiv.current.activeTool = 'distance'; // Activate the distance tool on expansion
+                    }
+                } else {
+                    measureDiv.current?.clear(); // Optional: Clear any active measurements
+                }
             });
             mapView.ui.add(measureExpand, 'top-left')
         }

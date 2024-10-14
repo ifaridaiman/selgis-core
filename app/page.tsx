@@ -28,6 +28,8 @@ export default function Home() {
     const result = await authService.login(data.username, data.password);
     setIsLoading(false);
     if (result.token) {
+      toast.success("Login successful");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       router.push("/halaman-utama");
     } else {
       toast.error(result.error || "Login failed. Please try again.");

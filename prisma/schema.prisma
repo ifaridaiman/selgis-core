@@ -15,17 +15,22 @@ datasource db {
 
 model Projek{
   id String @id @default(uuid())
-  lotNumber Int
+  lotNumber String
   daerah String
   mukim String
-  koordinat_x String
-  koordinat_y String
+  koordinat_x Float
+  koordinat_y Float
+  xMin Float
+  yMin Float
+  xMax Float
+  yMax Float
   tajukProjek String
   jenisPermohonan String
   noFail String
   status String
   bahagian String
   ulasans Ulasan[]
+
 
 }
 

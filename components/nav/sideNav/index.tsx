@@ -7,6 +7,7 @@ import { useNav } from '@/hooks/useNav';
 
 const   SideNav:React.FC = () => {
   const {handleDashboard, handleUlasanTeknikal} = useNav();
+  const {handleLogout} = useLogout();
   return (
     <div className="bg-blue-600 text-white p-4 min-h-screen flex flex-col fixed top-0 left-0 ">
         {/* Logo Section */}
@@ -27,7 +28,7 @@ const   SideNav:React.FC = () => {
           <div>
             <div onClick={handleDashboard} className="flex items-center cursor-pointer text-white mb-4 gap-4 text-base hover:bg-black hover:rounded-lg transition-all duration-300 ease-in-out py-2 px-4">
               <span className='text-xl'><VscPreview/></span>
-              <span className='text-base'>Dashboard</span>
+              <span className='text-base'>Halaman Utama</span>
             </div>
             {/* <div onClick={handleUlasanTeknikal} className="flex items-center cursor-pointer text-white mb-4 gap-4 text-base hover:bg-black hover:rounded-lg transition-all duration-300 ease-in-out py-2 px-4">
               <span className='text-xl'><VscPreview/></span>
@@ -37,7 +38,8 @@ const   SideNav:React.FC = () => {
 
           {/* Logout Section */}
           <div className="mt-auto">
-            <button className="bg-white text-black text-base py-2 px-4 rounded w-full flex items-center justify-center gap-4">
+            <button className="bg-white text-black text-base py-2 px-4 rounded w-full flex items-center justify-center gap-4"
+            onClick={handleLogout}>
               <span className='text-black '><IoIosLogOut/></span>
               Log Keluar
             </button>
