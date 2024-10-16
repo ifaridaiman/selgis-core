@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from "react";
 import { MdCopyAll } from "react-icons/md";
+import { toast } from "react-toastify";
 
 const DsmCalculator = () => {
   const [latitudeDegrees, setLatitudeDegrees] = useState("");
@@ -37,7 +38,7 @@ const DsmCalculator = () => {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    alert(`Copied: ${text}`);
+    toast.success(`Copied: ${text}`);
   };
 
   return (
