@@ -126,13 +126,33 @@ const DashboardPage = () => {
     console.log("Form Carian Submit");
     const form = e.target as HTMLFormElement;
     let lotNumber = form.lotNumber.value;
+    let daerah = form.daerah.value;
+    let mukim = form.mukim.value;
     if (lotNumber && lotNumber.length > 0) {
       console.log("Lot Number: ", lotNumber);
       const filtered = listOfLot.filter((item) => {
-        return (
-          item.attributes.No_Lot &&
-          item.attributes.No_Lot.toLowerCase().includes(lotNumber.toLowerCase())
-        );
+        // Start with filtering by Lot Number if it's provided
+        let matchesLot = lotNumber && lotNumber.length > 0
+        ? item.attributes.No_Lot && item.attributes.No_Lot.toLowerCase().includes(lotNumber.toLowerCase())
+        : true;
+
+        // If Daerah is provided, also filter by Daerah
+        let matchesDaerah = daerah && daerah.length > 0
+          ? item.attributes.Daerah && item.attributes.Daerah.toLowerCase().includes(daerah.toLowerCase())
+          : true;
+
+        // If Mukim is provided, also filter by Mukim
+        let matchesMukim = mukim && mukim.length > 0
+          ? item.attributes.Mukim && item.attributes.Mukim.toLowerCase().includes(mukim.toLowerCase())
+          : true;
+        
+        // If only Daerah is provided (without lotNumber), allow matching only by Daerah
+        if (!lotNumber && daerah && daerah.length > 0 && !mukim) {
+          return matchesDaerah;
+        }
+
+        // Return true if all provided conditions match
+        return matchesLot && matchesDaerah && matchesMukim;
       });
 
       if (filtered.length == 0) {

@@ -4,6 +4,9 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useMapContext } from "@/components/map/MapContext";
 import { senaraiDaerahKodMukim, senaraiBahagian } from "@/contents/fieldInput";
+import { CgCalculator } from "react-icons/cg";
+import { MdCopyAll } from "react-icons/md";
+import DsmCalculator from "@/components/calculator/DsmCalculator";
 
 const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
   ssr: false,
@@ -66,6 +69,7 @@ const UlasanTeknikalPage = () => {
   const [selectedBahagian, setSelectedBahagian] = useState("");
   const [filteredJenisPermohonan, setFilteredJenisPermohonan] = useState<{ label: string; value: string }[]>([]);
   const [filteredStatus, setFilteredStatus] = useState<{ label: string; value: string }[]>([]);
+  const [showCalculator, setShowCalcultor] = useState<boolean>(false);
 
   const { mapView, ciptaUlasanForm, setCiptaUlasanForm, lotNumber, setLotNumber, listOfLot, listOfMukim, listOfDaerah } = useMapContext();
 
@@ -205,6 +209,17 @@ const UlasanTeknikalPage = () => {
                         </label>{" "}
                         <div className="mt-1 text-sm text-gray-500">
                           Sketch untuk mendapatkan kordinat
+                        </div>
+                        <div>
+                          <button onClick={() => setShowCalcultor(!showCalculator)} className="p-2 hover:bg-gray-200 transition-all duration-100 rounded-full"><CgCalculator /></button>
+                          {
+                            showCalculator && 
+                            <div className="relative -top-4 left-16">
+                              <DsmCalculator/>
+                            </div>
+                          }
+                          
+                          
                         </div>
                       </div>
                       <div className="mt-1 sm:self-center flex items-center md:w-[50rem]">

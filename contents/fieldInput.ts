@@ -71,6 +71,23 @@ export const senaraiBahagian = [
                 label: 'Kolam Udang',
                 value: 'Kolam Udang'
             },
+            {
+                label: 'Kelulusan pasir dasar laut atas 3 batu nautika',
+                value: 'Kelulusan pasir dasar laut atas 3 batu nautika'
+            },
+            {
+                label: 'Kelulusan pasir dasar laut bawah 3 batu nautika',
+                value: 'Kelulusan pasir dasar laut bawah 3 batu nautika',
+            },
+            {
+                label: 'Laluan utiliti dasar laut',
+                value: 'Laluan utiliti dasar laut'
+            },
+            {
+                label: 'Laluan Perkapalan',
+                value: 'Laluan Perkapalan'
+            },
+            
         ],
         senaraiStatus: [
             {
