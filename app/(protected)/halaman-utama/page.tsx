@@ -61,7 +61,8 @@ const BasemapWidget = dynamic(
 
 import { senaraiDaerahKodMukim } from "@/contents/fieldInput";
 import Polygon from "@arcgis/core/geometry/Polygon";
-
+import GraphicLayer from '@arcgis/core/layers/GraphicsLayer';
+import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 
 const DashboardPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -182,6 +183,13 @@ const DashboardPage = () => {
     console.log("Rings: ", rings);
 
     if (rings && rings.length > 0) {
+      // Create the graphic layer if not already added
+      let graphicLayer = mapView.map.findLayerById('polygonGraphicLayer') as GraphicLayer;
+      if (!graphicLayer) {
+        graphicLayer = new GraphicLayer({ id: 'polygonGraphicLayer' });
+        mapView.map.add(graphicLayer);
+      }
+
       // Construct polygon geometry using the rings provided
       const polygon = new Polygon( {
         rings: rings,
