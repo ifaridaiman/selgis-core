@@ -62,7 +62,7 @@ const BasemapWidget = dynamic(
 import { senaraiDaerahKodMukim } from "@/contents/fieldInput";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import GraphicLayer from '@arcgis/core/layers/GraphicsLayer';
-import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
+import TextSymbol from '@arcgis/core/symbols/TextSymbol';
 
 const DashboardPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -176,7 +176,7 @@ const DashboardPage = () => {
 
   
 
-  const handleZoomtoLayer = (rings: number[][][])  => {
+  const handleZoomtoLayer = (rings: number[][][], No_Lot: number)  => {
 
     if(!mapView) return;
 
@@ -212,6 +212,30 @@ const DashboardPage = () => {
   
       graphicLayer.removeAll(); // Clear any existing graphics before adding a new one
       graphicLayer.add(polygonGraphic);
+
+      // Calculate the centroid of the polygon
+    const centroid = polygon.centroid;
+
+    // Create a text symbol to display No_Lot at the centroid of the polygon
+    const textSymbol = new TextSymbol({
+      color: 'black',
+      haloColor: 'white',
+      haloSize: '1px',
+      text: No_Lot.toString(),  // Convert the No_Lot to a string
+      font: {
+        size: 12,
+        family: 'sans-serif',
+        weight: 'bold',
+      }
+    });
+
+    // Create a graphic for the text symbol and add it to the graphic layer
+    const textGraphic = new Graphic({
+      geometry: centroid,  // Use the centroid of the polygon as the location for the text
+      symbol: textSymbol,
+    });
+
+    graphicLayer.add(textGraphic);
 
       // Zoom to the polygon geometry
       mapView.goTo(polygon.extent).catch((error) => {
@@ -359,16 +383,17 @@ const DashboardPage = () => {
                           <button
                             className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
                             title="Zoom to Lot"
-                            onClick={() => handleZoomtoLayer(item.geometry?.rings)}
+                            onClick={() => handleZoomtoLayer(item.geometry?.rings, item.attributes.No_Lot)}
                           >
                             <FaMagnifyingGlassLocation />
                           </button>
-                          {/* <button
+                          <a
+                            href={`/cipta-ulasan?rings=${item.geometry?.rings}`}
                             className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
-                            title="Update Item"
+                            title="Cipta Ulasan Berdasarkan lot"
                           >
                             <IoPencilOutline />
-                          </button> */}
+                          </a>
 
                           {/* <button
                         className='p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full'
