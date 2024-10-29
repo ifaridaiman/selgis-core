@@ -7,6 +7,7 @@ import { senaraiDaerahKodMukim, senaraiBahagian } from "@/contents/fieldInput";
 import { CgCalculator } from "react-icons/cg";
 import { MdCopyAll } from "react-icons/md";
 import DsmCalculator from "@/components/calculator/DsmCalculator";
+import FormGroup from "@/components/form/FormGroup";
 
 const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
   ssr: false,
@@ -15,10 +16,13 @@ const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
   ),
 });
 
-const SearchCoordinate = dynamic(() => import("@/components/map/widget/SearchCoordinate"), {
-  ssr: false,
-  loading: () => <p>Loading...</p>,
-});
+const SearchCoordinate = dynamic(
+  () => import("@/components/map/widget/SearchCoordinate"),
+  {
+    ssr: false,
+    loading: () => <p>Loading...</p>,
+  }
+);
 
 const HomeWidget = dynamic(() => import("@/components/map/widget/HomeWidget"), {
   ssr: false,
@@ -63,25 +67,40 @@ const DrawWidget = dynamic(() => import("@/components/map/widget/DrawWidget"), {
 });
 
 const UlasanTeknikalPage = () => {
-
   const [selectedDaerah, setSelectedDaerah] = useState("");
-  const [filteredMukim, setFilteredMukim] = useState<{ kodMukim: string; namaMukim: string }[]>([]);
+  const [filteredMukim, setFilteredMukim] = useState<
+    { kodMukim: string; namaMukim: string }[]
+  >([]);
   const [selectedBahagian, setSelectedBahagian] = useState("");
-  const [filteredJenisPermohonan, setFilteredJenisPermohonan] = useState<{ label: string; value: string }[]>([]);
-  const [filteredStatus, setFilteredStatus] = useState<{ label: string; value: string }[]>([]);
+  const [filteredJenisPermohonan, setFilteredJenisPermohonan] = useState<
+    { label: string; value: string }[]
+  >([]);
+  const [filteredStatus, setFilteredStatus] = useState<
+    { label: string; value: string }[]
+  >([]);
   const [showCalculator, setShowCalcultor] = useState<boolean>(false);
 
-  const { mapView, ciptaUlasanForm, setCiptaUlasanForm, lotNumber, setLotNumber, listOfLot, listOfMukim, listOfDaerah } = useMapContext();
+  const {
+    mapView,
+    ciptaUlasanForm,
+    setCiptaUlasanForm,
+    lotNumber,
+    setLotNumber,
+    listOfLot,
+    listOfMukim,
+    listOfDaerah,
+  } = useMapContext();
 
   const handleChangeDaerah = (e: React.FormEvent<HTMLSelectElement>) => {
     const selected = (e.target as HTMLSelectElement).value;
     setSelectedDaerah(selected);
     setCiptaUlasanForm({ ...ciptaUlasanForm, daerah: selected });
 
-    const daerahData = senaraiDaerahKodMukim.find((daerah) => daerah.daerah === selected);
+    const daerahData = senaraiDaerahKodMukim.find(
+      (daerah) => daerah.daerah === selected
+    );
 
     setFilteredMukim(daerahData ? daerahData.senaraiMukim : []);
-    
   };
 
   const handleChangeBahagian = (e: React.FormEvent<HTMLSelectElement>) => {
@@ -89,13 +108,21 @@ const UlasanTeknikalPage = () => {
     setSelectedBahagian(selected);
     setCiptaUlasanForm({ ...ciptaUlasanForm, bahagian: selected });
 
-    const bahagianData = senaraiBahagian.find((bahagian) => bahagian.value === selected);
+    const bahagianData = senaraiBahagian.find(
+      (bahagian) => bahagian.value === selected
+    );
 
-    setFilteredJenisPermohonan(bahagianData ? bahagianData.senaraiJenisPermohonan : []);
+    setFilteredJenisPermohonan(
+      bahagianData ? bahagianData.senaraiJenisPermohonan : []
+    );
     setFilteredStatus(bahagianData ? bahagianData.senaraiStatus : []);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
 
     setCiptaUlasanForm({
@@ -146,15 +173,13 @@ const UlasanTeknikalPage = () => {
     }
   };
 
-  
-
   let mapData = [];
   try {
     mapData = JSON.parse(process.env.mapData || "[]");
   } catch (error) {
     console.error("Failed to parse mapData:", error);
   }
-  
+
   return (
     <>
       <div className=" mb-6 flex justify-between items-center w-full">
@@ -179,25 +204,16 @@ const UlasanTeknikalPage = () => {
                   </p>
                 </div>
                 <form onSubmit={handleFormCiptaUlasan}>
-                  <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
-                      <label
-                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-                        htmlFor="tajukProjek"
-                      >
-                        {`Nama Projek`} <span className="text-red-500">*</span>
-                      </label>{" "}
-                      <div className="mt-1 sm:self-center flex items-center">
-                        <input
-                          className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                          type="text"
-                          name="tajukProjek"
-                          id="tajukProjek"
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  <FormGroup label="Tajuk Projek" labelId="tajukProjek">
+                    <input
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      type="text"
+                      name="tajukProjek"
+                      id="tajukProjek"
+                      onChange={handleInputChange}
+                    />
+                  </FormGroup>
+
                   <div className="space-y-6 sm:space-y-5">
                     <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
                       <div>
@@ -211,15 +227,17 @@ const UlasanTeknikalPage = () => {
                           Sketch untuk mendapatkan kordinat
                         </div>
                         <div>
-                          <button onClick={() => setShowCalcultor(!showCalculator)} className="p-2 hover:bg-gray-200 transition-all duration-100 rounded-full"><CgCalculator /></button>
-                          {
-                            showCalculator && 
+                          <button
+                            onClick={() => setShowCalcultor(!showCalculator)}
+                            className="p-2 hover:bg-gray-200 transition-all duration-100 rounded-full"
+                          >
+                            <CgCalculator />
+                          </button>
+                          {showCalculator && (
                             <div className="relative -top-4 left-16">
-                              <DsmCalculator/>
+                              <DsmCalculator />
                             </div>
-                          }
-                          
-                          
+                          )}
                         </div>
                       </div>
                       <div className="mt-1 sm:self-center flex items-center md:w-[50rem]">
@@ -280,216 +298,148 @@ const UlasanTeknikalPage = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
-                      <label
-                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-                        htmlFor="lotNumber"
-                      >
-                        {`No Lot`} <span className="text-red-500">*</span>
-                      </label>{" "}
-                      <div className="mt-1 sm:self-center flex items-center">
-                        <input
-                          className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                          type="text"
-                          name="lotNumber"
-                          value={ciptaUlasanForm.lotNumber || ""}
-                          onChange={handleInputChange} // Update the form state on change
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
-                      <label
-                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-                        htmlFor="daerah"
-                      >
-                        {`Daerah`} <span className="text-red-500">*</span>
-                      </label>{" "}
-                      <div className="mt-1 sm:self-center flex items-center">
-                        <select
-                          className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                          onChange={handleChangeDaerah}
-                          value={selectedDaerah}
-                          name="daerah"
-                        >
-                          <option value="">-- Pilih Daerah --</option>
-                          {senaraiDaerahKodMukim.map(
-                            (daerah: {
-                              daerah: string;
-                              kodDaerah: string;
-                              senaraiMukim: {
-                                kodMukim: string;
-                                namaMukim: string;
-                              }[];
-                            }) => (
-                              <option key={daerah.daerah} value={daerah.daerah}>
-                                {daerah.daerah}
-                              </option>
-                            )
-                          )}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
-                      <label
-                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-                        htmlFor="mukim"
-                      >
-                        {`Mukim`} <span className="text-red-500">*</span>
-                      </label>{" "}
-                      <div className="mt-1 sm:self-center flex items-center">
-                        <select
-                          className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                          name="mukim"
-                          onChange={handleInputChange}
-                          value={ciptaUlasanForm.mukim}
-                        >
-                          <option value="">-- Pilih Mukim --</option>
-                          {filteredMukim.map((mukim, index) => (
-                            <option key={index} value={mukim.namaMukim}>
-                              {mukim.namaMukim}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
-                      <label
-                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-                        htmlFor="bahagian"
-                      >
-                        {`Bahagian`} <span className="text-red-500">*</span>
-                      </label>{" "}
-                      <div className="mt-1 sm:self-center flex items-center">
-                        <select
-                          className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                          onChange={handleChangeBahagian}
-                          value={selectedBahagian}
-                          name="bahagian"
-                        >
-                          <option value="">-- Pilih Bahagian --</option>
-                          {senaraiBahagian.map((bahagian, index) => (
-                            <option key={index} value={bahagian.value}>
-                              {bahagian.label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5  mb-4">
-                      <label
-                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-                        htmlFor="jenisPermohonan"
-                      >
-                        {`Jenis Permohonan`}{" "}
-                        <span className="text-red-500">*</span>
-                      </label>{" "}
-                      <div className="mt-1 sm:self-center flex items-center">
-                        <select
-                          className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                          name="jenisPermohonan"
-                          onChange={handleInputChange}
-                          value={ciptaUlasanForm.jenisPermohonan}
-                        >
-                          <option value="">-- Pilih Jenis Permohonan --</option>
-                          {filteredJenisPermohonan.map((permohonan, index) => (
-                            <option key={index} value={permohonan.value}>
-                              {permohonan.label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
-                      <label
-                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-                        htmlFor="noFail"
-                      >
-                        {`No Fail`} <span className="text-red-500">*</span>
-                      </label>{" "}
-                      <div className="mt-1 sm:self-center flex items-center">
-                        <input
-                          className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                          type="text"
-                          name="noFail"
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
-                      <label
-                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-                        htmlFor="status"
-                      >
-                        {`Status`} <span className="text-red-500">*</span>
-                      </label>{" "}
-                      <div className="mt-1 sm:self-center flex items-center">
-                        <select
-                          className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                          name="status"
-                          onChange={handleInputChange}
-                          value={ciptaUlasanForm.status}
-                        >
-                          <option value="">-- Pilih Status --</option>
-                          {filteredStatus.map((status, index) => (
-                            <option key={index} value={status.value}>
-                              {status.label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
+                  <FormGroup label="No Lot" labelId="lotNumber">
+                    <input
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      type="text"
+                      name="lotNumber"
+                      value={ciptaUlasanForm.lotNumber || ""}
+                      onChange={handleInputChange} // Update the form state on change
+                    />
+                  </FormGroup>
+                  <FormGroup label="Panjang (m)" labelId="panjang">
+                    <input
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      type="text"
+                      name="panjang"
+                      value={ciptaUlasanForm.lotNumber || ""}
+                      onChange={handleInputChange} // Update the form state on change
+                    />
+                  </FormGroup>
+                  <FormGroup label="Luas (m²)" labelId="luas">
+                    <input
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      type="text"
+                      name="luas"
+                      value={ciptaUlasanForm.lotNumber || ""}
+                      onChange={handleInputChange} // Update the form state on change
+                    />
+                  </FormGroup>
 
-                  <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
-                      <label
-                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-                        htmlFor="ulasan"
-                      >
-                        {`Ulasan`} <span className="text-red-500">*</span>
-                      </label>{" "}
-                      <div className="mt-1 sm:self-center flex items-center">
-                        <textarea
-                          className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                          name="ulasan"
-                          onChange={handleInputChange}
-                        ></textarea>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-6 sm:space-y-5">
-                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                      <label
-                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-                        htmlFor="failSokongan"
-                      >
-                        {`Fail Sokongan`}{" "}
-                        <span className="text-red-500">*</span>
-                      </label>{" "}
-                      <div className="mt-1 sm:self-center flex items-center">
-                        <input
-                          type="file"
-                          className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                          multiple
-                          name="folderPath"
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  <FormGroup label="Daerah" labelId="daerah">
+                    <select
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      onChange={handleChangeDaerah}
+                      value={selectedDaerah}
+                      name="daerah"
+                    >
+                      <option value="">-- Pilih Daerah --</option>
+                      {senaraiDaerahKodMukim.map(
+                        (daerah: {
+                          daerah: string;
+                          kodDaerah: string;
+                          senaraiMukim: {
+                            kodMukim: string;
+                            namaMukim: string;
+                          }[];
+                        }) => (
+                          <option key={daerah.daerah} value={daerah.daerah}>
+                            {daerah.daerah}
+                          </option>
+                        )
+                      )}
+                    </select>
+                  </FormGroup>
+
+                  <FormGroup label="Mukim" labelId="mukim">
+                    <select
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      name="mukim"
+                      onChange={handleInputChange}
+                      value={ciptaUlasanForm.mukim}
+                    >
+                      <option value="">-- Pilih Mukim --</option>
+                      {filteredMukim.map((mukim, index) => (
+                        <option key={index} value={mukim.namaMukim}>
+                          {mukim.namaMukim}
+                        </option>
+                      ))}
+                    </select>
+                  </FormGroup>
+                  <FormGroup label="Bahagian" labelId="bahagian">
+                    <select
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      onChange={handleChangeBahagian}
+                      value={selectedBahagian}
+                      name="bahagian"
+                    >
+                      <option value="">-- Pilih Bahagian --</option>
+                      {senaraiBahagian.map((bahagian, index) => (
+                        <option key={index} value={bahagian.value}>
+                          {bahagian.label}
+                        </option>
+                      ))}
+                    </select>
+                  </FormGroup>
+                  <FormGroup label="Jenis Permohonan" labelId="jenisPermohonan">
+                    <select
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      name="jenisPermohonan"
+                      onChange={handleInputChange}
+                      value={ciptaUlasanForm.jenisPermohonan}
+                    >
+                      <option value="">-- Pilih Jenis Permohonan --</option>
+                      {filteredJenisPermohonan.map((permohonan, index) => (
+                        <option key={index} value={permohonan.value}>
+                          {permohonan.label}
+                        </option>
+                      ))}
+                    </select>
+                  </FormGroup>
+
+                  <FormGroup label="No Fail" labelId="noFail">
+                    <input
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      type="text"
+                      name="noFail"
+                      onChange={handleInputChange}
+                    />
+                  </FormGroup>
+
+                  <FormGroup label="Status" labelId="status">
+                    <select
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      name="status"
+                      onChange={handleInputChange}
+                      value={ciptaUlasanForm.status}
+                    >
+                      <option value="">-- Pilih Status --</option>
+                      {filteredStatus.map((status, index) => (
+                        <option key={index} value={status.value}>
+                          {status.label}
+                        </option>
+                      ))}
+                    </select>
+                  </FormGroup>
+
+                  <FormGroup label="Ulasan" labelId="ulasan">
+                    <textarea
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      name="ulasan"
+                      onChange={handleInputChange}
+                    ></textarea>
+                  </FormGroup>
+
+                  <FormGroup label="Fail Sokongan" labelId="failSokongan">
+                    <input
+                      type="file"
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      multiple
+                      name="folderPath"
+                      onChange={handleInputChange}
+                    />
+                  </FormGroup>
+                  
                   <div className="pt-6 space-y-6 sm:pt-10 sm:space-y-5">
                     <div className="sm:flex sm:gap-4 sm:justify-end sm:border-t sm:border-gray-200 sm:pt-5 ">
                       <button

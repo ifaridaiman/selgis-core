@@ -44,7 +44,6 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
           event.state === "complete" &&
           event.graphic.geometry.type === "polygon"
         ) {
-
           console.log("Polygon Drawn:", event.graphic.geometry.toJSON());
 
           console.log("graphicLayer", graphicLayer);
@@ -153,21 +152,21 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
 
               setCiptaUlasanForm({
                 lotNumber: newLabel, // Keep this empty initially
-              daerah: "", // Assuming daerah is set elsewhere
-              mukim: "", // Assuming mukim is set elsewhere
-              kordinatX: kordinatX,
-              kordinatY: kordinatY,
-              tajukProjek: "", // Assuming tajukProjek is set elsewhere
-              jenisPermohonan: "", // Assuming jenisPermohonan is set elsewhere
-              noFail: "", // Assuming noFail is set elsewhere
-              status: "", // Assuming status is set elsewhere
-              bahagian: "", // Assuming bahagian is set elsewhere
-              ulasan: "", // Assuming ulasan is set elsewhere
-              folderPath: "", // Assuming folderPath is set elsewhere
-              xMin: xmin,
-              yMin: ymin,
-              xMax: xmax,
-              yMax: ymax,
+                daerah: "", // Assuming daerah is set elsewhere
+                mukim: "", // Assuming mukim is set elsewhere
+                kordinatX: kordinatX,
+                kordinatY: kordinatY,
+                tajukProjek: "", // Assuming tajukProjek is set elsewhere
+                jenisPermohonan: "", // Assuming jenisPermohonan is set elsewhere
+                noFail: "", // Assuming noFail is set elsewhere
+                status: "", // Assuming status is set elsewhere
+                bahagian: "", // Assuming bahagian is set elsewhere
+                ulasan: "", // Assuming ulasan is set elsewhere
+                folderPath: "", // Assuming folderPath is set elsewhere
+                xMin: xmin,
+                yMin: ymin,
+                xMax: xmax,
+                yMax: ymax,
               });
 
               console.log("Sketch Info:", {

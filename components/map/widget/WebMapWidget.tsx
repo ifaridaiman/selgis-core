@@ -64,39 +64,39 @@ const WebMapWidget: React.FC<WebMapWidgetProps> = ({
     console.log("Adding to feature service", item);
   };
 
-  const symbolGraphicCarian = {
-    type: "simple-fill", // autocasts as new SimpleFillSymbol()
-    color: [128, 10, 204, 0.5],
-    style: "solid",
-    outline: {
-      // autocasts as new SimpleLineSymbol()
-      color: "gray",
-      width: 1,
-    },
-  };
+  // const symbolGraphicCarian = {
+  //   type: "simple-fill", // autocasts as new SimpleFillSymbol()
+  //   color: [128, 10, 204, 0.5],
+  //   style: "solid",
+  //   outline: {
+  //     // autocasts as new SimpleLineSymbol()
+  //     color: "gray",
+  //     width: 1,
+  //   },
+  // };
 
-  const lotLayer = new FeatureLayer({
-    source: listOfLot, // array of graphics objects
-    objectIdField: "OBJECTID",
-    fields: [
-      {
-        name: "OBJECTID",
-        type: "oid",
-      },
-      {
-        name: "Lot No",
-        type: "string",
-      },
-      {
-        name: "Daerah",
-        type: "string",
-      },
-      {
-        name: "Mukim",
-        type: "string",
-      },
-    ],
-  });
+  // const lotLayer = new FeatureLayer({
+  //   source: listOfLot, // array of graphics objects
+  //   objectIdField: "OBJECTID",
+  //   fields: [
+  //     {
+  //       name: "OBJECTID",
+  //       type: "oid",
+  //     },
+  //     {
+  //       name: "Lot No",
+  //       type: "string",
+  //     },
+  //     {
+  //       name: "Daerah",
+  //       type: "string",
+  //     },
+  //     {
+  //       name: "Mukim",
+  //       type: "string",
+  //     },
+  //   ],
+  // });
 
   const loadLayerFromPortal = () => {
     checkIsAllLayerLoad();
