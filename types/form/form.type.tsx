@@ -1,4 +1,5 @@
-type attribute = {
+
+export type CiptaUlasanFormType = {
   lotNumber: string;
   daerah: string;
   mukim: string;
@@ -10,16 +11,28 @@ type attribute = {
   status: string;
   bahagian: string;
   ulasan: string;
-  folderPath: string[];
+  folderPath: File[];
   panjang?: number;
   luas?: number;
-};
-
-type geometry = {
   rings: number[][][];
+  tajukSurat: string;
 };
 
-export type FormType = {
-  attributes: attribute;
-  geometries: geometry;
-};
+export const CiptaUlasanFormTypeInit:CiptaUlasanFormType = {
+  lotNumber: "",
+  daerah: "",
+  mukim: "",
+  kordinatX: "",
+  kordinatY: "",
+  tajukProjek: "",
+  jenisPermohonan: "",
+  noFail: "",
+  status: "",
+  bahagian: "",
+  ulasan: "",
+  folderPath: [],
+  panjang: 0,
+  luas: 0,
+  rings: [], // Initialize with an empty array
+  tajukSurat: ""
+}

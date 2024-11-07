@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import dynamic from "next/dynamic";
 import { useMapContext } from "@/components/map/MapContext";
@@ -8,6 +8,9 @@ import { CgCalculator } from "react-icons/cg";
 import { MdCopyAll } from "react-icons/md";
 import DsmCalculator from "@/components/calculator/DsmCalculator";
 import FormGroup from "@/components/form/FormGroup";
+import { useFormState } from "react-dom";
+import { useCiptaUlasan } from "./_hooks/useCiptaUlasan";
+import { useCalculator } from "@/components/calculator/hooks/useCalculator";
 
 const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
   ssr: false,
@@ -67,110 +70,62 @@ const DrawWidget = dynamic(() => import("@/components/map/widget/DrawWidget"), {
 });
 
 const UlasanTeknikalPage = () => {
-  const [selectedDaerah, setSelectedDaerah] = useState("");
-  const [filteredMukim, setFilteredMukim] = useState<
-    { kodMukim: string; namaMukim: string }[]
-  >([]);
-  const [selectedBahagian, setSelectedBahagian] = useState("");
-  const [filteredJenisPermohonan, setFilteredJenisPermohonan] = useState<
-    { label: string; value: string }[]
-  >([]);
-  const [filteredStatus, setFilteredStatus] = useState<
-    { label: string; value: string }[]
-  >([]);
-  const [showCalculator, setShowCalcultor] = useState<boolean>(false);
-
   const {
-    mapView,
-    ciptaUlasanForm,
-    setCiptaUlasanForm,
-    lotNumber,
-    setLotNumber,
-    listOfLot,
-    listOfMukim,
-    listOfDaerah,
-  } = useMapContext();
+    selectedDaerah,
+    filteredMukim,
+    selectedBahagian,
+    filteredJenisPermohonan,
+    filteredStatus,
+    handleChangeBahagian,
+    handleChangeDaerah,
+    handleInputChange,
+    selectedFiles,
+    handleFileChange,
+  } = useCiptaUlasan();
+  const { mapView, ciptaUlasanForm } = useMapContext();
 
-  const handleChangeDaerah = (e: React.FormEvent<HTMLSelectElement>) => {
-    const selected = (e.target as HTMLSelectElement).value;
-    setSelectedDaerah(selected);
-    setCiptaUlasanForm({ ...ciptaUlasanForm, daerah: selected });
-
-    const daerahData = senaraiDaerahKodMukim.find(
-      (daerah) => daerah.daerah === selected
-    );
-
-    setFilteredMukim(daerahData ? daerahData.senaraiMukim : []);
-  };
-
-  const handleChangeBahagian = (e: React.FormEvent<HTMLSelectElement>) => {
-    const selected = (e.target as HTMLSelectElement).value;
-    setSelectedBahagian(selected);
-    setCiptaUlasanForm({ ...ciptaUlasanForm, bahagian: selected });
-
-    const bahagianData = senaraiBahagian.find(
-      (bahagian) => bahagian.value === selected
-    );
-
-    setFilteredJenisPermohonan(
-      bahagianData ? bahagianData.senaraiJenisPermohonan : []
-    );
-    setFilteredStatus(bahagianData ? bahagianData.senaraiStatus : []);
-  };
-
-  const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-
-    setCiptaUlasanForm({
-      ...ciptaUlasanForm, // Spread the current state to retain other field values
-      [name]: value, // Update only the specific field by its name
-    });
-  };
+  const { showCalculator, setShowCalcultor } = useCalculator();
 
   const handleFormCiptaUlasan = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const formData = {
-      lotNumber: ciptaUlasanForm.lotNumber,
-      daerah: ciptaUlasanForm.daerah,
-      mukim: ciptaUlasanForm.mukim,
-      koordinat_x: ciptaUlasanForm.kordinatX,
-      koordinat_y: ciptaUlasanForm.kordinatY,
-      tajukProjek: ciptaUlasanForm.tajukProjek,
-      jenisPermohonan: ciptaUlasanForm.jenisPermohonan,
-      noFail: ciptaUlasanForm.noFail,
-      status: ciptaUlasanForm.status,
-      bahagian: ciptaUlasanForm.bahagian,
-      ulasans: [
-        {
-          ulasan: ciptaUlasanForm.ulasan,
-          folderPath: ciptaUlasanForm.folderPath,
-        },
-      ],
-    };
-
     try {
-      const response = await fetch("/api/ulasan", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      // const response = await fetch("/api/createProjek", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({
+      //     ...ciptaUlasanForm,
+      //     koordinat_x: ciptaUlasanForm.kordinatX, // Adjust key to match Prisma schema
+      //     koordinat_y: ciptaUlasanForm.kordinatY,
+      //     ulasan: ciptaUlasanForm.ulasan,
+      //     file_upload: ciptaUlasanForm.folderPath, // Use file_upload as folderPath
+      //   }),
+      // });
 
-      if (response.ok) {
-        const result = await response.json();
-        console.log("Projek and Ulasan created successfully:", result);
-      } else {
-        console.error("Failed to create projek and ulasan");
-      }
+      // if (response.ok) {
+      //   const result = await response.json();
+      //   console.log("Submitted successfully:", result);
+      // } else {
+      //   console.error("Failed to submit form:", response.statusText);
+      // }
+      console.log("Form data:", ciptaUlasanForm);
+
+      // If you'd like to manipulate or validate the data before submission, do it here
+      const formData = {
+        ...ciptaUlasanForm,
+        koordinat_x: ciptaUlasanForm.kordinatX, // Adjust key to match Prisma schema
+        koordinat_y: ciptaUlasanForm.kordinatY,
+        ulasan: ciptaUlasanForm.ulasan,
+        folderPath: ciptaUlasanForm.folderPath, // Use file_upload as folderPath
+      };
+
+      // Log the transformed data structure for clarity
+      console.log("Transformed form data:", formData);
     } catch (error) {
-      console.error("Error submitting projek and ulasan:", error);
+      console.error("Error during submission:", error);
     }
+
+    
   };
 
   let mapData = [];
@@ -179,6 +134,8 @@ const UlasanTeknikalPage = () => {
   } catch (error) {
     console.error("Failed to parse mapData:", error);
   }
+
+  const formRef = useRef<HTMLFormElement>(null);
 
   return (
     <>
@@ -203,7 +160,7 @@ const UlasanTeknikalPage = () => {
                     Ulasan teknikal untuk projek yang diusulkan.
                   </p>
                 </div>
-                <form onSubmit={handleFormCiptaUlasan}>
+                <form onSubmit={handleFormCiptaUlasan} ref={formRef}>
                   <FormGroup label="Tajuk Projek" labelId="tajukProjek">
                     <input
                       className="border border-gray-300 rounded-md px-4 py-2 w-full"
@@ -312,7 +269,7 @@ const UlasanTeknikalPage = () => {
                       className="border border-gray-300 rounded-md px-4 py-2 w-full"
                       type="text"
                       name="panjang"
-                      value={ciptaUlasanForm.lotNumber || ""}
+                      value={ciptaUlasanForm.panjang || ""}
                       onChange={handleInputChange} // Update the form state on change
                     />
                   </FormGroup>
@@ -321,7 +278,7 @@ const UlasanTeknikalPage = () => {
                       className="border border-gray-300 rounded-md px-4 py-2 w-full"
                       type="text"
                       name="luas"
-                      value={ciptaUlasanForm.lotNumber || ""}
+                      value={ciptaUlasanForm.luas || ""}
                       onChange={handleInputChange} // Update the form state on change
                     />
                   </FormGroup>
@@ -431,15 +388,52 @@ const UlasanTeknikalPage = () => {
                   </FormGroup>
 
                   <FormGroup label="Fail Sokongan" labelId="failSokongan">
-                    <input
-                      type="file"
-                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                      multiple
-                      name="folderPath"
-                      onChange={handleInputChange}
-                    />
+                    <div className="max-w-xl">
+                      <label className="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
+                        <span className="flex items-center space-x-2">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-6 h-6 text-gray-600"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                            />
+                          </svg>
+                          <span className="font-medium text-gray-600">
+                            Drop files to Attach, or
+                            <span className="text-blue-600 underline">
+                              browse
+                            </span>
+                          </span>
+                        </span>
+                        <input
+                          type="file"
+                          name="file_upload"
+                          className="hidden"
+                          multiple
+                          onChange={handleFileChange}
+                        />
+                      </label>
+                      <div className="mt-2">
+                        {selectedFiles.length > 0 && (
+                          <ul>
+                            {selectedFiles.map((file, index) => (
+                              <li key={index} className="text-sm text-gray-700">
+                                {file.name}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    </div>
                   </FormGroup>
-                  
+
                   <div className="pt-6 space-y-6 sm:pt-10 sm:space-y-5">
                     <div className="sm:flex sm:gap-4 sm:justify-end sm:border-t sm:border-gray-200 sm:pt-5 ">
                       <button

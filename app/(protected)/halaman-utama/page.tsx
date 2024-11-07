@@ -174,8 +174,6 @@ const DashboardPage = () => {
     }
   };
 
-  
-
   const handleZoomtoLayer = (rings: number[][][], No_Lot: number)  => {
 
     if(!mapView) return;
@@ -245,11 +243,7 @@ const DashboardPage = () => {
       console.error("Rings are not available for the selected lot");
     }
   };
-
   
-  
-  
-
   return (
     <>
       <div className=" mb-6 flex justify-between items-center w-full">

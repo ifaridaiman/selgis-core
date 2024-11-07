@@ -93,7 +93,7 @@ const SearchCoordinate: React.FC<SearchProps> = ({ mapView }) => {
         group: "expandable-widgets",
       });
 
-      mapView.ui.add(searchExpand, "top-right");
+      mapView.ui.add(searchExpand, {position:"top-right", index:0});
 
       // Optionally clear the search when collapsed
       searchExpand.watch("expanded", (isExpanded) => {

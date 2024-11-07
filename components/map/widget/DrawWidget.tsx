@@ -19,10 +19,8 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
 
   let kordinatX = "";
   let kordinatY = "";
-  let xmin = 0;
-  let ymin = 0;
-  let xmax = 0;
-  let ymax = 0;
+  let ring: number[][][] = [];
+
 
   useEffect(() => {
     if (!drawDiv.current && mapView) {
@@ -51,7 +49,8 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
           // Calculate the centroid of the polygon
           const centroid = event.graphic.geometry.extent.center;
           const polygon = event.graphic.geometry as __esri.Polygon;
-          const extent = polygon.extent;
+          // const extent = polygon.extent;
+          ring = polygon.rings;
 
           // Create a text symbol to label the polygon
           const textSymbol = new TextSymbol({
@@ -76,10 +75,10 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
 
           graphicLayer.add(labelGraphic);
 
-          xmin = extent.xmin;
-          ymin = extent.ymin;
-          xmax = extent.xmax;
-          ymax = extent.ymax;
+          // xmin = extent.xmin;
+          // ymin = extent.ymin;
+          // xmax = extent.xmax;
+          // ymax = extent.ymax;
 
           if (centroid.spatialReference.wkid !== 4326) {
             const centroidWGS84 =
@@ -102,11 +101,9 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
               status: "", // Assuming status is set elsewhere
               bahagian: "", // Assuming bahagian is set elsewhere
               ulasan: "", // Assuming ulasan is set elsewhere
-              folderPath: "", // Assuming folderPath is set elsewhere
-              xMin: xmin,
-              yMin: ymin,
-              xMax: xmax,
-              yMax: ymax,
+              folderPath: [], // Assuming folderPath is set elsewhere
+              rings:ring,
+              tajukSurat: ""
             });
           }
 
@@ -162,11 +159,9 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
                 status: "", // Assuming status is set elsewhere
                 bahagian: "", // Assuming bahagian is set elsewhere
                 ulasan: "", // Assuming ulasan is set elsewhere
-                folderPath: "", // Assuming folderPath is set elsewhere
-                xMin: xmin,
-                yMin: ymin,
-                xMax: xmax,
-                yMax: ymax,
+                folderPath: [], // Assuming folderPath is set elsewhere
+                rings:ring,
+                tajukSurat: ""
               });
 
               console.log("Sketch Info:", {
@@ -188,7 +183,7 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
         group: "expandable-widgets",
       });
 
-      mapView.ui.add(drawExpand, "top-right");
+      mapView.ui.add(drawExpand, {position:"top-right", index:1});
     }
   }, [mapView]);
 

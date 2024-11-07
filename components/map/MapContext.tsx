@@ -3,31 +3,13 @@ import MapView from "@arcgis/core/views/MapView";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import WebMap from "@arcgis/core/WebMap";
 import GroupLayer from "@arcgis/core/layers/GroupLayer";
+import { CiptaUlasanFormType, CiptaUlasanFormTypeInit } from "@/types/form/form.type";
 
 export type lotAttributes = {
   OBJECTID: number;
   No_Lot: string;
   Nama_Mukim: string;
   Nama_Daerah: string;
-};
-
-export type CiptaUlasanFormType = {
-  lotNumber: string;
-  daerah: string;
-  mukim: string;
-  kordinatX: string;
-  kordinatY: string;
-  tajukProjek: string;
-  jenisPermohonan: string;
-  noFail: string;
-  status: string;
-  bahagian: string;
-  ulasan: string;
-  folderPath: string;
-  xMin?: number;
-  xMax?: number;
-  yMin?: number;
-  yMax?: number;
 };
 
 type MapContextType = {
@@ -73,24 +55,7 @@ export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
   const [lotNumber, setLotNumber] = useState<string>("");
   const [listOfLot, setListOfLot] = useState<lotAttributes[]>([]);
   const [listOfDaerah, setListOfDaerah] = useState<string[]>([]);
-  const [ciptaUlasanForm, setCiptaUlasanForm] = useState<CiptaUlasanFormType>({
-    lotNumber: "",
-    daerah: "",
-    mukim: "",
-    kordinatX: "",
-    kordinatY: "",
-    tajukProjek: "",
-    jenisPermohonan:"",
-    noFail:"",
-    status:"",
-    bahagian:"",
-    ulasan:"",
-    folderPath: "",
-    xMax: 0,
-    xMin: 0,
-    yMax: 0,
-    yMin: 0,
-  })
+  const [ciptaUlasanForm, setCiptaUlasanForm] = useState<CiptaUlasanFormType>(CiptaUlasanFormTypeInit);
   const [allGroupLayers, setAllGroupLayers] = useState<GroupLayer[]>([]);
 
   const zoomToDaerah = (daerah: string) => {
@@ -115,13 +80,9 @@ export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
     }
   };
 
-  
   const graphicLayer = new GraphicsLayer({
     title: "Sketch Layer",
   });
-
-
-  
 
   return (
     <MapContext.Provider
@@ -141,7 +102,7 @@ export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
         ciptaUlasanForm,
         setCiptaUlasanForm,
         allGroupLayers,
-        setAllGroupLayers
+        setAllGroupLayers,
       }}
     >
       {children}

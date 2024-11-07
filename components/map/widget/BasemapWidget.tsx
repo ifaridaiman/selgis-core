@@ -25,7 +25,7 @@ const BasemapWidget:React.FC<BasemapWidgetProps> = ({mapView}) => {
                 content: baseMapDiv.current,
                 group: "expandable-widgets"
             });
-            mapView.ui.add(baseMapExpand, "top-right");
+            mapView.ui.add(baseMapExpand, {position:"top-left",index:4});
         }
     },[mapView])
   return null
