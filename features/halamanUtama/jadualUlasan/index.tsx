@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useJadualUlasan } from "./hooks/useJadualUlasan";
+import {
+  IoPencilOutline,
+  IoTrashBin,
+  IoTrashBinOutline,
+} from "react-icons/io5";
+
 const JadualUlasanTable = () => {
   const [jadualUlasanData, setJadualUlasanData] = useState<any[]>([]);
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -11,7 +17,7 @@ const JadualUlasanTable = () => {
 
   const fetchJadualUlasan = async () => {
     try {
-      const res = await fetch("/admin/api/ulasan", {
+      const res = await fetch("/ulasan-teknikal/api/ulasan", {
         method: "GET",
       });
       if (!res.ok) {
@@ -101,9 +107,18 @@ const JadualUlasanTable = () => {
               <td className="py-4 px-4 text-center">{projek.bahagian}</td>
               <td className="py-4 px-4 text-center">{projek.status}</td>
               <td className="py-4 px-4 text-center">
-                <button className="bg-blue-500 text-white px-4 py-2 rounded">
-                  View Ulasan
-                </button>
+                <div className="flex flex-row gap-4 items-center">
+                  <a
+                    href={`/ulasan-teknikal/ulasan?no_lot=${projek.lotNumber}`}
+                    className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
+                    title="Kemaskini Ulasan"
+                  >
+                    <IoPencilOutline />
+                  </a>
+                  <button >
+                    <IoTrashBinOutline />
+                  </button>
+                </div>
               </td>
             </tr>
           ))}

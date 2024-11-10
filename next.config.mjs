@@ -12,7 +12,7 @@ const nextConfig = {
             { title: "Maklumat Sungai", id: "9760aba7c3cc46a19f0721a83fca44b3" }
         ])
     },
-    basePath:"/admin"
+    basePath:"/ulasan-teknikal"
 };
 
 export default nextConfig;

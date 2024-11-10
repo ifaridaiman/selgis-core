@@ -11,7 +11,7 @@ import FormGroup from "@/components/form/FormGroup";
 import { useFormState } from "react-dom";
 import { useCiptaUlasan } from "./_hooks/useCiptaUlasan";
 import { useCalculator } from "@/components/calculator/hooks/useCalculator";
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, useSearchParams } from "next/navigation";
 
 const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
   ssr: false,
@@ -86,17 +86,47 @@ const UlasanTeknikalPage = () => {
   const { mapView, ciptaUlasanForm } = useMapContext();
 
   const { showCalculator, setShowCalcultor } = useCalculator();
-  const [ulasanLoad, setUlasanLoad] = useState<boolean>(false)
+  const [ulasanLoad, setUlasanLoad] = useState<boolean>(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const fetchData = async () => {
+    const no_lot = searchParams.get("no_lot"); // Retrieve no_lot from query parameter    const no_lot = searchParams.get("no_lot"); // Retrieve no_lot from query
+
+    if (!no_lot) {
+      console.error("No 'no_lot' query parameter found.");
+      return;
+    }
+
+    const response = await fetch(
+      `/ulasan-teknikal/api/ulasan-teknikal`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ no_lot: no_lot }), // Pass no_lot in the body
+      }
+    );
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log("Submitted successfully:", result);
+    } else {
+      console.error("Failed to submit form:", response.statusText);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleFormCiptaUlasan = async (e: React.FormEvent<HTMLFormElement>) => {
-
     e.preventDefault();
-    setUlasanLoad(true)
+    setUlasanLoad(true);
     const formData = new FormData();
-    console.log("FORM DATA AT PAGE START: ", formData)
+    console.log("FORM DATA AT PAGE START: ", formData);
 
-  
     // Append form fields
     formData.append("lotNumber", ciptaUlasanForm.lotNumber || "");
     formData.append("daerah", ciptaUlasanForm.daerah || "");
@@ -113,34 +143,33 @@ const UlasanTeknikalPage = () => {
     formData.append("luas", ciptaUlasanForm.luas?.toString() || "");
     formData.append("ulasan", ciptaUlasanForm.ulasan || "");
     formData.append("tajukSurat", ciptaUlasanForm.tajukSurat || "");
-  
+
     // Append files if there are any
     selectedFiles.forEach((file) => {
       formData.append("file", file);
     });
 
-    console.log("FORM DATA AT END: ", formData)
-  
+    console.log("FORM DATA AT END: ", formData);
+
     try {
       const response = await fetch("/ulasan-teknikal/api/ulasan", {
         method: "POST",
         body: formData,
       });
-  
+
       if (response.ok) {
         const result = await response.json();
         console.log("Submitted successfully:", result);
-        router.push("/halaman-utama")
+        router.push("/halaman-utama");
       } else {
         console.error("Failed to submit form:", response.statusText);
       }
     } catch (error) {
       console.error("Error during submission:", error);
-    } finally{
-      setUlasanLoad(false)
+    } finally {
+      setUlasanLoad(false);
     }
   };
-  
 
   let mapData = [];
   try {
@@ -168,15 +197,13 @@ const UlasanTeknikalPage = () => {
               <div className="space-y-6 sm:space-y-5">
                 <div>
                   <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    Cipta Ulasan
+                    Kemaskini Ulasan
                   </h3>
                   <p className="mt-1 text-sm text-gray-500">
-                    Ulasan teknikal untuk projek yang diusulkan.
+                    Kemaskini Ulasan teknikal untuk projek yang diusulkan.
                   </p>
                 </div>
                 <form onSubmit={handleFormCiptaUlasan} ref={formRef}>
-                  
-
                   <div className="space-y-6 sm:space-y-5">
                     <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
                       <div>
@@ -289,7 +316,6 @@ const UlasanTeknikalPage = () => {
                       value={ciptaUlasanForm.tajukSurat || ""}
                       onChange={handleInputChange}
                     />
-                    
                   </FormGroup>
                   <FormGroup label="Panjang (m)" labelId="panjang">
                     <input

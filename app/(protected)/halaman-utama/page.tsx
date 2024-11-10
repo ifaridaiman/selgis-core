@@ -129,9 +129,11 @@ const DashboardPage = () => {
     let lotNumber = form.lotNumber.value;
     let daerah = form.daerah.value;
     let mukim = form.mukim.value;
+
     if (lotNumber && lotNumber.length > 0) {
-      console.log("Lot Number: ", lotNumber);
+      
       const filtered = listOfLot.filter((item) => {
+
         // Start with filtering by Lot Number if it's provided
         let matchesLot = lotNumber && lotNumber.length > 0
         ? item.attributes.No_Lot && item.attributes.No_Lot.toLowerCase().includes(lotNumber.toLowerCase())
@@ -139,18 +141,18 @@ const DashboardPage = () => {
 
         // If Daerah is provided, also filter by Daerah
         let matchesDaerah = daerah && daerah.length > 0
-          ? item.attributes.Daerah && item.attributes.Daerah.toLowerCase().includes(daerah.toLowerCase())
+          ? item.attributes.Nama_Daerah && item.attributes.Nama_Daerah.toLowerCase().includes(daerah.toLowerCase())
           : true;
 
         // If Mukim is provided, also filter by Mukim
         let matchesMukim = mukim && mukim.length > 0
-          ? item.attributes.Mukim && item.attributes.Mukim.toLowerCase().includes(mukim.toLowerCase())
+          ? item.attributes.Nama_Mukim && item.attributes.Nama_Mukim.toLowerCase().includes(mukim.toLowerCase())
           : true;
         
-        // If only Daerah is provided (without lotNumber), allow matching only by Daerah
-        if (!lotNumber && daerah && daerah.length > 0 && !mukim) {
-          return matchesDaerah;
-        }
+        console.log("matchesLot", matchesLot);
+        console.log("matchesDaerah", matchesDaerah);
+        console.log("matchesMukim", matchesMukim);
+        console.log("item.attributes.Daerah", item.attributes)
 
         // Return true if all provided conditions match
         return matchesLot && matchesDaerah && matchesMukim;
@@ -382,7 +384,7 @@ const DashboardPage = () => {
                             <FaMagnifyingGlassLocation />
                           </button>
                           <a
-                            href={`/cipta-ulasan?no_lot=${item.attributes.No_Lot}&rings=${item.geometry?.rings}`}
+                            href={`/ulasan-teknikal/cipta-ulasan?no_lot=${item.attributes.No_Lot}&rings=${item.geometry?.rings}`}
                             className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
                             title="Cipta Ulasan Berdasarkan lot"
                           >

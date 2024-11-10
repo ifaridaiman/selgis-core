@@ -5,16 +5,18 @@ import { VscPreview } from "react-icons/vsc";
 import { TfiDashboard } from "react-icons/tfi";
 import { useLogout } from '@/hooks/auth/useLogout';
 import { useNav } from '@/hooks/useNav';
+
 import Link from 'next/link';
 const   SideNav:React.FC = () => {
   const {handleDashboard, handleUlasanTeknikal} = useNav();
   const {handleLogout} = useLogout();
+  
   return (
     <div className="bg-blue-600 text-white p-4 min-h-screen flex flex-col fixed top-0 left-0 ">
         {/* Logo Section */}
         <div className="mb-4 flex flex-col items-center">
           <Image
-            src="/admin/assets/logo/logo_jpsselgis.png"
+            src="/ulasan-teknikal/assets/logo/logo_jpsselgis.png"
             alt="Logo"
             width={150}
             height={150}
