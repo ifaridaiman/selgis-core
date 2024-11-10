@@ -40,6 +40,6 @@ model Ulasan{
   projek Projek @relation(fields: [projekId], references: [id])
   projekId String
   ulasan String
-  folderPath String
+  folderPath String?
   
 }

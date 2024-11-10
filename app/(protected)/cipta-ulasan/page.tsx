@@ -87,46 +87,54 @@ const UlasanTeknikalPage = () => {
   const { showCalculator, setShowCalcultor } = useCalculator();
 
   const handleFormCiptaUlasan = async (e: React.FormEvent<HTMLFormElement>) => {
+
     e.preventDefault();
+  
+    const formData = new FormData();
+    console.log("FORM DATA AT PAGE START: ", formData)
 
+  
+    // Append form fields
+    formData.append("lotNumber", ciptaUlasanForm.lotNumber || "");
+    formData.append("daerah", ciptaUlasanForm.daerah || "");
+    formData.append("mukim", ciptaUlasanForm.mukim || "");
+    formData.append("koordinat_x", ciptaUlasanForm.kordinatX.toString() || "");
+    formData.append("koordinat_y", ciptaUlasanForm.kordinatY.toString() || "");
+    formData.append("tajukProjek", ciptaUlasanForm.tajukProjek || "");
+    formData.append("jenisPermohonan", ciptaUlasanForm.jenisPermohonan || "");
+    formData.append("noFail", ciptaUlasanForm.noFail || "");
+    formData.append("status", ciptaUlasanForm.status || "");
+    formData.append("bahagian", ciptaUlasanForm.bahagian || "");
+    formData.append("rings", JSON.stringify(ciptaUlasanForm.rings || ""));
+    formData.append("panjang", ciptaUlasanForm.panjang?.toString() || "");
+    formData.append("luas", ciptaUlasanForm.luas?.toString() || "");
+    formData.append("ulasan", ciptaUlasanForm.ulasan || "");
+    formData.append("tajukSurat", ciptaUlasanForm.tajukSurat || "");
+  
+    // Append files if there are any
+    selectedFiles.forEach((file) => {
+      formData.append("file", file);
+    });
+
+    console.log("FORM DATA AT END: ", formData)
+  
     try {
-      // const response = await fetch("/api/createProjek", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     ...ciptaUlasanForm,
-      //     koordinat_x: ciptaUlasanForm.kordinatX, // Adjust key to match Prisma schema
-      //     koordinat_y: ciptaUlasanForm.kordinatY,
-      //     ulasan: ciptaUlasanForm.ulasan,
-      //     file_upload: ciptaUlasanForm.folderPath, // Use file_upload as folderPath
-      //   }),
-      // });
-
-      // if (response.ok) {
-      //   const result = await response.json();
-      //   console.log("Submitted successfully:", result);
-      // } else {
-      //   console.error("Failed to submit form:", response.statusText);
-      // }
-      console.log("Form data:", ciptaUlasanForm);
-
-      // If you'd like to manipulate or validate the data before submission, do it here
-      const formData = {
-        ...ciptaUlasanForm,
-        koordinat_x: ciptaUlasanForm.kordinatX, // Adjust key to match Prisma schema
-        koordinat_y: ciptaUlasanForm.kordinatY,
-        ulasan: ciptaUlasanForm.ulasan,
-        folderPath: ciptaUlasanForm.folderPath, // Use file_upload as folderPath
-      };
-
-      // Log the transformed data structure for clarity
-      console.log("Transformed form data:", formData);
+      const response = await fetch("/admin/api/ulasan", {
+        method: "POST",
+        body: formData,
+      });
+  
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Submitted successfully:", result);
+      } else {
+        console.error("Failed to submit form:", response.statusText);
+      }
     } catch (error) {
       console.error("Error during submission:", error);
     }
-
-    
   };
+  
 
   let mapData = [];
   try {
@@ -167,8 +175,20 @@ const UlasanTeknikalPage = () => {
                       type="text"
                       name="tajukProjek"
                       id="tajukProjek"
+                      value={ciptaUlasanForm.tajukProjek || ""}
                       onChange={handleInputChange}
                     />
+                  </FormGroup>
+                  <FormGroup label="Tajuk Surat" labelId="tajukSurat">
+                    <input
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      type="text"
+                      name="tajukSurat"
+                      id="tajukSurat"
+                      value={ciptaUlasanForm.tajukSurat || ""}
+                      onChange={handleInputChange}
+                    />
+                    
                   </FormGroup>
 
                   <div className="space-y-6 sm:space-y-5">
@@ -414,7 +434,7 @@ const UlasanTeknikalPage = () => {
                         </span>
                         <input
                           type="file"
-                          name="file_upload"
+                          name="file"
                           className="hidden"
                           multiple
                           onChange={handleFileChange}

@@ -11,7 +11,8 @@ const nextConfig = {
             { title: "Maklumat Kolam", id: "9053a8dccc1d46e2b64c2ea4b0a7e3c7" },
             { title: "Maklumat Sungai", id: "9760aba7c3cc46a19f0721a83fca44b3" }
         ])
-    }
+    },
+    basePath:"/admin"
 };
 
 export default nextConfig;

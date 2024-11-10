@@ -418,7 +418,7 @@ const DashboardPage = () => {
           />
         </Tab>
         <Tab label="Jadual Ulasan">
-        <table className="w-full">
+        {/* <table className="w-full">
       <thead>
         <tr>
           <th className="rounded-tl-xl bg-gray-300">
@@ -433,7 +433,7 @@ const DashboardPage = () => {
           <th className="py-4 px-4 bg-gray-300 rounded-tr-xl">Action</th>
         </tr>
       </thead>
-      </table>
+      </table> */}
           <JadualUlasanTable />
         </Tab>
       </TabContainer>

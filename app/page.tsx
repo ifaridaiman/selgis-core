@@ -38,7 +38,7 @@ export default function Home() {
   };
   return (
     <main className="flex w-screen h-screen">
-      <div className="bg-[url('/assets/background/bg_login.jpg')] bg-cover h-full flex items-center w-1/3 p-8">
+      <div className="bg-[url('/admin/assets/background/bg_login.jpg')] bg-cover h-full flex items-center w-1/3 p-8">
         <p className="text-white text-7xl font-bold">
           Pusat Data GIS JPS, Negeri Selangor
         </p>
@@ -46,13 +46,13 @@ export default function Home() {
       <div className="w-2/3 flex justify-center flex-col items-center">
         <div className="flex items-center">
           <Image
-            src="/assets/logo/jata-logo-lambang-selangor.svg"
+            src="/admin/assets/logo/jata-logo-lambang-selangor.svg"
             width={200}
             height={80}
             alt="logo_selangor"
           />
           <Image
-            src="/assets/logo/logo_jpsselgis.png"
+            src="/admin/assets/logo/logo_jpsselgis.png"
             width={250}
             height={100}
             alt="logojpsselgis"

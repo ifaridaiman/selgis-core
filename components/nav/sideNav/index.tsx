@@ -5,7 +5,7 @@ import { VscPreview } from "react-icons/vsc";
 import { TfiDashboard } from "react-icons/tfi";
 import { useLogout } from '@/hooks/auth/useLogout';
 import { useNav } from '@/hooks/useNav';
-
+import Link from 'next/link';
 const   SideNav:React.FC = () => {
   const {handleDashboard, handleUlasanTeknikal} = useNav();
   const {handleLogout} = useLogout();
@@ -14,7 +14,7 @@ const   SideNav:React.FC = () => {
         {/* Logo Section */}
         <div className="mb-4 flex flex-col items-center">
           <Image
-            src="/assets/logo/logo_jpsselgis.png"
+            src="/admin/assets/logo/logo_jpsselgis.png"
             alt="Logo"
             width={150}
             height={150}
@@ -31,10 +31,10 @@ const   SideNav:React.FC = () => {
               <span className='text-xl'><VscPreview/></span>
               <span className='text-base'>Halaman Utama</span>
             </div>
-            <div className="flex items-center cursor-pointer text-white mb-4 gap-4 text-base hover:bg-black hover:rounded-lg transition-all duration-300 ease-in-out py-2 px-4">
+            <Link href="https://jpsselgis.selangor.gov.my/portal/apps/opsdashboard/index.html#/c8be80aa051e4316ae3e446a5d9b4785" target='_blank' className="flex items-center cursor-pointer text-white mb-4 gap-4 text-base hover:bg-black hover:rounded-lg transition-all duration-300 ease-in-out py-2 px-4">
               <span className='text-xl'><TfiDashboard/></span>
               <span className='text-base'>Dashboard</span>
-            </div>
+            </Link>
             {/* <div onClick={handleUlasanTeknikal} className="flex items-center cursor-pointer text-white mb-4 gap-4 text-base hover:bg-black hover:rounded-lg transition-all duration-300 ease-in-out py-2 px-4">
               <span className='text-xl'><VscPreview/></span>
               <span className='text-base'>Ulasan Teknikal</span>

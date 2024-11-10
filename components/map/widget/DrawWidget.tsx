@@ -15,12 +15,14 @@ type DrawWidgetProps = {
 
 const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
   const drawDiv = useRef<Sketch | null>(null);
-  const { graphicLayer, setCiptaUlasanForm } = useMapContext();
+  const { graphicLayer, setCiptaUlasanForm, ciptaUlasanForm } = useMapContext();
+
+  const currentTajukProjek = ciptaUlasanForm.tajukProjek;
+  const currentTajukSurat = ciptaUlasanForm.tajukSurat;
 
   let kordinatX = "";
   let kordinatY = "";
   let ring: number[][][] = [];
-
 
   useEffect(() => {
     if (!drawDiv.current && mapView) {
@@ -89,21 +91,28 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
             kordinatX = centroidWGS84Json.x;
             kordinatY = centroidWGS84Json.y;
 
+            // setCiptaUlasanForm({
+            //   lotNumber: "", // Keep this empty initially
+            //   daerah: "", // Assuming daerah is set elsewhere
+            //   mukim: "", // Assuming mukim is set elsewhere
+            //   kordinatX: kordinatX,
+            //   kordinatY: kordinatY,
+            //   tajukProjek: currentTajukProjek, // Assuming tajukProjek is set elsewhere
+            //   jenisPermohonan: "", // Assuming jenisPermohonan is set elsewhere
+            //   noFail: "", // Assuming noFail is set elsewhere
+            //   status: "", // Assuming status is set elsewhere
+            //   bahagian: "", // Assuming bahagian is set elsewhere
+            //   ulasan: "", // Assuming ulasan is set elsewhere
+            //   folderPath: [], // Assuming folderPath is set elsewhere
+            //   rings: ring,
+            //   tajukSurat: currentTajukSurat,
+            // });
+            // Preserve existing values of `tajukProjek` and `tajukSurat`
             setCiptaUlasanForm({
-              lotNumber: "", // Keep this empty initially
-              daerah: "", // Assuming daerah is set elsewhere
-              mukim: "", // Assuming mukim is set elsewhere
-              kordinatX: kordinatX,
-              kordinatY: kordinatY,
-              tajukProjek: "", // Assuming tajukProjek is set elsewhere
-              jenisPermohonan: "", // Assuming jenisPermohonan is set elsewhere
-              noFail: "", // Assuming noFail is set elsewhere
-              status: "", // Assuming status is set elsewhere
-              bahagian: "", // Assuming bahagian is set elsewhere
-              ulasan: "", // Assuming ulasan is set elsewhere
-              folderPath: [], // Assuming folderPath is set elsewhere
-              rings:ring,
-              tajukSurat: ""
+              ...ciptaUlasanForm,
+              kordinatX,
+              kordinatY,
+              rings: ring,
             });
           }
 
@@ -147,23 +156,27 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
               });
               graphicHit.graphic.attributes.label = newLabel;
 
-              setCiptaUlasanForm({
-                lotNumber: newLabel, // Keep this empty initially
-                daerah: "", // Assuming daerah is set elsewhere
-                mukim: "", // Assuming mukim is set elsewhere
-                kordinatX: kordinatX,
-                kordinatY: kordinatY,
-                tajukProjek: "", // Assuming tajukProjek is set elsewhere
-                jenisPermohonan: "", // Assuming jenisPermohonan is set elsewhere
-                noFail: "", // Assuming noFail is set elsewhere
-                status: "", // Assuming status is set elsewhere
-                bahagian: "", // Assuming bahagian is set elsewhere
-                ulasan: "", // Assuming ulasan is set elsewhere
-                folderPath: [], // Assuming folderPath is set elsewhere
-                rings:ring,
-                tajukSurat: ""
-              });
+              // setCiptaUlasanForm({
+              //   lotNumber: newLabel, // Keep this empty initially
+              //   daerah: "", // Assuming daerah is set elsewhere
+              //   mukim: "", // Assuming mukim is set elsewhere
+              //   kordinatX: kordinatX,
+              //   kordinatY: kordinatY,
+              //   tajukProjek: currentTajukProjek, // Assuming tajukProjek is set elsewhere
+              //   jenisPermohonan: "", // Assuming jenisPermohonan is set elsewhere
+              //   noFail: "", // Assuming noFail is set elsewhere
+              //   status: "", // Assuming status is set elsewhere
+              //   bahagian: "", // Assuming bahagian is set elsewhere
+              //   ulasan: "", // Assuming ulasan is set elsewhere
+              //   folderPath: [], // Assuming folderPath is set elsewhere
+              //   rings: ring,
+              //   tajukSurat: currentTajukSurat,
+              // });
 
+              setCiptaUlasanForm({
+                ...ciptaUlasanForm,
+                lotNumber: newLabel,
+              });
               console.log("Sketch Info:", {
                 geometry: graphicHit.graphic.geometry.toJSON(),
                 label: newLabel,
@@ -183,7 +196,7 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
         group: "expandable-widgets",
       });
 
-      mapView.ui.add(drawExpand, {position:"top-right", index:1});
+      mapView.ui.add(drawExpand, { position: "top-right", index: 1 });
     }
   }, [mapView]);
 
