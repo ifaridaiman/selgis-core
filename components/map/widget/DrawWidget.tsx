@@ -91,28 +91,21 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
             kordinatX = centroidWGS84Json.x;
             kordinatY = centroidWGS84Json.y;
 
-            // setCiptaUlasanForm({
-            //   lotNumber: "", // Keep this empty initially
-            //   daerah: "", // Assuming daerah is set elsewhere
-            //   mukim: "", // Assuming mukim is set elsewhere
-            //   kordinatX: kordinatX,
-            //   kordinatY: kordinatY,
-            //   tajukProjek: currentTajukProjek, // Assuming tajukProjek is set elsewhere
-            //   jenisPermohonan: "", // Assuming jenisPermohonan is set elsewhere
-            //   noFail: "", // Assuming noFail is set elsewhere
-            //   status: "", // Assuming status is set elsewhere
-            //   bahagian: "", // Assuming bahagian is set elsewhere
-            //   ulasan: "", // Assuming ulasan is set elsewhere
-            //   folderPath: [], // Assuming folderPath is set elsewhere
-            //   rings: ring,
-            //   tajukSurat: currentTajukSurat,
-            // });
-            // Preserve existing values of `tajukProjek` and `tajukSurat`
             setCiptaUlasanForm({
-              ...ciptaUlasanForm,
-              kordinatX,
-              kordinatY,
+              lotNumber: "", // Keep this empty initially
+              daerah: "", // Assuming daerah is set elsewhere
+              mukim: "", // Assuming mukim is set elsewhere
+              kordinatX: kordinatX,
+              kordinatY: kordinatY,
+              tajukProjek: currentTajukProjek, // Assuming tajukProjek is set elsewhere
+              jenisPermohonan: "", // Assuming jenisPermohonan is set elsewhere
+              noFail: "", // Assuming noFail is set elsewhere
+              status: "", // Assuming status is set elsewhere
+              bahagian: "", // Assuming bahagian is set elsewhere
+              ulasan: "", // Assuming ulasan is set elsewhere
+              folderPath: [], // Assuming folderPath is set elsewhere
               rings: ring,
+              tajukSurat: currentTajukSurat,
             });
           }
 
@@ -156,27 +149,23 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
               });
               graphicHit.graphic.attributes.label = newLabel;
 
-              // setCiptaUlasanForm({
-              //   lotNumber: newLabel, // Keep this empty initially
-              //   daerah: "", // Assuming daerah is set elsewhere
-              //   mukim: "", // Assuming mukim is set elsewhere
-              //   kordinatX: kordinatX,
-              //   kordinatY: kordinatY,
-              //   tajukProjek: currentTajukProjek, // Assuming tajukProjek is set elsewhere
-              //   jenisPermohonan: "", // Assuming jenisPermohonan is set elsewhere
-              //   noFail: "", // Assuming noFail is set elsewhere
-              //   status: "", // Assuming status is set elsewhere
-              //   bahagian: "", // Assuming bahagian is set elsewhere
-              //   ulasan: "", // Assuming ulasan is set elsewhere
-              //   folderPath: [], // Assuming folderPath is set elsewhere
-              //   rings: ring,
-              //   tajukSurat: currentTajukSurat,
-              // });
-
               setCiptaUlasanForm({
-                ...ciptaUlasanForm,
-                lotNumber: newLabel,
+                lotNumber: newLabel, // Keep this empty initially
+                daerah: "", // Assuming daerah is set elsewhere
+                mukim: "", // Assuming mukim is set elsewhere
+                kordinatX: kordinatX,
+                kordinatY: kordinatY,
+                tajukProjek: currentTajukProjek, // Assuming tajukProjek is set elsewhere
+                jenisPermohonan: "", // Assuming jenisPermohonan is set elsewhere
+                noFail: "", // Assuming noFail is set elsewhere
+                status: "", // Assuming status is set elsewhere
+                bahagian: "", // Assuming bahagian is set elsewhere
+                ulasan: "", // Assuming ulasan is set elsewhere
+                folderPath: [], // Assuming folderPath is set elsewhere
+                rings: ring,
+                tajukSurat: currentTajukSurat,
               });
+
               console.log("Sketch Info:", {
                 geometry: graphicHit.graphic.geometry.toJSON(),
                 label: newLabel,

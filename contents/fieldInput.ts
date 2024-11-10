@@ -1,7 +1,7 @@
 export const senaraiBahagian = [
     {
-        label: 'Bahagian Pengurusan Sungai, Sumber Air dan Hidrologu (BPSgHid)',
-        value: 'Bahagian Pengurusan Sungai, Sumber Air dan Hidrologu (BPSgHid)',
+        label: 'Bahagian Pengurusan Sungai',
+        value: 'Bahagian Pengurusan Sungai',
         senaraiJenisPermohonan: [
             {
                 label: 'Kuari/ Perlombongan',

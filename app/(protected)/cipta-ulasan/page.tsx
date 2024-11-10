@@ -169,27 +169,7 @@ const UlasanTeknikalPage = () => {
                   </p>
                 </div>
                 <form onSubmit={handleFormCiptaUlasan} ref={formRef}>
-                  <FormGroup label="Tajuk Projek" labelId="tajukProjek">
-                    <input
-                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                      type="text"
-                      name="tajukProjek"
-                      id="tajukProjek"
-                      value={ciptaUlasanForm.tajukProjek || ""}
-                      onChange={handleInputChange}
-                    />
-                  </FormGroup>
-                  <FormGroup label="Tajuk Surat" labelId="tajukSurat">
-                    <input
-                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                      type="text"
-                      name="tajukSurat"
-                      id="tajukSurat"
-                      value={ciptaUlasanForm.tajukSurat || ""}
-                      onChange={handleInputChange}
-                    />
-                    
-                  </FormGroup>
+                  
 
                   <div className="space-y-6 sm:space-y-5">
                     <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
@@ -283,6 +263,27 @@ const UlasanTeknikalPage = () => {
                       value={ciptaUlasanForm.lotNumber || ""}
                       onChange={handleInputChange} // Update the form state on change
                     />
+                  </FormGroup>
+                  <FormGroup label="Tajuk Projek" labelId="tajukProjek">
+                    <input
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      type="text"
+                      name="tajukProjek"
+                      id="tajukProjek"
+                      value={ciptaUlasanForm.tajukProjek || ""}
+                      onChange={handleInputChange}
+                    />
+                  </FormGroup>
+                  <FormGroup label="Tajuk Surat" labelId="tajukSurat">
+                    <input
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      type="text"
+                      name="tajukSurat"
+                      id="tajukSurat"
+                      value={ciptaUlasanForm.tajukSurat || ""}
+                      onChange={handleInputChange}
+                    />
+                    
                   </FormGroup>
                   <FormGroup label="Panjang (m)" labelId="panjang">
                     <input
