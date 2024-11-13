@@ -8,6 +8,7 @@ import { useMapContext } from "../MapContext";
 import * as webMercatorUtils from "@arcgis/core/geometry/support/webMercatorUtils.js";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import Query from "@arcgis/core/rest/support/Query";
+import Point from "@arcgis/core/geometry/Point";
 
 type DrawWidgetProps = {
   mapView: MapView;
@@ -15,6 +16,7 @@ type DrawWidgetProps = {
 
 const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
   const drawDiv = useRef<Sketch | null>(null);
+  const ringsWGS84Ref = useRef<number[][][]>([]); // Use ref to store rings in WGS84 format
   const { graphicLayer, setCiptaUlasanForm, ciptaUlasanForm } = useMapContext();
 
   const currentTajukProjek = ciptaUlasanForm.tajukProjek;
@@ -54,6 +56,18 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
           // const extent = polygon.extent;
           ring = polygon.rings;
 
+          // if(polygon.spatialReference.wkid !== 4326){
+            const ringsWGS84 = polygon.rings.map((ring) =>
+              ring.map((coords) => {
+                const pointWebMercator = new Point({ x: coords[0], y: coords[1], spatialReference: { wkid: 3857 } });
+                const pointWGS84 = webMercatorUtils.webMercatorToGeographic(pointWebMercator) as Point;
+                return [pointWGS84.x, pointWGS84.y];
+              })
+            );
+          // s}
+          ringsWGS84Ref.current = ringsWGS84;
+          
+
           // Create a text symbol to label the polygon
           const textSymbol = new TextSymbol({
             text: "Click to Edit Label", // Default label text
@@ -83,6 +97,9 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
           // ymax = extent.ymax;
 
           if (centroid.spatialReference.wkid !== 4326) {
+
+
+
             const centroidWGS84 =
               webMercatorUtils.webMercatorToGeographic(centroid);
             const centroidWGS84Json = centroidWGS84.toJSON();
@@ -104,8 +121,9 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
               bahagian: "", // Assuming bahagian is set elsewhere
               ulasan: "", // Assuming ulasan is set elsewhere
               folderPath: [], // Assuming folderPath is set elsewhere
-              rings: ring,
+              rings: ringsWGS84Ref.current,
               tajukSurat: currentTajukSurat,
+              tarikhUlasan: new Date()
             });
           }
 
@@ -162,8 +180,9 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
                 bahagian: "", // Assuming bahagian is set elsewhere
                 ulasan: "", // Assuming ulasan is set elsewhere
                 folderPath: [], // Assuming folderPath is set elsewhere
-                rings: ring,
+                rings: ringsWGS84Ref.current,
                 tajukSurat: currentTajukSurat,
+                tarikhUlasan: new Date()
               });
 
               console.log("Sketch Info:", {

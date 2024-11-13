@@ -87,7 +87,7 @@ export const senaraiBahagian = [
                 label: 'Laluan Perkapalan',
                 value: 'Laluan Perkapalan'
             },
-            
+
         ],
         senaraiStatus: [
             {

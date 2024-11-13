@@ -1,45 +1,37 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "sqlserver"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
-
-model Projek{
-  id String @id @default(uuid())
-  lotNumber String
-  daerah String
-  mukim String
-  koordinat_x Float
-  koordinat_y Float
-  tajukProjek String
-  jenisPermohonan String
-  noFail String
-  status String
-  bahagian String
-  ulasans Ulasan[]
-  rings String
-  panjang String
-  luas String 
-  tajukSurat String
-
-
+model Projek {
+  id              Int      @id(map: "PK__Projek__3213E83FC1E569CA") @default(autoincrement())
+  lotNumber       String   @db.VarChar(255)
+  daerah          String   @db.VarChar(255)
+  mukim           String   @db.VarChar(255)
+  koordinat_x     Float
+  koordinat_y     Float
+  tajukProjek     String   @db.VarChar(255)
+  jenisPermohonan String   @db.VarChar(255)
+  noFail          String   @db.VarChar(255)
+  status          String   @db.VarChar(255)
+  bahagian        String   @db.VarChar(255)
+  rings           String   @db.VarChar(255)
+  panjang         String   @db.VarChar(255)
+  luas            String   @db.VarChar(255)
+  tajukSurat      String   @db.VarChar(255)
+  tarikhUlasan    DateTime @db.Date
+  Ulasan          Ulasan[]
 }
 
-model Ulasan{
-  id Int @id @default(autoincrement())
-  projek Projek @relation(fields: [projekId], references: [id])
-  projekId String
-  ulasan String
-  folderPath String?
-  
+model Ulasan {
+  id         Int     @id(map: "PK__Ulasan__3213E83F055889FA") @default(autoincrement())
+  ulasanID   String? @default(dbgenerated("newid()"), map: "DF__Ulasan__ulasanID__398D8EEE") @db.UniqueIdentifier
+  projekId   Int
+  ulasan     String  @db.VarChar(255)
+  folderPath String? @db.VarChar(255)
+  Projek     Projek  @relation(fields: [projekId], references: [id], onUpdate: NoAction, map: "fk_projek")
 }

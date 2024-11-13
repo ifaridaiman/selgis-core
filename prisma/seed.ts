@@ -3,282 +3,74 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  // Seed data for Projek
+  // Seed `Projek` data
   const projek1 = await prisma.projek.create({
     data: {
-      lotNumber: '1002',
-      daerah: 'Kuala Langat',
-      mukim: 'Mukim Kelanang',
-      koordinat_x: 101.59234676780704,
-      koordinat_y: 3.264663480413145,
-      tajukProjek: 'Projek Pantai',
-      jenisPermohonan: 'Tebing Pantai',
-      noFail: 'po021',
-      status: 'Sokong dengan syarat',
-      bahagian: 'Bahagian Pengurusan Zon Pantai, Pengairan dan Saliran Pertanian (BPZPPSP)',
-      rings: `[
-        [
-          [11309223.836957322, 363764.38661855017],
-          [11309536.751041874, 363470.5817910701],
-          [11309125.902014831, 363525.5209051533],
-          [11308879.870330032, 363668.84033319034],
-          [11309223.836957322, 363764.38661855017]
-        ]
-      ]`,
+      lotNumber: '4001',
+      daerah: 'Klang',
+      mukim: 'Mukim Kapar',
+      koordinat_x: 101.5923,
+      koordinat_y: 3.2646,
+      tajukProjek: 'Projek Sungai Kuari',
+      jenisPermohonan: 'Kuari/ Perlombongan',
+      noFail: 'SG001',
+      status: 'Ulasan Teknikal',
+      bahagian: 'Bahagian Pengurusan Sungai',
+      rings: `[[[11309223.836957322, 363764.38661855017], [11309536.751041874, 363470.5817910701], [11309125.902014831, 363525.5209051533], [11308879.870330032, 363668.84033319034], [11309223.836957322, 363764.38661855017]]]`,
       panjang: '100',
-      luas: '200',
-      tajukSurat: 'Surat Sokongan Projek Pantai',
-
-      ulasans: {
-        create: [
-          {
-            ulasan: 'Projek ini disokong dengan syarat tertentu.',
-            folderPath: 'C:\\fakepath\\Commitment Bulanan Farid.xlsx'
-          },
-          {
-            ulasan: 'Perlu pemantauan tambahan di kawasan tersebut.',
-            folderPath: 'C:\\fakepath\\Pemantauan Kawasan.xlsx'
-          }
-        ]
-      }
-    }
+      luas: '250',
+      tajukSurat: 'Surat Ulasan Teknikal Kuari',
+      tarikhUlasan: new Date('2024-01-15'),
+    },
   });
+
   const projek2 = await prisma.projek.create({
     data: {
-      lotNumber: '1003',
-      daerah: 'Kuala Langat',
-      mukim: 'Mukim Kelanang',
-      koordinat_x: 101.59234676780704,
-      koordinat_y: 3.264663480413145,
-      tajukProjek: 'Projek Pantai',
-      jenisPermohonan: 'Tebing Pantai',
-      noFail: 'po021',
-      status: 'Sokong dengan syarat',
-      bahagian: 'Bahagian Pengurusan Zon Pantai, Pengairan dan Saliran Pertanian (BPZPPSP)',
-      rings: `[
-        [
-          [11309223.836957322, 363764.38661855017],
-          [11309536.751041874, 363470.5817910701],
-          [11309125.902014831, 363525.5209051533],
-          [11308879.870330032, 363668.84033319034],
-          [11309223.836957322, 363764.38661855017]
-        ]
-      ]`,
-      panjang: '100',
-      luas: '200',
-      tajukSurat: 'Surat Sokongan Projek Pantai',
-
-      ulasans: {
-        create: [
-          {
-            ulasan: 'Projek ini disokong dengan syarat tertentu.',
-            folderPath: 'C:\\fakepath\\Commitment Bulanan Farid.xlsx'
-          },
-          {
-            ulasan: 'Perlu pemantauan tambahan di kawasan tersebut.',
-            folderPath: 'C:\\fakepath\\Pemantauan Kawasan.xlsx'
-          }
-        ]
-      }
-    }
-  });
-  const projek3 = await prisma.projek.create({
-    data: {
-      lotNumber: '1004',
-      daerah: 'Kuala Langat',
-      mukim: 'Mukim Kelanang',
-      koordinat_x: 101.59234676780704,
-      koordinat_y: 3.264663480413145,
-      tajukProjek: 'Projek Pantai',
-      jenisPermohonan: 'Tebing Pantai',
-      noFail: 'po021',
-      status: 'Sokong dengan syarat',
-      bahagian: 'Bahagian Pengurusan Zon Pantai, Pengairan dan Saliran Pertanian (BPZPPSP)',
-      rings: `[
-        [
-          [11309223.836957322, 363764.38661855017],
-          [11309536.751041874, 363470.5817910701],
-          [11309125.902014831, 363525.5209051533],
-          [11308879.870330032, 363668.84033319034],
-          [11309223.836957322, 363764.38661855017]
-        ]
-      ]`,
-      panjang: '100',
-      luas: '200',
-      tajukSurat: 'Surat Sokongan Projek Pantai',
-
-      ulasans: {
-        create: [
-          {
-            ulasan: 'Projek ini disokong dengan syarat tertentu.',
-            folderPath: 'C:\\fakepath\\Commitment Bulanan Farid.xlsx'
-          },
-          {
-            ulasan: 'Perlu pemantauan tambahan di kawasan tersebut.',
-            folderPath: 'C:\\fakepath\\Pemantauan Kawasan.xlsx'
-          }
-        ]
-      }
-    }
-  });
-  const projek4 = await prisma.projek.create({
-    data: {
-      lotNumber: '1005',
-      daerah: 'Kuala Langat',
-      mukim: 'Mukim Kelanang',
-      koordinat_x: 101.59234676780704,
-      koordinat_y: 3.264663480413145,
-      tajukProjek: 'Projek Pantai',
-      jenisPermohonan: 'Tebing Pantai',
-      noFail: 'po021',
-      status: 'Sokong dengan syarat',
-      bahagian: 'Bahagian Pengurusan Zon Pantai, Pengairan dan Saliran Pertanian (BPZPPSP)',
-      rings: `[
-        [
-          [11309223.836957322, 363764.38661855017],
-          [11309536.751041874, 363470.5817910701],
-          [11309125.902014831, 363525.5209051533],
-          [11308879.870330032, 363668.84033319034],
-          [11309223.836957322, 363764.38661855017]
-        ]
-      ]`,
-      panjang: '100',
-      luas: '200',
-      tajukSurat: 'Surat Sokongan Projek Pantai',
-
-      ulasans: {
-        create: [
-          {
-            ulasan: 'Projek ini disokong dengan syarat tertentu.',
-            folderPath: 'C:\\fakepath\\Commitment Bulanan Farid.xlsx'
-          },
-          {
-            ulasan: 'Perlu pemantauan tambahan di kawasan tersebut.',
-            folderPath: 'C:\\fakepath\\Pemantauan Kawasan.xlsx'
-          }
-        ]
-      }
-    }
-  });
-  const projek5 = await prisma.projek.create({
-    data: {
-      lotNumber: '1006',
-      daerah: 'Kuala Langat',
-      mukim: 'Mukim Kelanang',
-      koordinat_x: 101.59234676780704,
-      koordinat_y: 3.264663480413145,
-      tajukProjek: 'Projek Pantai',
-      jenisPermohonan: 'Tebing Pantai',
-      noFail: 'po021',
-      status: 'Sokong dengan syarat',
-      bahagian: 'Bahagian Pengurusan Zon Pantai, Pengairan dan Saliran Pertanian (BPZPPSP)',
-      rings: `[
-        [
-          [11309223.836957322, 363764.38661855017],
-          [11309536.751041874, 363470.5817910701],
-          [11309125.902014831, 363525.5209051533],
-          [11308879.870330032, 363668.84033319034],
-          [11309223.836957322, 363764.38661855017]
-        ]
-      ]`,
-      panjang: '100',
-      luas: '200',
-      tajukSurat: 'Surat Sokongan Projek Pantai',
-
-      ulasans: {
-        create: [
-          {
-            ulasan: 'Projek ini disokong dengan syarat tertentu.',
-            folderPath: 'C:\\fakepath\\Commitment Bulanan Farid.xlsx'
-          },
-          {
-            ulasan: 'Perlu pemantauan tambahan di kawasan tersebut.',
-            folderPath: 'C:\\fakepath\\Pemantauan Kawasan.xlsx'
-          }
-        ]
-      }
-    }
-  });
-  const projek6 = await prisma.projek.create({
-    data: {
-      lotNumber: '1007',
-      daerah: 'Kuala Langat',
-      mukim: 'Mukim Kelanang',
-      koordinat_x: 101.59234676780704,
-      koordinat_y: 3.264663480413145,
-      tajukProjek: 'Projek Pantai',
-      jenisPermohonan: 'Tebing Pantai',
-      noFail: 'po021',
-      status: 'Sokong dengan syarat',
-      bahagian: 'Bahagian Pengurusan Zon Pantai, Pengairan dan Saliran Pertanian (BPZPPSP)',
-      rings: `[
-        [
-          [11309223.836957322, 363764.38661855017],
-          [11309536.751041874, 363470.5817910701],
-          [11309125.902014831, 363525.5209051533],
-          [11308879.870330032, 363668.84033319034],
-          [11309223.836957322, 363764.38661855017]
-        ]
-      ]`,
-      panjang: '100',
-      luas: '200',
-      tajukSurat: 'Surat Sokongan Projek Pantai',
-
-      ulasans: {
-        create: [
-          {
-            ulasan: 'Projek ini disokong dengan syarat tertentu.',
-            folderPath: 'C:\\fakepath\\Commitment Bulanan Farid.xlsx'
-          },
-          {
-            ulasan: 'Perlu pemantauan tambahan di kawasan tersebut.',
-            folderPath: 'C:\\fakepath\\Pemantauan Kawasan.xlsx'
-          }
-        ]
-      }
-    }
-  });
-  const projek8 = await prisma.projek.create({
-    data: {
-      lotNumber: '1008',
-      daerah: 'Kuala Langat',
-      mukim: 'Mukim Kelanang',
-      koordinat_x: 101.59234676780704,
-      koordinat_y: 3.264663480413145,
-      tajukProjek: 'Projek Pantai',
-      jenisPermohonan: 'Tebing Pantai',
-      noFail: 'po021',
-      status: 'Sokong dengan syarat',
-      bahagian: 'Bahagian Pengurusan Zon Pantai, Pengairan dan Saliran Pertanian (BPZPPSP)',
-      rings: `[
-        [
-          [11309223.836957322, 363764.38661855017],
-          [11309536.751041874, 363470.5817910701],
-          [11309125.902014831, 363525.5209051533],
-          [11308879.870330032, 363668.84033319034],
-          [11309223.836957322, 363764.38661855017]
-        ]
-      ]`,
-      panjang: '100',
-      luas: '200',
-      tajukSurat: 'Surat Sokongan Projek Pantai',
-
-      ulasans: {
-        create: [
-          {
-            ulasan: 'Projek ini disokong dengan syarat tertentu.',
-            folderPath: 'C:\\fakepath\\Commitment Bulanan Farid.xlsx'
-          },
-          {
-            ulasan: 'Perlu pemantauan tambahan di kawasan tersebut.',
-            folderPath: 'C:\\fakepath\\Pemantauan Kawasan.xlsx'
-          }
-        ]
-      }
-    }
+      lotNumber: '4002',
+      daerah: 'Klang',
+      mukim: 'Mukim Kapar',
+      koordinat_x: 101.582,
+      koordinat_y: 3.268,
+      tajukProjek: 'Projek Sungai Rizab',
+      jenisPermohonan: 'Penggunaan rizab sungai',
+      noFail: 'SG002',
+      status: 'Tidak Lengkap',
+      bahagian: 'Bahagian Pengurusan Sungai',
+      rings: `[[[11309223.836957322, 363764.38661855017], [11309536.751041874, 363470.5817910701], [11309125.902014831, 363525.5209051533], [11308879.870330032, 363668.84033319034], [11309223.836957322, 363764.38661855017]]]`,
+      panjang: '110',
+      luas: '260',
+      tajukSurat: 'Surat Tidak Lengkap Rizab Sungai',
+      tarikhUlasan: new Date('2024-02-10'),
+    },
   });
 
-  console.log({ projek1, projek2, projek3, projek4, projek5, projek6, projek8 });
+  // Add `Ulasan` entries for each `Projek`
+  await prisma.ulasan.createMany({
+    data: [
+      {
+        projekId: projek1.id,
+        ulasan: 'Projek ini disokong dengan syarat tambahan.',
+        folderPath: 'C:\\docs\\UlasanProjek1-1.pdf',
+      },
+      {
+        projekId: projek1.id,
+        ulasan: 'Pemantauan berkala diperlukan untuk keselamatan.',
+        folderPath: 'C:\\docs\\UlasanProjek1-2.pdf',
+      },
+      {
+        projekId: projek2.id,
+        ulasan: 'Dokumen tidak lengkap, perlu data tambahan.',
+        folderPath: 'C:\\docs\\UlasanProjek2-1.pdf',
+      },
+      {
+        projekId: projek2.id,
+        ulasan: 'Syarat kelulusan tambahan diperlukan.',
+        folderPath: 'C:\\docs\\UlasanProjek2-2.pdf',
+      },
+    ],
+  });
+
+  console.log({ projek1, projek2 });
 }
 
 main()

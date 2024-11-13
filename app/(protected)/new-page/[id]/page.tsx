@@ -9,11 +9,11 @@ import { MdCopyAll } from "react-icons/md";
 import DsmCalculator from "@/components/calculator/DsmCalculator";
 import FormGroup from "@/components/form/FormGroup";
 import { useFormState } from "react-dom";
-import { useCiptaUlasan } from "./_hooks/useCiptaUlasan";
+import { useCiptaUlasan } from "../_hooks/useCiptaUlasan";
 import { useCalculator } from "@/components/calculator/hooks/useCalculator";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
-const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
+const MapComponentUlasan = dynamic(() => import("@/components/map-ulasan/MapComponentUlasan"), {
   ssr: false,
   loading: () => (
     <div className="h-full flex justify-center items-center">Loading...</div>
@@ -73,10 +73,7 @@ const DrawWidget = dynamic(() => import("@/components/map/widget/DrawWidget"), {
 const UlasanTeknikalPage = () => {
   const {
     selectedDaerah,
-    filteredMukim,
     selectedBahagian,
-    filteredJenisPermohonan,
-    filteredStatus,
     handleChangeBahagian,
     handleChangeDaerah,
     handleInputChange,
@@ -87,30 +84,96 @@ const UlasanTeknikalPage = () => {
 
   const { showCalculator, setShowCalcultor } = useCalculator();
   const [ulasanLoad, setUlasanLoad] = useState<boolean>(false);
+  const [filteredJenisPermohonan, setFilteredJenisPermohonan] = useState<
+    { label: string; value: string }[]
+  >([]);
+  const [filteredMukim, setFilteredMukim] = useState<
+    { kodMukim: string; namaMukim: string }[]
+  >([]);
   const router = useRouter();
-  const searchParams = useSearchParams();
+
+  const [lotNumber, setLotNumber] = useState("");
+  const [tajukProjek, setTajukProjek] = useState("");
+  const [tajukSurat, setTajukSurat] = useState("");
+  const [panjang, setPanjang] = useState("");
+  const [luas, setLuas] = useState("");
+  const [daerah, setDaerah] = useState("");
+  const [mukim, setMukim] = useState("");
+  const [kordinatX, setKordinatX] = useState("");
+  const [kordinatY, setKordinatY] = useState("");
+  const [rings, setRings] = useState("");
+  const [jenisPermohonan, setJenisPermohonan] = useState("");
+  const [noFail, setNoFail] = useState("");
+  const [status, setStatus] = useState("");
+  const [ulasan, setUlasan] = useState("");
+  const [bahagian, setBahagian] = useState("");
+  const [filteredStatus, setFilteredStatus] = useState<
+    { label: string; value: string }[]
+  >([]);
+  const { id } = useParams();
 
   const fetchData = async () => {
-    const no_lot = searchParams.get("no_lot"); // Retrieve no_lot from query parameter    const no_lot = searchParams.get("no_lot"); // Retrieve no_lot from query
-
-    if (!no_lot) {
+    if (!id) {
       console.error("No 'no_lot' query parameter found.");
       return;
     }
 
-    const response = await fetch(
-      `/ulasan-teknikal/api/ulasan-teknikal`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ no_lot: no_lot }), // Pass no_lot in the body
-      }
-    );
+    const response = await fetch(`/ulasan-teknikal/api/ulasan-teknikal`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: id }), // Pass no_lot in the body
+    });
 
     if (response.ok) {
       const result = await response.json();
+      // const data = result.projek; // Assuming there's one item returned
+
+      if (result.projek) {
+        console.log("Projek:", result.projek);
+        console.log("Ulasan:", result.ulasan);
+
+        // Set your form fields or state here, e.g.:
+        setLotNumber(result.projek.lotNumber || "");
+        setTajukProjek(result.projek.tajukProjek || "");
+        setTajukSurat(result.projek.tajukSurat || "");
+        setPanjang(result.projek.panjang || "");
+        setLuas(result.projek.luas || "");
+        setDaerah(result.projek.daerah || "");
+        setMukim(result.projek.mukim || "");
+        setKordinatX(result.projek.koordinat_x || "");
+        setKordinatY(result.projek.koordinat_y || "");
+        setJenisPermohonan(result.projek.jenisPermohonan || "");
+        setNoFail(result.projek.noFail || "");
+        setRings(result.projek.rings || "");
+        setBahagian(result.projek.bahagian || "");
+
+        const daerahData = senaraiDaerahKodMukim.find(
+          (daerah) => daerah.daerah === result.projek.daerah
+        );
+
+        setFilteredMukim(daerahData ? daerahData.senaraiMukim : []);
+
+        const bahagianData = senaraiBahagian.find(
+          (bahagian) => bahagian.value === result.projek.bahagian
+        );
+        setFilteredStatus(bahagianData ? bahagianData.senaraiStatus : []);
+        setFilteredJenisPermohonan(
+          bahagianData ? bahagianData.senaraiJenisPermohonan : []
+        );
+        setStatus(result.projek.status || "");
+
+        // If Ulasan is an array, handle it as needed
+        if (result.ulasan && result.ulasan.length > 0) {
+          setUlasan(result.ulasan.map((u: any) => u.ulasan).join(", ") || "");
+        } else {
+          setUlasan("");
+        }
+      } else {
+        console.log("No projek found.");
+      }
+
       console.log("Submitted successfully:", result);
     } else {
       console.error("Failed to submit form:", response.statusText);
@@ -121,55 +184,55 @@ const UlasanTeknikalPage = () => {
     fetchData();
   }, []);
 
-  const handleFormCiptaUlasan = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setUlasanLoad(true);
-    const formData = new FormData();
-    console.log("FORM DATA AT PAGE START: ", formData);
+  // const handleFormCiptaUlasan = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   setUlasanLoad(true);
+  //   const formData = new FormData();
+  //   console.log("FORM DATA AT PAGE START: ", formData);
 
-    // Append form fields
-    formData.append("lotNumber", ciptaUlasanForm.lotNumber || "");
-    formData.append("daerah", ciptaUlasanForm.daerah || "");
-    formData.append("mukim", ciptaUlasanForm.mukim || "");
-    formData.append("koordinat_x", ciptaUlasanForm.kordinatX.toString() || "");
-    formData.append("koordinat_y", ciptaUlasanForm.kordinatY.toString() || "");
-    formData.append("tajukProjek", ciptaUlasanForm.tajukProjek || "");
-    formData.append("jenisPermohonan", ciptaUlasanForm.jenisPermohonan || "");
-    formData.append("noFail", ciptaUlasanForm.noFail || "");
-    formData.append("status", ciptaUlasanForm.status || "");
-    formData.append("bahagian", ciptaUlasanForm.bahagian || "");
-    formData.append("rings", JSON.stringify(ciptaUlasanForm.rings || ""));
-    formData.append("panjang", ciptaUlasanForm.panjang?.toString() || "");
-    formData.append("luas", ciptaUlasanForm.luas?.toString() || "");
-    formData.append("ulasan", ciptaUlasanForm.ulasan || "");
-    formData.append("tajukSurat", ciptaUlasanForm.tajukSurat || "");
+  //   // Append form fields
+  //   formData.append("lotNumber", ciptaUlasanForm.lotNumber || "");
+  //   formData.append("daerah", ciptaUlasanForm.daerah || "");
+  //   formData.append("mukim", ciptaUlasanForm.mukim || "");
+  //   formData.append("koordinat_x", ciptaUlasanForm.kordinatX.toString() || "");
+  //   formData.append("koordinat_y", ciptaUlasanForm.kordinatY.toString() || "");
+  //   formData.append("tajukProjek", ciptaUlasanForm.tajukProjek || "");
+  //   formData.append("jenisPermohonan", ciptaUlasanForm.jenisPermohonan || "");
+  //   formData.append("noFail", ciptaUlasanForm.noFail || "");
+  //   formData.append("status", ciptaUlasanForm.status || "");
+  //   formData.append("bahagian", ciptaUlasanForm.bahagian || "");
+  //   formData.append("rings", JSON.stringify(ciptaUlasanForm.rings || ""));
+  //   formData.append("panjang", ciptaUlasanForm.panjang?.toString() || "");
+  //   formData.append("luas", ciptaUlasanForm.luas?.toString() || "");
+  //   formData.append("ulasan", ciptaUlasanForm.ulasan || "");
+  //   formData.append("tajukSurat", ciptaUlasanForm.tajukSurat || "");
 
-    // Append files if there are any
-    selectedFiles.forEach((file) => {
-      formData.append("file", file);
-    });
+  //   // Append files if there are any
+  //   selectedFiles.forEach((file) => {
+  //     formData.append("file", file);
+  //   });
 
-    console.log("FORM DATA AT END: ", formData);
+  //   console.log("FORM DATA AT END: ", formData);
 
-    try {
-      const response = await fetch("/ulasan-teknikal/api/ulasan", {
-        method: "POST",
-        body: formData,
-      });
+  //   try {
+  //     const response = await fetch("/ulasan-teknikal/api/ulasan", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
 
-      if (response.ok) {
-        const result = await response.json();
-        console.log("Submitted successfully:", result);
-        router.push("/halaman-utama");
-      } else {
-        console.error("Failed to submit form:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error during submission:", error);
-    } finally {
-      setUlasanLoad(false);
-    }
-  };
+  //     if (response.ok) {
+  //       const result = await response.json();
+  //       console.log("Submitted successfully:", result);
+  //       router.push("/halaman-utama");
+  //     } else {
+  //       console.error("Failed to submit form:", response.statusText);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during submission:", error);
+  //   } finally {
+  //     setUlasanLoad(false);
+  //   }
+  // };
 
   let mapData = [];
   try {
@@ -183,7 +246,9 @@ const UlasanTeknikalPage = () => {
   return (
     <>
       <div className=" mb-6 flex justify-between items-center w-full">
-        <h2 className="text-black font-bold text-2xl">Ulasan Teknikal</h2>
+        <h2 className="text-black font-bold text-2xl">
+          Kemaskini Ulasan Teknikal
+        </h2>
         {/* <button
           className="flex justify-center items-center gap-2 bg-blue-500 hover:bg-blue-600 transition-all duration-75 py-2 px-3 rounded-md text-blue-100"
         >
@@ -203,7 +268,8 @@ const UlasanTeknikalPage = () => {
                     Kemaskini Ulasan teknikal untuk projek yang diusulkan.
                   </p>
                 </div>
-                <form onSubmit={handleFormCiptaUlasan} ref={formRef}>
+                {/* <form onSubmit={handleFormCiptaUlasan} ref={formRef}> */}
+                <form ref={formRef}>
                   <div className="space-y-6 sm:space-y-5">
                     <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
                       <div>
@@ -232,20 +298,12 @@ const UlasanTeknikalPage = () => {
                       </div>
                       <div className="mt-1 sm:self-center flex items-center md:w-[50rem]">
                         <div className="w-full md:h-[30rem] border border-gray-400">
-                          <MapContainer mapData={mapData}>
-                            {mapView && <HomeWidget mapView={mapView} />}
-                            {mapView && <LayerListWidget mapView={mapView} />}
-                            {mapView && <MeasureWidget mapView={mapView} />}
-                            {mapView && (
-                              <FeatureLayerWidget
-                                mapView={mapView}
-                                mapData={mapData}
-                              />
-                            )}
-                            {mapView && <BasemapWidget mapView={mapView} />}
-                            {mapView && <DrawWidget mapView={mapView} />}
-                            {mapView && <SearchCoordinate mapView={mapView} />}
-                          </MapContainer>
+                          <MapComponentUlasan
+                            kordinatX={kordinatX}
+                            kordinatY={kordinatY}
+                            ring={rings}
+                            lot={lotNumber}
+                          />
                         </div>
                       </div>
                     </div>
@@ -263,8 +321,9 @@ const UlasanTeknikalPage = () => {
                           type="text"
                           className="border border-gray-300 rounded-md px-4 py-2 w-full"
                           name="kordinatX"
-                          value={ciptaUlasanForm.kordinatX}
-                          onChange={handleInputChange}
+                          value={kordinatX}
+                          onChange={(e) => setKordinatX(e.target.value)}
+                          readOnly
                         />
                       </div>
                     </div>
@@ -282,8 +341,9 @@ const UlasanTeknikalPage = () => {
                           type="text"
                           className="border border-gray-300 rounded-md px-4 py-2 w-full"
                           name="kordinatY"
-                          value={ciptaUlasanForm.kordinatY}
-                          onChange={handleInputChange}
+                          value={kordinatY}
+                          onChange={(e) => setKordinatY(e.target.value)}
+                          readOnly
                         />
                       </div>
                     </div>
@@ -293,8 +353,9 @@ const UlasanTeknikalPage = () => {
                       className="border border-gray-300 rounded-md px-4 py-2 w-full"
                       type="text"
                       name="lotNumber"
-                      value={ciptaUlasanForm.lotNumber || ""}
+                      value={lotNumber}
                       onChange={handleInputChange} // Update the form state on change
+                      readOnly
                     />
                   </FormGroup>
                   <FormGroup label="Tajuk Projek" labelId="tajukProjek">
@@ -303,8 +364,8 @@ const UlasanTeknikalPage = () => {
                       type="text"
                       name="tajukProjek"
                       id="tajukProjek"
-                      value={ciptaUlasanForm.tajukProjek || ""}
-                      onChange={handleInputChange}
+                      value={tajukProjek}
+                      onChange={(e) => setTajukProjek(e.target.value)}
                     />
                   </FormGroup>
                   <FormGroup label="Tajuk Surat" labelId="tajukSurat">
@@ -313,8 +374,8 @@ const UlasanTeknikalPage = () => {
                       type="text"
                       name="tajukSurat"
                       id="tajukSurat"
-                      value={ciptaUlasanForm.tajukSurat || ""}
-                      onChange={handleInputChange}
+                      value={tajukSurat}
+                      onChange={(e) => setTajukSurat(e.target.value)}
                     />
                   </FormGroup>
                   <FormGroup label="Panjang (m)" labelId="panjang">
@@ -322,8 +383,8 @@ const UlasanTeknikalPage = () => {
                       className="border border-gray-300 rounded-md px-4 py-2 w-full"
                       type="text"
                       name="panjang"
-                      value={ciptaUlasanForm.panjang || ""}
-                      onChange={handleInputChange} // Update the form state on change
+                      value={panjang}
+                      onChange={(e) => setPanjang(e.target.value)} // Update the form state on change
                     />
                   </FormGroup>
                   <FormGroup label="Luas (m²)" labelId="luas">
@@ -331,17 +392,18 @@ const UlasanTeknikalPage = () => {
                       className="border border-gray-300 rounded-md px-4 py-2 w-full"
                       type="text"
                       name="luas"
-                      value={ciptaUlasanForm.luas || ""}
-                      onChange={handleInputChange} // Update the form state on change
+                      value={luas}
+                      onChange={(e) => setLuas(e.target.value)} // Update the form state on change
                     />
                   </FormGroup>
 
                   <FormGroup label="Daerah" labelId="daerah">
                     <select
                       className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                      onChange={handleChangeDaerah}
-                      value={selectedDaerah}
+                      value={daerah}
+                      onChange={(e) => setDaerah(e.target.value)}
                       name="daerah"
+                      disabled
                     >
                       <option value="">-- Pilih Daerah --</option>
                       {senaraiDaerahKodMukim.map(
@@ -365,8 +427,9 @@ const UlasanTeknikalPage = () => {
                     <select
                       className="border border-gray-300 rounded-md px-4 py-2 w-full"
                       name="mukim"
-                      onChange={handleInputChange}
-                      value={ciptaUlasanForm.mukim}
+                      value={mukim}
+                      onChange={(e) => setMukim(e.target.value)}
+                      disabled
                     >
                       <option value="">-- Pilih Mukim --</option>
                       {filteredMukim.map((mukim, index) => (
@@ -379,9 +442,10 @@ const UlasanTeknikalPage = () => {
                   <FormGroup label="Bahagian" labelId="bahagian">
                     <select
                       className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                      onChange={handleChangeBahagian}
-                      value={selectedBahagian}
+                      value={bahagian}
+                      onChange={(e) => setBahagian(e.target.value)}
                       name="bahagian"
+                      disabled
                     >
                       <option value="">-- Pilih Bahagian --</option>
                       {senaraiBahagian.map((bahagian, index) => (
@@ -395,8 +459,9 @@ const UlasanTeknikalPage = () => {
                     <select
                       className="border border-gray-300 rounded-md px-4 py-2 w-full"
                       name="jenisPermohonan"
-                      onChange={handleInputChange}
-                      value={ciptaUlasanForm.jenisPermohonan}
+                      value={jenisPermohonan}
+                      onChange={(e) => setJenisPermohonan(e.target.value)}
+                      disabled
                     >
                       <option value="">-- Pilih Jenis Permohonan --</option>
                       {filteredJenisPermohonan.map((permohonan, index) => (
@@ -412,7 +477,8 @@ const UlasanTeknikalPage = () => {
                       className="border border-gray-300 rounded-md px-4 py-2 w-full"
                       type="text"
                       name="noFail"
-                      onChange={handleInputChange}
+                      value={noFail}
+                      onChange={(e) => setNoFail(e.target.value)}
                     />
                   </FormGroup>
 
@@ -420,8 +486,8 @@ const UlasanTeknikalPage = () => {
                     <select
                       className="border border-gray-300 rounded-md px-4 py-2 w-full"
                       name="status"
-                      onChange={handleInputChange}
-                      value={ciptaUlasanForm.status}
+                      value={status}
+                      onChange={(e) => setStatus(e.target.value)}
                     >
                       <option value="">-- Pilih Status --</option>
                       {filteredStatus.map((status, index) => (
@@ -436,7 +502,8 @@ const UlasanTeknikalPage = () => {
                     <textarea
                       className="border border-gray-300 rounded-md px-4 py-2 w-full"
                       name="ulasan"
-                      onChange={handleInputChange}
+                      value={ulasan}
+                      onChange={(e) => setUlasan(e.target.value)}
                     ></textarea>
                   </FormGroup>
 
@@ -493,7 +560,7 @@ const UlasanTeknikalPage = () => {
                         type="submit"
                         className="bg-blue-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-blue-50 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800"
                       >
-                        {ulasanLoad ? "Loading ..." : "Cipta Ulasan"}
+                        {ulasanLoad ? "Loading ..." : "Kemaskini Ulasan"}
                       </button>
                     </div>
                   </div>

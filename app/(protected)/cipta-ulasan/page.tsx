@@ -11,8 +11,12 @@ import FormGroup from "@/components/form/FormGroup";
 import { useFormState } from "react-dom";
 import { useCiptaUlasan } from "./_hooks/useCiptaUlasan";
 import { useCalculator } from "@/components/calculator/hooks/useCalculator";
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, useSearchParams } from "next/navigation";
 
+import { stringify } from "querystring";
+const MapComponentLot = dynamic(() => import("@/components/map-lot/MapComponentLot"), {ssr:false, loading: () => (
+  <div className="h-full flex justify-center items-center">Loading...</div>
+),})
 const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
   ssr: false,
   loading: () => (
@@ -85,18 +89,22 @@ const UlasanTeknikalPage = () => {
   } = useCiptaUlasan();
   const { mapView, ciptaUlasanForm } = useMapContext();
 
+  const searchParams = useSearchParams();
+  const noLot = searchParams.get("no_lot");
+  const ringsParams = searchParams.get("rings");
+
+  const rings = ringsParams ? String(ringsParams) : "";
+
   const { showCalculator, setShowCalcultor } = useCalculator();
-  const [ulasanLoad, setUlasanLoad] = useState<boolean>(false)
+  const [ulasanLoad, setUlasanLoad] = useState<boolean>(false);
   const router = useRouter();
 
   const handleFormCiptaUlasan = async (e: React.FormEvent<HTMLFormElement>) => {
-
     e.preventDefault();
-    setUlasanLoad(true)
+    setUlasanLoad(true);
     const formData = new FormData();
-    console.log("FORM DATA AT PAGE START: ", formData)
+    console.log("FORM DATA AT PAGE START: ", formData);
 
-  
     // Append form fields
     formData.append("lotNumber", ciptaUlasanForm.lotNumber || "");
     formData.append("daerah", ciptaUlasanForm.daerah || "");
@@ -113,34 +121,39 @@ const UlasanTeknikalPage = () => {
     formData.append("luas", ciptaUlasanForm.luas?.toString() || "");
     formData.append("ulasan", ciptaUlasanForm.ulasan || "");
     formData.append("tajukSurat", ciptaUlasanForm.tajukSurat || "");
-  
+    formData.append(
+      "tarikhUlasan",
+      ciptaUlasanForm.tarikhUlasan instanceof Date
+        ? ciptaUlasanForm.tarikhUlasan.toISOString()
+        : new Date(ciptaUlasanForm.tarikhUlasan).toISOString()
+    );
+
     // Append files if there are any
     selectedFiles.forEach((file) => {
       formData.append("file", file);
     });
 
-    console.log("FORM DATA AT END: ", formData)
-  
+    console.log("FORM DATA AT END: ", formData);
+
     try {
       const response = await fetch("/ulasan-teknikal/api/ulasan", {
         method: "POST",
         body: formData,
       });
-  
+
       if (response.ok) {
         const result = await response.json();
         console.log("Submitted successfully:", result);
-        router.push("/halaman-utama")
+        router.push("/halaman-utama");
       } else {
         console.error("Failed to submit form:", response.statusText);
       }
     } catch (error) {
       console.error("Error during submission:", error);
-    } finally{
-      setUlasanLoad(false)
+    } finally {
+      setUlasanLoad(false);
     }
   };
-  
 
   let mapData = [];
   try {
@@ -175,8 +188,6 @@ const UlasanTeknikalPage = () => {
                   </p>
                 </div>
                 <form onSubmit={handleFormCiptaUlasan} ref={formRef}>
-                  
-
                   <div className="space-y-6 sm:space-y-5">
                     <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
                       <div>
@@ -186,9 +197,11 @@ const UlasanTeknikalPage = () => {
                         >
                           {`Lokasi Lot`} <span className="text-red-500">*</span>
                         </label>{" "}
-                        <div className="mt-1 text-sm text-gray-500">
-                          Sketch untuk mendapatkan kordinat
-                        </div>
+                        {!noLot && (
+                          <div className="mt-1 text-sm text-gray-500">
+                            Sketch untuk mendapatkan kordinat
+                          </div>
+                        )}
                         <div>
                           <button
                             onClick={() => setShowCalcultor(!showCalculator)}
@@ -205,20 +218,26 @@ const UlasanTeknikalPage = () => {
                       </div>
                       <div className="mt-1 sm:self-center flex items-center md:w-[50rem]">
                         <div className="w-full md:h-[30rem] border border-gray-400">
-                          <MapContainer mapData={mapData}>
-                            {mapView && <HomeWidget mapView={mapView} />}
-                            {mapView && <LayerListWidget mapView={mapView} />}
-                            {mapView && <MeasureWidget mapView={mapView} />}
-                            {mapView && (
-                              <FeatureLayerWidget
-                                mapView={mapView}
-                                mapData={mapData}
-                              />
-                            )}
-                            {mapView && <BasemapWidget mapView={mapView} />}
-                            {mapView && <DrawWidget mapView={mapView} />}
-                            {mapView && <SearchCoordinate mapView={mapView} />}
-                          </MapContainer>
+                          {noLot ? (
+                            <MapComponentLot lot={noLot} rings={rings}  />
+                          ) : (
+                            <MapContainer mapData={mapData}>
+                              {mapView && <HomeWidget mapView={mapView} />}
+                              {mapView && <LayerListWidget mapView={mapView} />}
+                              {mapView && <MeasureWidget mapView={mapView} />}
+                              {mapView && (
+                                <FeatureLayerWidget
+                                  mapView={mapView}
+                                  mapData={mapData}
+                                />
+                              )}
+                              {mapView && <BasemapWidget mapView={mapView} />}
+                              {mapView && <DrawWidget mapView={mapView} />}
+                              {mapView && (
+                                <SearchCoordinate mapView={mapView} />
+                              )}
+                            </MapContainer>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -262,13 +281,23 @@ const UlasanTeknikalPage = () => {
                     </div>
                   </div>
                   <FormGroup label="No Lot" labelId="lotNumber">
-                    <input
-                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
-                      type="text"
-                      name="lotNumber"
-                      value={ciptaUlasanForm.lotNumber || ""}
-                      onChange={handleInputChange} // Update the form state on change
-                    />
+                    {noLot ? (
+                      <input
+                        className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                        type="text"
+                        name="lotNumber"
+                        value={noLot}
+                        onChange={handleInputChange} // Update the form state on change
+                      />
+                    ) : (
+                      <input
+                        className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                        type="text"
+                        name="lotNumber"
+                        value={ciptaUlasanForm.lotNumber || ""}
+                        onChange={handleInputChange} // Update the form state on change
+                      />
+                    )}
                   </FormGroup>
                   <FormGroup label="Tajuk Projek" labelId="tajukProjek">
                     <input
@@ -289,7 +318,6 @@ const UlasanTeknikalPage = () => {
                       value={ciptaUlasanForm.tajukSurat || ""}
                       onChange={handleInputChange}
                     />
-                    
                   </FormGroup>
                   <FormGroup label="Panjang (m)" labelId="panjang">
                     <input
@@ -404,6 +432,15 @@ const UlasanTeknikalPage = () => {
                         </option>
                       ))}
                     </select>
+                  </FormGroup>
+
+                  <FormGroup label="Tarikh Ulasan" labelId="tarikhUlasan">
+                    <input
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      type="date"
+                      name="tarikhUlasan"
+                      onChange={handleInputChange}
+                    />
                   </FormGroup>
 
                   <FormGroup label="Ulasan" labelId="ulasan">

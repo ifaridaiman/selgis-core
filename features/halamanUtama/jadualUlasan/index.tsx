@@ -5,6 +5,7 @@ import {
   IoTrashBin,
   IoTrashBinOutline,
 } from "react-icons/io5";
+import { AiOutlineFilePdf } from "react-icons/ai";
 
 const JadualUlasanTable = () => {
   const [jadualUlasanData, setJadualUlasanData] = useState<any[]>([]);
@@ -68,6 +69,29 @@ const JadualUlasanTable = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
+
+  async function handleDelete(id:any) {
+    try {
+      const response = await fetch('/ulasan-teknikal/api/ulasan', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id }),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        alert("Projek deleted successfully!");
+        // Optionally, refresh data or update the UI here
+      } else {
+        console.error("Failed to delete Projek");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
   return (
     <>
       <input
@@ -108,14 +132,17 @@ const JadualUlasanTable = () => {
               <td className="py-4 px-4 text-center">{projek.status}</td>
               <td className="py-4 px-4 text-center">
                 <div className="flex flex-row gap-4 items-center">
+                  <button >
+                    <AiOutlineFilePdf />
+                  </button>
                   <a
-                    href={`/ulasan-teknikal/ulasan?no_lot=${projek.lotNumber}`}
+                    href={`/ulasan-teknikal/ulasan/${projek.id}`}
                     className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
                     title="Kemaskini Ulasan"
                   >
                     <IoPencilOutline />
                   </a>
-                  <button >
+                  <button onClick={() => handleDelete(projek.id)}>
                     <IoTrashBinOutline />
                   </button>
                 </div>

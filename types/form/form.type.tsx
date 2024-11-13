@@ -16,6 +16,7 @@ export type CiptaUlasanFormType = {
   luas?: number;
   rings: number[][][];
   tajukSurat: string;
+  tarikhUlasan: Date;
 };
 
 export const CiptaUlasanFormTypeInit:CiptaUlasanFormType = {
@@ -34,5 +35,6 @@ export const CiptaUlasanFormTypeInit:CiptaUlasanFormType = {
   panjang: 0,
   luas: 0,
   rings: [], // Initialize with an empty array
-  tajukSurat: ""
+  tajukSurat: "",
+  tarikhUlasan: new Date()
 }

@@ -17,7 +17,7 @@ type WebMapWidgetProps = {
   onMapViewReady: (mapView: MapView) => void;
 };
 
-const WebMapWidget: React.FC<WebMapWidgetProps> = ({
+const   WebMapWidget: React.FC<WebMapWidgetProps> = ({
   mapData,
   onMapViewReady,
 }) => {

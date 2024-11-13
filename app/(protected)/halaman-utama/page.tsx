@@ -384,7 +384,7 @@ const DashboardPage = () => {
                             <FaMagnifyingGlassLocation />
                           </button>
                           <a
-                            href={`/ulasan-teknikal/cipta-ulasan?no_lot=${item.attributes.No_Lot}&rings=${item.geometry?.rings}`}
+                            href={`/ulasan-teknikal/cipta-ulasan?no_lot=${item.attributes.No_Lot}&rings=${JSON.stringify(item.geometry?.rings)}`}
                             className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
                             title="Cipta Ulasan Berdasarkan lot"
                           >
