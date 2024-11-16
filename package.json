@@ -17,6 +17,7 @@
   "dependencies": {
     "@arcgis/core": "^4.29.10",
     "@prisma/client": "^5.22.0",
+    "@react-pdf/renderer": "^4.0.2",
     "formidable": "^3.5.2",
     "next": "14.2.3",
     "next-auth": "^4.24.5",
@@ -26,6 +27,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.52.2",
     "react-icons": "^5.2.1",
+    "react-pdf": "^9.1.1",
     "react-toastify": "^10.0.5"
   },
   "devDependencies": {
@@ -33,6 +35,7 @@
     "@types/node": "^20.16.9",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-pdf": "^7.0.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "postcss": "^8",
