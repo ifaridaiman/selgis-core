@@ -7,22 +7,26 @@ import Graphic from "@arcgis/core/Graphic";
 import TextSymbol from "@arcgis/core/symbols/TextSymbol";
 import LayerList from "@arcgis/core/widgets/LayerList";
 
-type MapImageUlasanProps = {
+type MapComponentUlasanProps = {
   kordinatX: string;
   kordinatY: string;
   ring: string;
   lot:string
-  onImageReady: (dataUrl: string) => void; // Callback to send the screenshot
 };
 
-const MapImageUlasan: React.FC<MapImageUlasanProps> = ({kordinatX, kordinatY, ring, lot, onImageReady}) => {
+const MapComponentUlasan: React.FC<MapComponentUlasanProps> = ({kordinatX, kordinatY, ring, lot}) => {
   const mapDiv = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!mapDiv.current) return;
 
-    const graphicLayer = new GraphicsLayer();
-    const webMap = new WebMap({basemap: "satellite"});
+    const graphicLayer = new GraphicsLayer({
+      title: "Sketch Layer",
+    });
+
+    const webMap = new WebMap({
+      basemap: "satellite",
+    });
 
     // Add graphicLayer to the map's operational layers
     webMap.add(graphicLayer);
@@ -37,12 +41,12 @@ const MapImageUlasan: React.FC<MapImageUlasanProps> = ({kordinatX, kordinatY, ri
       map: webMap,
       center: [centerX, centerY],
       zoom: 18,
-      constraints: {
-        minZoom: 18, // Set min and max zoom to the same value to disable zooming
-        maxZoom: 18,
-        snapToZoom: false, // Disable snapping to zoom levels
-        rotationEnabled: false
-      },
+      // constraints: {
+      //   minZoom: 18, // Set min and max zoom to the same value to disable zooming
+      //   maxZoom: 18,
+      //   snapToZoom: false, // Disable snapping to zoom levels
+      //   rotationEnabled: false
+      // },
       navigation: {
         gamepad: {
           enabled: false
@@ -105,19 +109,11 @@ const MapImageUlasan: React.FC<MapImageUlasanProps> = ({kordinatX, kordinatY, ri
       // Add the text graphic to the graphics layer
       graphicLayer.add(textGraphic);
 
-      view.takeScreenshot({ width: 800, height: 600 })
-        .then((screenshot) => { // Correct syntax
-            onImageReady(screenshot.dataUrl)
-            console.log(screenshot.dataUrl);    
-        })
-        .catch((error) => console.error("Error taking screenshot: ", error));
-
+      
 
     }).catch((error) => {
       console.log("Error initializing map: ", error);
     });
-
-    
 
     // Cleanup function to destroy the view on component unmount
     return () => {
@@ -125,9 +121,9 @@ const MapImageUlasan: React.FC<MapImageUlasanProps> = ({kordinatX, kordinatY, ri
         view.destroy();
       }
     };
-  }, [kordinatX, kordinatY, ring, onImageReady]); // Removed dependency array since no props are used
+  }, [kordinatX, kordinatY, ring]); // Removed dependency array since no props are used
 
-  return <div ref={mapDiv} style={{ height: 0, width: 0, overflow: "hidden" }} />;
+  return <div ref={mapDiv} style={{ height: "100%", width: "100%" }} />;
 };
 
-export default MapImageUlasan;
+export default MapComponentUlasan;

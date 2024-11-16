@@ -12,7 +12,7 @@ const   SideNav:React.FC = () => {
   const {handleLogout} = useLogout();
   
   return (
-    <div className="bg-blue-600 text-white p-4 min-h-screen flex flex-col fixed top-0 left-0 ">
+    <div className="bg-blue-600 text-white p-4 min-h-screen flex flex-col fixed top-0 left-0 print:hidden">
         {/* Logo Section */}
         <div className="mb-4 flex flex-col items-center">
           <Image

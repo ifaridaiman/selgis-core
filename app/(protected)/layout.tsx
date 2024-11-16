@@ -16,7 +16,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <div className="flex min-h-screen w-full bg-gray-100">
         <SideNav />
 
-        <div className="ml-64 p-4 overflow-auto w-full">{children}</div>
+        <div className="ml-64 print:ml-0 p-4 overflow-auto w-full">{children}</div>
       </div>
       <ToastContainer
         position="top-right"

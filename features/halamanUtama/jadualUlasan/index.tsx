@@ -134,9 +134,14 @@ const JadualUlasanTable = () => {
               <td className="py-4 px-4 text-center">{projek.status}</td>
               <td className="py-4 px-4 text-center">
                 <div className="flex flex-row gap-4 items-center">
-                  <button >
+                  
+                  <a
+                    href={`/ulasan-teknikal/ulasan-pdf/${projek.id}`}
+                    className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"
+                    title="Kemaskini Ulasan"
+                  >
                     <AiOutlineFilePdf />
-                  </button>
+                  </a>
                   <a
                     href={`/ulasan-teknikal/ulasan/${projek.id}`}
                     className="p-2 hover:bg-gray-200 transition-all duration-150 ease-in-out hover:rounded-full"

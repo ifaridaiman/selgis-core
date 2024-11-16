@@ -1,14 +1,13 @@
 "use client";
 import React, {useRef, useState, useEffect} from "react";
-import MapView from "@arcgis/core/views/MapView";
-import WebMap from "@arcgis/core/WebMap";
 import { senaraiDaerahKodMukim, senaraiBahagian } from "@/contents/fieldInput";
 import { useParams } from 'next/navigation'
-import { pdf, Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
-import MapComponentUlasan from "@/components/map-ulasan/MapComponentUlasan";
-import MapImageUlasan from "@/app/(protected)/ulasan-pdf/_components/map/map-image/MapImage";
-import Image from "next/image";
-import styles from "../styles/style"
+import dynamic from "next/dynamic";
+const MapImageUlasan = dynamic(() => import("@/app/(protected)/ulasan-pdf/_components/map/map-image/MapImage"),
+{
+  ssr: false,
+  loading: () => <p>Loading...</p>,
+}) ;
 
 type UlasanItem = {
   id: number;
@@ -21,7 +20,6 @@ type UlasanItem = {
 
 
 const UlasanPrint = () => {
-  const mapRef = useRef(null);
   
   const [projectData, setProjectData] = useState<Record<string, string | number> | null>(null);
   const [lotNumber, setLotNumber] = useState("");
@@ -131,56 +129,33 @@ const UlasanPrint = () => {
     setMapImage(dataUrl); // Save the image for display or further processing
   };
 
-  const handlePrint = async () => {
-    const MyDocument = () =>(
-      <Document>
-        <Page size="A4" style={styles.page}>
-          <Text style={styles.header}>Ulasan Teknikal</Text>
-          {mapImage ? (
-            <Image style={styles.mapImage} src={mapImage} alt="image" width={100} height={100} />
-          ) : (
-            <Text>Loading map...</Text>
-          )}
-          <View style={styles.table}>
-          {projectData && Object.entries(projectData).map(([field, value], index) => (
-              <View key={index} style={styles.tableRow}>
-                <Text style={styles.tableCell}>{field}</Text>
-                <Text style={styles.tableCell}>{value}</Text>
-              </View>
-            ))}
-          </View>
-        </Page>
-      </Document>
-    );
-
-    // Generate the PDF blob
-    const blob = await pdf(<MyDocument />).toBlob();
-
-    // Open the PDF in a new tab
-    const blobURL = URL.createObjectURL(blob);
-    const newTab = window.open(blobURL);
-    if (newTab) {
-      newTab.onload = () => {
-        newTab.print(); // Print the PDF once the tab is loaded
-      };
-    }
-  };
+  
 
   return (
     <div>
-      <button onClick={handlePrint} className="print-button">
-        Print Document
-      </button>
+      
 
       {/* Generate the map image */}
-      <div className="bg-gray-500 md:h-[40rem]">
+      <div className="bg-gray-500 md:h-[40rem] print:h-[40rem] print:w-full">
         <MapImageUlasan
           kordinatX={kordinatX}
           kordinatY={kordinatY}
           ring={rings}
           lot={lotNumber}
-          onImageReady={handleImageReady}
         />
+      </div>
+
+      <div className="mt-8">
+        <table className="border border-black w-full">
+          <tbody>
+          {projectData && Object.entries(projectData).map(([field, value], index) => (
+              <tr key={index} className="border border-black p-2">
+                <td className="border border-black p-2">{field}</td>
+                <td className="border border-black p-2">{value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

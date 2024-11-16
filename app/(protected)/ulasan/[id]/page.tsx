@@ -5,7 +5,6 @@ import { BiLayerPlus } from "react-icons/bi";
 import dynamic from "next/dynamic";
 import { useMapContext } from "@/components/map/MapContext";
 import { useParams } from "next/navigation";
-import StatusSelector from "../_components/StatusSelector";
 
 import { useTable } from "@/hooks/dashboard/useTable";
 import { useDashboard } from "@/hooks/dashboard/useDashboard";
