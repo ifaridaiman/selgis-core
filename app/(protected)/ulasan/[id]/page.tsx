@@ -5,12 +5,15 @@ import { BiLayerPlus } from "react-icons/bi";
 import dynamic from "next/dynamic";
 import { useMapContext } from "@/components/map/MapContext";
 import { useParams } from "next/navigation";
+import StatusSelector from "../_components/StatusSelector";
 
 import { useTable } from "@/hooks/dashboard/useTable";
 import { useDashboard } from "@/hooks/dashboard/useDashboard";
 import { useNewProjek } from "@/hooks/dashboard/useNewProjek";
 import Image from "next/image";
 import { LuFileEdit } from "react-icons/lu";
+import { toast } from "react-toastify";
+import UlasanComponent from "../_components/UlasanComponent";
 
 const MapComponentUlasan = dynamic(
   () => import("@/components/map-ulasan/MapComponentUlasan"),
@@ -29,7 +32,6 @@ type UlasanItem = {
 };
 
 const UlasanTeknikalPage = () => {
-  
   const [lotNumber, setLotNumber] = useState("");
   const [tajukProjek, setTajukProjek] = useState("");
   const [tajukSurat, setTajukSurat] = useState("");
@@ -50,6 +52,7 @@ const UlasanTeknikalPage = () => {
   const [bahagian, setBahagian] = useState("");
 
   const { id } = useParams();
+  const projectId = parseInt(Array.isArray(id) ? id[0] : id ?? "", 10);
 
   const fetchData = async () => {
     if (!id) {
@@ -95,7 +98,6 @@ const UlasanTeknikalPage = () => {
         setFilteredStatus(bahagianData ? bahagianData.senaraiStatus : []);
         setStatus(result.projek.status || "");
 
-        
         // If Ulasan is an array, handle it as needed
         if (result.ulasan && result.ulasan.length > 0) {
           setUlasan(result.ulasan || []);
@@ -114,16 +116,84 @@ const UlasanTeknikalPage = () => {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [inputValue, setInputValue] = useState("");
   const [folderName, setFolderName] = useState("");
 
-  const handleAddUlasan = () => {
-    if (inputValue.trim() && folderName.trim()) {
-      // addUlasan(inputValue, folderName);
-      setInputValue(""); // Clear the input field after adding
-      setFolderName(""); // Clear the folder input field after adding
+  const handleAddUlasan = async () => {
+    if (!inputValue.trim()) {
+      alert("Ulasan content cannot be empty.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "/ulasan-teknikal/api/update-ulasan/ulasan-tambah",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: projectId, // Replace with dynamic project ID
+            ulasan: inputValue,
+            folderPath: folderName || null,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error adding ulasan:", errorData.message);
+        alert("Failed to add ulasan.");
+        return;
+      }
+
+      const newUlasan = await response.json();
+      setUlasan((prev) => [...prev, newUlasan]);
+      setInputValue("");
+      setFolderName("");
+      alert("Ulasan added successfully.");
+    } catch (error) {
+      console.error("An error occurred:", error);
+      alert("An error occurred while adding ulasan.");
+    }
+  };
+
+  const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedStatus = e.target.value;
+    setStatus(selectedStatus);
+    console.log("Check Handle Change")
+
+    // Send a request to update the status via API
+    try {
+      const response = await fetch("/ulasan-teknikal/api/update-ulasan/status/", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: projectId,
+          status: selectedStatus,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error updating status:", errorData.message);
+        alert("Failed to update status.");
+        return;
+      }
+
+      toast.success("Status updated successfully")
+
+      const data = await response.json();
+      console.log("Status updated successfully:", data);
+    } catch (error) {
+      console.error("An error occurred:", error);
+      alert("An error occurred while updating status.");
     }
   };
 
@@ -131,10 +201,9 @@ const UlasanTeknikalPage = () => {
     <>
       <div className=" mb-6 flex justify-between items-center w-full">
         <h2 className="text-black font-bold text-2xl">Ulasan Teknikal</h2>
-        
       </div>
       <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 mb-12">
-        <div className="bg-gray-500 md:h-[40rem]">
+        <div className="bg-gray-500 md:h-auto">
           {/* Map Section */}
           <MapComponentUlasan
             kordinatX={kordinatX}
@@ -151,16 +220,17 @@ const UlasanTeknikalPage = () => {
             <label className="block mb-2">Jenis Permohonan</label>
             <input
               type="text"
-              className="border border-gray-300 rounded-md px-4 py-2 w-full"
+              className="border border-gray-300 rounded-md px-4 py-2 w-full bg-gray-100 cursor-not-allowed"
               value={jenisPermohonan}
               onChange={(e) => setJenisPermohonan(e.target.value)}
+              readOnly
             />
           </div>
           <div className="mb-4">
             <label className="block mb-2">No. Lot</label>
             <input
               type="text"
-              className="border border-gray-300 rounded-md px-4 py-2 w-full"
+              className="border border-gray-300 rounded-md px-4 py-2 w-full bg-gray-100 cursor-not-allowed"
               value={lotNumber}
               onChange={(e) => setLotNumber(e.target.value)}
               readOnly
@@ -168,52 +238,30 @@ const UlasanTeknikalPage = () => {
           </div>
           <div className="mb-4">
             <label className="block mb-2">Daerah</label>
-            <select
-              className="border border-gray-300 rounded-md px-4 py-2 w-full"
+            <input
+              type="text"
+              className="border border-gray-300 rounded-md px-4 py-2 w-full bg-gray-100 cursor-not-allowed"
               value={daerah}
-              onChange={(e) => setDaerah(e.target.value)}
-            >
-              <option value="">-- Pilih Daerah --</option>
-              {senaraiDaerahKodMukim.map(
-                (daerah: {
-                  daerah: string;
-                  kodDaerah: string;
-                  senaraiMukim: {
-                    kodMukim: string;
-                    namaMukim: string;
-                  }[];
-                }) => (
-                  <option key={daerah.daerah} value={daerah.daerah}>
-                    {daerah.daerah}
-                  </option>
-                )
-              )}
-            </select>
+              onChange={(e) => setLotNumber(e.target.value)}
+              readOnly
+            />
           </div>
           <div className="mb-4">
             <label className="block mb-2">Mukim</label>
             <input
               type="text"
-              className="border border-gray-300 rounded-md px-4 py-2 w-full"
+              className="border border-gray-300 rounded-md px-4 py-2 w-full bg-gray-100 cursor-not-allowed"
               value={mukim}
               onChange={(e) => setMukim(e.target.value)}
             />
           </div>
           <div className="mb-4">
             <label className="block mb-2">Bahagian</label>
-            <select
-              className="border border-gray-300 rounded-md px-4 py-2 w-full"
+            <input
+              type="text"
+              className="border border-gray-300 rounded-md px-4 py-2 w-full bg-gray-100 cursor-not-allowed"
               value={bahagian}
-              onChange={(e) => setBahagian(e.target.value)}
-              name="bahagian"
-            >
-              <option value="">-- Pilih Bahagian --</option>
-              {senaraiBahagian.map((bahagian, index) => (
-                <option key={index} value={bahagian.value}>
-                  {bahagian.label}
-                </option>
-              ))}
-            </select>
+            />
           </div>
           <div className="mb-4">
             <label className="block mb-2">Status</label>
@@ -221,38 +269,15 @@ const UlasanTeknikalPage = () => {
               className="border border-gray-300 rounded-md px-4 py-2 w-full"
               name="status"
               value={status}
-              onChange={(e) => setStatus(e.target.value)}
+              onChange={handleChange}
             >
               <option value="">-- Pilih Status --</option>
-              {filteredStatus.map((status, index) => (
-                <option key={index} value={status.value}>
-                  {status.label}
+              {filteredStatus.map((statusOption, index) => (
+                <option key={index} value={statusOption.value}>
+                  {statusOption.label}
                 </option>
               ))}
             </select>
-          </div>
-          <div className="mb-4">
-            <label className="block mb-2">Lampiran</label>
-            <div className="rounded border border-gray-300 p-2 max-h-24 h-24 overflow-auto">
-              {ulasan.length === 0 ? (
-                <p>No Lampiran Available</p>
-              ) : (
-                ulasan.map((item, index) => {
-                  console.log("Ulasan item:", item); // Log the structure of each item in ulasan
-
-                  return (
-                    <div
-                      key={index}
-                      className="flex justify-between items-center border border-gray-300 p-1 rounded mb-2"
-                    >
-                      <p>
-                        {item.folderPath.split("/").pop() || "No Folder Path"}
-                      </p>
-                    </div>
-                  );
-                })
-              )}
-            </div>
           </div>
         </div>
       </div>
@@ -262,22 +287,7 @@ const UlasanTeknikalPage = () => {
       </div>
       <div className="bg-white p-7 rounded-lg">
         <div className="flex justify-between mb-4">
-          {/* <Link
-            href="/pengguna/projek"
-            className="bg-blue-500 text-white py-2 px-4 rounded-md flex gap-4 items-center justify-center"
-          >
-            <span>
-              <RiFunctionAddLine />
-            </span>
-            Daftar Projek
-          </Link>
-          <input
-            type="text"
-            placeholder="Carian"
-            className="border border-gray-300 rounded-md px-4 py-2 w-1/4"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-          /> */}
+          
         </div>
         <div className="w-full h-full flex flex-col">
           <div className="w-full h-full">
@@ -292,7 +302,7 @@ const UlasanTeknikalPage = () => {
                 <p>Tiada Data Ulasan</p>
               </div>
             ) : (
-              <div className="p-4">
+              <div className="py-4">
                 <ul>
                   {ulasan.map((item, index) => (
                     <div
@@ -300,7 +310,7 @@ const UlasanTeknikalPage = () => {
                       className="flex justify-between items-center border border-gray-300 p-1 rounded mb-2"
                     >
                       <p>{item.ulasan}</p>
-                      <p className="text-gray-500 text-sm">{item.folderPath}</p>
+                      <a className="text-gray-500 text-sm" href={item.folderPath} download>{item.folderPath}</a>
                     </div>
                   ))}
                 </ul>
@@ -340,6 +350,7 @@ const UlasanTeknikalPage = () => {
           </div>
         </div>
       </div>
+      {/* <UlasanComponent /> */}
     </>
   );
 };

@@ -39,6 +39,7 @@ export async function POST(request: Request) {
   
   return NextResponse.json(result);
 }
+
 export async function DELETE(request: Request) {
   try {
     const { id } = await request.json();

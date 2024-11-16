@@ -319,7 +319,7 @@ const UlasanTeknikalPage = () => {
                       <div className="mt-1 sm:self-center flex items-center">
                         <input
                           type="text"
-                          className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                          className="border border-gray-300 rounded-md px-4 py-2 w-full bg-gray-100"
                           name="kordinatX"
                           value={kordinatX}
                           onChange={(e) => setKordinatX(e.target.value)}
@@ -339,7 +339,7 @@ const UlasanTeknikalPage = () => {
                       <div className="mt-1 sm:self-center flex items-center">
                         <input
                           type="text"
-                          className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                          className="border border-gray-300 rounded-md px-4 py-2 w-full bg-gray-100"
                           name="kordinatY"
                           value={kordinatY}
                           onChange={(e) => setKordinatY(e.target.value)}
@@ -350,7 +350,7 @@ const UlasanTeknikalPage = () => {
                   </div>
                   <FormGroup label="No Lot" labelId="lotNumber">
                     <input
-                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full bg-gray-100"
                       type="text"
                       name="lotNumber"
                       value={lotNumber}
@@ -399,7 +399,7 @@ const UlasanTeknikalPage = () => {
 
                   <FormGroup label="Daerah" labelId="daerah">
                     <select
-                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full bg-gray-100"
                       value={daerah}
                       onChange={(e) => setDaerah(e.target.value)}
                       name="daerah"
@@ -425,7 +425,7 @@ const UlasanTeknikalPage = () => {
 
                   <FormGroup label="Mukim" labelId="mukim">
                     <select
-                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full bg-gray-100"
                       name="mukim"
                       value={mukim}
                       onChange={(e) => setMukim(e.target.value)}
@@ -441,7 +441,7 @@ const UlasanTeknikalPage = () => {
                   </FormGroup>
                   <FormGroup label="Bahagian" labelId="bahagian">
                     <select
-                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full bg-gray-100"
                       value={bahagian}
                       onChange={(e) => setBahagian(e.target.value)}
                       name="bahagian"
@@ -457,7 +457,7 @@ const UlasanTeknikalPage = () => {
                   </FormGroup>
                   <FormGroup label="Jenis Permohonan" labelId="jenisPermohonan">
                     <select
-                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full bg-gray-100"
                       name="jenisPermohonan"
                       value={jenisPermohonan}
                       onChange={(e) => setJenisPermohonan(e.target.value)}
@@ -474,17 +474,18 @@ const UlasanTeknikalPage = () => {
 
                   <FormGroup label="No Fail" labelId="noFail">
                     <input
-                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full bg-gray-100"
                       type="text"
                       name="noFail"
                       value={noFail}
                       onChange={(e) => setNoFail(e.target.value)}
+                      readOnly
                     />
                   </FormGroup>
 
                   <FormGroup label="Status" labelId="status">
                     <select
-                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full bg-white"
                       name="status"
                       value={status}
                       onChange={(e) => setStatus(e.target.value)}
@@ -509,7 +510,7 @@ const UlasanTeknikalPage = () => {
 
                   <FormGroup label="Fail Sokongan" labelId="failSokongan">
                     <div className="max-w-xl">
-                      <label className="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
+                      {/* <label className="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
                         <span className="flex items-center space-x-2">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -550,7 +551,9 @@ const UlasanTeknikalPage = () => {
                             ))}
                           </ul>
                         )}
-                      </div>
+                      </div> */}
+
+                      
                     </div>
                   </FormGroup>
 

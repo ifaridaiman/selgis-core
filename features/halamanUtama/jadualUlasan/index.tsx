@@ -71,24 +71,26 @@ const JadualUlasanTable = () => {
 
 
   async function handleDelete(id:any) {
-    try {
-      const response = await fetch('/ulasan-teknikal/api/ulasan', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id }),
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        alert("Projek deleted successfully!");
-        // Optionally, refresh data or update the UI here
-      } else {
-        console.error("Failed to delete Projek");
+    if (confirm("Are you sure you want to delete this item?")) {
+      try {
+        const response = await fetch('/ulasan-teknikal/api/ulasan', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id }),
+        });
+    
+        if (response.ok) {
+          const data = await response.json();
+          alert("Projek deleted successfully!");
+          // Optionally, refresh data or update the UI here
+        } else {
+          console.error("Failed to delete Projek");
+        }
+      } catch (error) {
+        console.error("Error:", error);
       }
-    } catch (error) {
-      console.error("Error:", error);
     }
   }
 
