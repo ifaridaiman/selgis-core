@@ -16,14 +16,14 @@ export default async function middleware(req: NextRequest) {
 
     // 4. Redirect to '/' with a message if the token is missing on protected routes
     if (isProtectedRoute && !token) {
-        const url = new URL('/', req.nextUrl);
+        const url = new URL('/ulasan-teknikal/login', req.nextUrl);
         url.searchParams.set('error', 'no-authenticate'); // Add a message or error code
         return NextResponse.redirect(url);
     }
 
     // 5. If authenticated and on a public route, optionally redirect to a dashboard or another page
     if (isPublicRoute && token) {
-        return NextResponse.redirect(new URL('/halaman-utama', req.nextUrl));
+        return NextResponse.redirect(new URL('/ulasan-teknikal/halaman-utama', req.nextUrl));
     }
 
     // 6. Allow the request to proceed
