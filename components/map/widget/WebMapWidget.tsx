@@ -17,7 +17,7 @@ type WebMapWidgetProps = {
   onMapViewReady: (mapView: MapView) => void;
 };
 
-const   WebMapWidget: React.FC<WebMapWidgetProps> = ({
+const WebMapWidget: React.FC<WebMapWidgetProps> = ({
   mapData,
   onMapViewReady,
 }) => {
@@ -25,7 +25,7 @@ const   WebMapWidget: React.FC<WebMapWidgetProps> = ({
   const portalEditingID: string[] = [];
   let portalExtentID: string | null = null;
   const allGroupLayer: GroupLayer[] = [];
-  const {setAllGroupLayers} = useMapContext();
+  const { setAllGroupLayers } = useMapContext();
   let countLayerLoad = 0;
   let countFeatAdd = 0;
   let mapImagePortalExtent: any = null;
@@ -45,7 +45,7 @@ const   WebMapWidget: React.FC<WebMapWidgetProps> = ({
     listOfMukim,
     setListOfDaerah,
     graphicLayer,
-    setMapView
+    setMapView,
   } = useMapContext();
 
   const webMap = new WebMap({
@@ -98,79 +98,183 @@ const   WebMapWidget: React.FC<WebMapWidgetProps> = ({
   //   ],
   // });
 
+  const loadSingleLayer = (element: {
+    title: string;
+    id: string;
+    isEditing?: boolean;
+    isExtent?: boolean;
+  }) => {
+    const existingLayer = allGroupLayer.find(
+      (layer) => layer.title === element.title
+    );
+
+    if (existingLayer) {
+      console.log(
+        `Layer with title "${element.title}" already exists. Skipping.`
+      );
+      return;
+    }
+
+    const portalWebMap = new WebMap({
+      portalItem: {
+        id: element.id,
+      },
+    });
+
+    if (element.isEditing) {
+      portalEditingID.push(element.id);
+    }
+    if (element.isExtent) {
+      portalExtentID = element.id;
+    }
+
+    portalWebMap.load().then((evt) => {
+      if (evt.allLayers) {
+        let mySubLayers: any[] = [];
+        let isNoMapImage = false;
+
+        evt.allLayers.items.forEach((item: any, index: any) => {
+          if (item.type === "map-image") {
+            if (portalEditingID.includes(evt.portalItem.id)) {
+              countFeatAdd += 1;
+              addToFeatService(item);
+            }
+            mySubLayers.push(item);
+            if (evt.portalItem.id === portalExtentID) {
+              mapImagePortalExtent = item;
+            }
+          } else if (index === 0) {
+            isNoMapImage = true;
+            mySubLayers.push(item);
+          } else if (isNoMapImage) {
+            mySubLayers.push(item);
+          }
+        });
+
+        if (portalEditingID.length > 0) {
+          checkIsFeatLoaded();
+        }
+
+        const groupLayer = new GroupLayer({
+          title: element.title,
+          layers: mySubLayers,
+        });
+
+        allGroupLayer.push(groupLayer);
+        countLayerLoad += 1;
+        webMap.add(groupLayer);
+      }
+    });
+
+    if (allGroupLayer.length > 0) {
+      console.log("All Group Layers", allGroupLayer.length);
+      setAllGroupLayers(allGroupLayer);
+    }
+  };
+
   const projectDrawFE = new FeatureLayer({
     url: "https://jpsselgis.selangor.gov.my/gis/rest/services/ProjectDraw/MapServer/0", // Service URL
   });
 
-  webMap.add(projectDrawFE)
+  webMap.add(projectDrawFE);
+
+  loadSingleLayer({
+    title: "Sempadan",
+    id: "c71e8e3c14b74f3483a4eaf3005e6a9a",
+  });
+  loadSingleLayer({
+    title: "Maklumat Banjir",
+    id: "5761834ca35d4da89be36df9ca131a15",
+  });
+  loadSingleLayer({
+    title: "Maklumat Asas",
+    id: "75b422d354fb45c3b853d1e0700568c5",
+  });
+  loadSingleLayer({
+    title: "Maklumat Saliran",
+    id: "b82c2a8e107f4e0fbcf43274588d1713",
+  });
+  loadSingleLayer({
+    title: "Lot Kadaster",
+    id: "9872a1ce1563482187ded7301adbc1a5",
+  });
+  loadSingleLayer({
+    title: "Maklumat Kolam",
+    id: "9053a8dccc1d46e2b64c2ea4b0a7e3c7",
+  });
+  loadSingleLayer({
+    title: "Maklumat Sungai",
+    id: "9760aba7c3cc46a19f0721a83fca44b3",
+  });
 
   const loadLayerFromPortal = () => {
     checkIsAllLayerLoad();
-    mapData.forEach((element) => {
+    
+    // mapData.forEach((element) => {
 
-      const existingLayer = allGroupLayer.find(
-        (layer) => layer.title === element.title
-      );
-  
-      if (existingLayer) {
-        console.log(`Layer with title "${element.title}" already exists. Skipping.`);
-        return;
-      }
-      const portalWebMap = new WebMap({
-        portalItem: {
-          id: element.id,
-        },
-      });
+    //   const existingLayer = allGroupLayer.find(
+    //     (layer) => layer.title === element.title
+    //   );
 
-      if (element.isEditing) {
-        portalEditingID.push(element.id);
-      }
-      if (element.isExtent) {
-        portalExtentID = element.id;
-      }
+    //   if (existingLayer) {
+    //     console.log(`Layer with title "${element.title}" already exists. Skipping.`);
+    //     return;
+    //   }
+    //   const portalWebMap = new WebMap({
+    //     portalItem: {
+    //       id: element.id,
+    //     },
+    //   });
 
-      portalWebMap.load().then((evt) => {
-        if (evt.allLayers) {
-          let mySubLayers: any[] = [];
-          let isNoMapImage = false;
-          evt.allLayers.items.forEach((item: any, index: any) => {
-            if (item.type === "map-image") {
-              if (portalEditingID.includes(evt.portalItem.id)) {
-                countFeatAdd += 1;
-                addToFeatService(item);
-              }
-              mySubLayers.push(item);
-              if (evt.portalItem.id === portalExtentID) {
-                mapImagePortalExtent = item;
-              }
-            } else if (index === 0) {
-              isNoMapImage = true;
-              mySubLayers.push(item);
-            } else if (isNoMapImage) {
-              mySubLayers.push(item);
-            }
-          });
+    //   if (element.isEditing) {
+    //     portalEditingID.push(element.id);
+    //   }
+    //   if (element.isExtent) {
+    //     portalExtentID = element.id;
+    //   }
 
-          if (portalEditingID.length > 0) {
-            checkIsFeatLoaded();
-          }
+    //   portalWebMap.load().then((evt) => {
+    //     if (evt.allLayers) {
+    //       let mySubLayers: any[] = [];
+    //       let isNoMapImage = false;
+    //       evt.allLayers.items.forEach((item: any, index: any) => {
+    //         if (item.type === "map-image") {
+    //           if (portalEditingID.includes(evt.portalItem.id)) {
+    //             countFeatAdd += 1;
+    //             addToFeatService(item);
+    //           }
+    //           mySubLayers.push(item);
+    //           if (evt.portalItem.id === portalExtentID) {
+    //             mapImagePortalExtent = item;
+    //           }
+    //         } else if (index === 0) {
+    //           isNoMapImage = true;
+    //           mySubLayers.push(item);
+    //         } else if (isNoMapImage) {
+    //           mySubLayers.push(item);
+    //         }
+    //       });
 
-          const groupLayer = new GroupLayer({
-            title: element.title,
-            layers: mySubLayers,
-          });
+    //       if (portalEditingID.length > 0) {
+    //         checkIsFeatLoaded();
+    //       }
 
-          allGroupLayer.push(groupLayer);
-          countLayerLoad += 1;
-          webMap.add(groupLayer);
-        }
-      });
+    //       const groupLayer = new GroupLayer({
+    //         title: element.title,
+    //         layers: mySubLayers,
+    //       });
 
-      if(allGroupLayer.length > 0){
-        console.log("All Group Layers", allGroupLayer.length);
-        setAllGroupLayers(allGroupLayer);
-      }
-    });
+    //       allGroupLayer.push(groupLayer);
+    //       countLayerLoad += 1;
+    //       webMap.add(groupLayer);
+    //     }
+    //   });
+
+    //   if(allGroupLayer.length > 0){
+    //     console.log("All Group Layers", allGroupLayer.length);
+    //     setAllGroupLayers(allGroupLayer);
+    //   }
+    // });
   };
 
   const queryLotKadasterLayer = async () => {
@@ -190,22 +294,27 @@ const   WebMapWidget: React.FC<WebMapWidgetProps> = ({
       let daerahSet = new Set();
       let mukimsSet = new Set();
 
-      const featureLayerPromises = lotKadasterLayer.layers.map(async (featureLayer, i) => {
-        const layer = featureLayer as FeatureLayer;
+      const featureLayerPromises = lotKadasterLayer.layers.map(
+        async (featureLayer, i) => {
+          const layer = featureLayer as FeatureLayer;
 
-        const resultLotList = await layer.queryFeatures({
-          where: "1=1", // Modify this query as needed
-          outFields: ["*"], // Retrieve all fields
-          returnGeometry: true, // Include geometry in the results
-        });
-        console.log(`Results for sublayer ${i}:`, resultLotList.features);
-        resultLotList.features.forEach((feature) => {
-          lotListing.push({attributes: feature.attributes, geometry: feature.geometry.toJSON()});
+          const resultLotList = await layer.queryFeatures({
+            where: "1=1", // Modify this query as needed
+            outFields: ["*"], // Retrieve all fields
+            returnGeometry: true, // Include geometry in the results
+          });
+          console.log(`Results for sublayer ${i}:`, resultLotList.features);
+          resultLotList.features.forEach((feature) => {
+            lotListing.push({
+              attributes: feature.attributes,
+              geometry: feature.geometry.toJSON(),
+            });
 
-          mukimsSet.add(feature.attributes.Nama_Mukim);
-          daerahSet.add(feature.attributes.Nama_Daerah);
-        });
-      });
+            mukimsSet.add(feature.attributes.Nama_Mukim);
+            daerahSet.add(feature.attributes.Nama_Daerah);
+          });
+        }
+      );
 
       await Promise.all(featureLayerPromises);
 
@@ -275,80 +384,78 @@ const   WebMapWidget: React.FC<WebMapWidgetProps> = ({
     }
   };
 
-  
-
   // const queryLotKadasterLayer = async () => {
   //   try {
   //     // Find the GroupLayer for Lot Kadaster
   //     const lotKadasterLayer = allGroupLayer.find(
   //       (layer) => layer.title === "Lot Kadaster"
   //     );
-  
+
   //     if (!lotKadasterLayer) {
   //       console.error("Lot Kadaster layer not found");
   //       return;
   //     }
-  
+
   //     let lotListing: { attributes: any; geometry: any }[] = [];
   //     let daerahListing: string[] = [];
   //     let mukimsListing: string[] = [];
-  
+
   //     // Iterate through all sublayers and query each one
   //     for (let i = 0; i < lotKadasterLayer.layers.length; i++) {
   //       const featureLayer = lotKadasterLayer.layers.getItemAt(i) as FeatureLayer;
-  
+
   //       if (!featureLayer) {
   //         console.error(`FeatureLayer not found within Lot Kadaster layer at index ${i}`);
   //         continue;
   //       }
-  
+
   //       const resultLotList = await featureLayer.queryFeatures({
   //         where: "1=1", // Modify this query as needed
   //         outFields: ["*"], // Retrieve all fields
   //         returnGeometry: true, // Include geometry in the results
   //       });
-  
+
   //       console.log(`Results for sublayer ${i}:`, resultLotList.features);
-  
+
   //       // Loop through each feature and get its attributes and geometry
   //       resultLotList.features.forEach((feature) => {
   //         const lotAttributes = feature.attributes; // Access attributes (e.g., lot number, daerah, mukim)
   //         const lotGeometry = feature.geometry; // Access geometry (polygon, etc.)
-  
+
   //         console.log(`Lot Geometry for sublayer ${i}:`, lotGeometry);
   //         lotListing.push({
   //           attributes: lotAttributes,
   //           geometry: lotGeometry.toJSON(), // Convert geometry to JSON format
   //         });
-  
+
   //         // Optional: Extract additional properties such as Daerah and Mukim
   //         const mukim = lotAttributes.Nama_Mukim;
   //         const daerah = lotAttributes.Nama_Daerah;
-  
+
   //         mukimsListing.push(mukim);
   //         daerahListing.push(daerah);
   //       });
   //     }
-  
+
   //     // Remove duplicates from Daerah and Mukim listings
   //     const uniqueMukims = [...new Set(mukimsListing)];
   //     const uniqueDaerah = [...new Set(daerahListing)];
-  
+
   //     // Log the results
   //     console.log("Lot Listing with Geometry:", lotListing);
   //     console.log("Unique Mukims:", uniqueMukims);
   //     console.log("Unique Daerah:", uniqueDaerah);
-  
+
   //     // Update state with the results
   //     setListOfLot(lotListing); // Update the lot listing with geometry
   //     setListOfMukim(uniqueMukims);
   //     setListOfDaerah(uniqueDaerah);
-  
+
   //   } catch (err) {
   //     console.error("Error querying Lot Kadaster:", err);
   //   }
   // };
-  
+
   useEffect(() => {
     if (!mapDiv.current) return;
 
@@ -368,7 +475,6 @@ const   WebMapWidget: React.FC<WebMapWidgetProps> = ({
             setMapView(view);
             await loadLayerFromPortal(); // Load layers from portal when the map is ready
 
-
             onMapViewReady(view);
 
             setTimeout(queryLotKadasterLayer, 2000);
@@ -383,7 +489,7 @@ const   WebMapWidget: React.FC<WebMapWidgetProps> = ({
         // view.map.allLayers.on("change", (event) => {
         //   if (event.added.length > 6) {
         //     console.log("Ape ni", event.added[0].title);
-            
+
         //   }
         // });
       } catch (err) {
