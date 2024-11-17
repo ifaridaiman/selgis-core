@@ -47,20 +47,20 @@ const MapComponentUlasan: React.FC<MapComponentUlasanProps> = ({kordinatX, kordi
       //   snapToZoom: false, // Disable snapping to zoom levels
       //   rotationEnabled: false
       // },
-      navigation: {
-        gamepad: {
-          enabled: false
-        },
-        browserTouchPanEnabled: false,
-        momentumEnabled: false,
-        mouseWheelZoomEnabled: false
-      },
+      // navigation: {
+      //   gamepad: {
+      //     enabled: false
+      //   },
+      //   browserTouchPanEnabled: false,
+      //   momentumEnabled: false,
+      //   mouseWheelZoomEnabled: false
+      // },
     });
 
-    view.on("drag", function(event){
-      // prevents panning with the mouse drag event
-      event.stopPropagation();
-    });
+    // view.on("drag", function(event){
+    //   // prevents panning with the mouse drag event
+    //   event.stopPropagation();
+    // });
 
     view.when(() => {
       console.log("Map is ready");

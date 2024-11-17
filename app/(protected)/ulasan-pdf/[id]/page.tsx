@@ -65,15 +65,17 @@ const UlasanPrint = () => {
         console.log("Projek:", result.projek);
         console.log("Ulasan:", result.ulasan);
         setProjectData({
-          "Lot Number": result.projek.lotNumber || "",
+          
+          "Tarikh Ulasan": new Intl.DateTimeFormat('en-GB').format(new Date(result.projek.tarikhUlasan)) || "",
+          "No Lot": result.projek.lotNumber || "",
           "Tajuk Projek": result.projek.tajukProjek || "",
           "Tajuk Surat": result.projek.tajukSurat || "",
-          Panjang: result.projek.panjang || "",
-          Luas: result.projek.luas || "",
+          "Panjang (m)": result.projek.panjang || "",
+          "Luas (m²/ha/ek)": result.projek.luas || "",
           Daerah: result.projek.daerah || "",
           Mukim: result.projek.mukim || "",
-          "Koordinat X": result.projek.koordinat_x || "",
-          "Koordinat Y": result.projek.koordinat_y || "",
+          "Koordinat X (Lat)": result.projek.koordinat_x || "",
+          "Koordinat Y (Long)": result.projek.koordinat_y || "",
           "Jenis Permohonan": result.projek.jenisPermohonan || "",
           "No. Fail": result.projek.noFail || "",
         });
@@ -143,9 +145,12 @@ const UlasanPrint = () => {
         </button>
       </div>
       
+      <div className="w-full flex justify-between py-4 px-2 bg-gray-300 md:hidden print:block">
+        <img src="/ulasan-teknikal/assets/logo/logo_jpsselgis_print.png" className="w-28 h-auto" />
+      </div>
 
       {/* Generate the map image */}
-      <div className="bg-gray-500 md:h-[40rem] print:h-[40rem] print:w-full">
+      <div className="bg-gray-500 md:h-[40rem] print:h-[20rem] print:w-full">
         <MapImageUlasan
           kordinatX={kordinatX}
           kordinatY={kordinatY}
@@ -155,6 +160,7 @@ const UlasanPrint = () => {
       </div>
 
       <div className="mt-8">
+        <p className="mb-2 font-bold text-lg">Maklumat Projek</p>
         <table className="border border-black w-full">
           <tbody>
           {projectData && Object.entries(projectData).map(([field, value], index) => (

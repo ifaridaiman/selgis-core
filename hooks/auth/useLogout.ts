@@ -13,7 +13,7 @@ export const useLogout = () => {
     // Optionally, clear other cookies or user-related state here
 
     // Redirect to the login or home page
-    router.push('/');
+    router.push('/ulasan-teknikal/login');
   };
 
   return { handleLogout };

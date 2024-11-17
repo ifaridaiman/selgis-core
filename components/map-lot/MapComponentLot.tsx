@@ -79,20 +79,7 @@ const MapComponentLot: React.FC<MapComponentLotProps> = ({ lot, rings }) => {
       map: webMap,
       center: [centerX, centerY],
       zoom: 18,
-      constraints: {
-        minZoom: 18, // Set min and max zoom to the same value to disable zooming
-        maxZoom: 18,
-        snapToZoom: false, // Disable snapping to zoom levels
-        rotationEnabled: false,
-      },
-      navigation: {
-        gamepad: {
-          enabled: false,
-        },
-        browserTouchPanEnabled: false,
-        momentumEnabled: false,
-        mouseWheelZoomEnabled: false,
-      },
+      
     });
 
     view.on("drag", function (event) {
