@@ -92,6 +92,10 @@ export default function Home() {
               >
                 {isLoading ? "Loading..." : "Log Masuk"}
               </button>
+              <div className="flex justify-center mt-2">
+                <a className="text-center text-sm hover:underline transition-all duration-150" href="https://jpsselgis.selangor.gov.my/jpsselgis">Kembali ke halaman utama</a>
+              </div>
+              
             </div>
           </form>
         </div>
