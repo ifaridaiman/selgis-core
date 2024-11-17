@@ -281,13 +281,19 @@ const DashboardPage = () => {
     <>
       <div className=" mb-6 flex justify-between items-center w-full">
         <h2 className="text-black font-bold text-2xl">Halaman Utama</h2>
-        <button
+        {/* <button
           onClick={handleNavigation}
           disabled={isUlasanLoading}
           className="flex justify-center items-center gap-2 bg-blue-500 hover:bg-blue-600 transition-all duration-75 py-2 px-3 rounded-md text-white"
         >
           <BiLayerPlus className="text-base" /> {isUlasanLoading ? "Loading...." : "Cipta Ulasan"}
-        </button>
+        </button> */}
+        <a
+          href={"/ulasan-teknikal/cipta-ulasan"}
+          className="flex justify-center items-center gap-2 bg-blue-500 hover:bg-blue-600 transition-all duration-75 py-2 px-3 rounded-md text-white"
+        >
+          <BiLayerPlus className="text-base" /> {isUlasanLoading ? "Loading...." : "Cipta Ulasan"}
+        </a>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4 mb-12">
         <div className="bg-gray-500 md:h-[40rem]">
