@@ -98,6 +98,12 @@ const   WebMapWidget: React.FC<WebMapWidgetProps> = ({
   //   ],
   // });
 
+  const projectDrawFE = new FeatureLayer({
+    url: "https://jpsselgis.selangor.gov.my/gis/rest/services/ProjectDraw/MapServer/0", // Service URL
+  });
+
+  webMap.add(projectDrawFE)
+
   const loadLayerFromPortal = () => {
     checkIsAllLayerLoad();
     mapData.forEach((element) => {
@@ -386,7 +392,7 @@ const   WebMapWidget: React.FC<WebMapWidgetProps> = ({
     };
 
     initMap();
-  }, [mapDiv]);
+  }, []);
 
   return <div ref={mapDiv} style={{ height: "100%" }} />;
 };
