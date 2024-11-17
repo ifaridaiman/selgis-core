@@ -68,6 +68,7 @@ import TextSymbol from '@arcgis/core/symbols/TextSymbol';
 const DashboardPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedDaerah, setSelectedDaerah] = useState("");
+  const [carianLoading, setCarianLoading] = useState<boolean>(false);
   const [filteredMukim, setFilteredMukim] = useState<{ kodMukim: string; namaMukim: string }[]>([]);
   const { lotNumber, setLotNumber, listOfLot, listOfMukim, listOfDaerah, allGroupLayers, mapView, graphicLayer } =
     useMapContext();
@@ -126,6 +127,7 @@ const DashboardPage = () => {
   const handleFormCarianSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Form Carian Submit");
+    setCarianLoading(true)
     const form = e.target as HTMLFormElement;
     let lotNumber = form.lotNumber.value;
     let daerah = form.daerah.value;
@@ -139,6 +141,9 @@ const DashboardPage = () => {
         let matchesLot = lotNumber && lotNumber.length > 0
         ? item.attributes.No_Lot && item.attributes.No_Lot.toLowerCase().includes(lotNumber.toLowerCase())
         : true;
+
+        console.log("DAERA LOT:", item.attributes.Nama_Daera)
+        console.log("DAERAH LOT:", item.attributes.Nama_Daerah)
 
         // If Daerah is provided, also filter by Daerah
         let matchesDaerah = daerah && daerah.length > 0
@@ -187,6 +192,7 @@ const DashboardPage = () => {
         });
       }
 
+      setCarianLoading(false)
       setFilteredLotList(filtered);
     }
   };
@@ -356,7 +362,7 @@ const DashboardPage = () => {
               <input
                 type="submit"
                 className="border border-gray-300 rounded-md px-4 py-2 w-full bg-blue-600 text-blue-50 font-bold hover:bg-blue-700 transition-all duration-100 ease-linear"
-                value={"Carian"}
+                value={carianLoading ? "Loading..." : "Carian"}
               />
             </div>
           </form>

@@ -173,11 +173,11 @@ export const senaraiDaerahKodMukim = [
         senaraiMukim: [
             {
                 kodMukim: '01',
-                namaMukim: 'Mukim Kapar'
+                namaMukim: 'Kapar'
             },
             {
                 kodMukim: '02',
-                namaMukim: 'Mukim Klang'
+                namaMukim: 'Klang'
             }
         ]
     },
@@ -187,31 +187,31 @@ export const senaraiDaerahKodMukim = [
         senaraiMukim: [
             {
                 kodMukim: '01',
-                namaMukim: 'Mukim Bandar'
+                namaMukim: 'Bandar'
             },
             {
                 kodMukim: '02',
-                namaMukim: 'Mukim Batu'
+                namaMukim: 'Batu'
             },
             {
                 kodMukim: '03',
-                namaMukim: 'Mukim Jugra'
+                namaMukim: 'Jugra'
             },
             {
                 kodMukim: '04',
-                namaMukim: 'Mukim Kelanang'
+                namaMukim: 'Kelanang'
             },
             {
                 kodMukim: '05',
-                namaMukim: 'Mukim Morib'
+                namaMukim: 'Morib'
             },
             {
                 kodMukim: '06',
-                namaMukim: 'Mukim Tanjong Duabelas'
+                namaMukim: 'Tanjong Duabelas'
             },
             {
                 kodMukim: '07',
-                namaMukim: 'Mukim Telok Panglima Garang'
+                namaMukim: 'Telok Panglima Garang'
             }
         ]
     },
@@ -221,39 +221,39 @@ export const senaraiDaerahKodMukim = [
         senaraiMukim: [
             {
                 kodMukim: '01',
-                namaMukim: 'Mukim Api-Api'
+                namaMukim: 'Api-Api'
             },
             {
                 kodMukim: '03',
-                namaMukim: 'Mukim Ujong Permatang'
+                namaMukim: 'Ujong Permatang'
             },
             {
                 kodMukim: '04',
-                namaMukim: 'Mukim Ulu Tinggi'
+                namaMukim: 'Ulu Tinggi'
             },
             {
                 kodMukim: '05',
-                namaMukim: 'Mukim Ijok'
+                namaMukim: 'Ijok'
             },
             {
                 kodMukim: '06',
-                namaMukim: 'Mukim Jeram'
+                namaMukim: 'Jeram'
             },
             {
                 kodMukim: '07',
-                namaMukim: 'Mukim Kuala Selangor'
+                namaMukim: 'Kuala Selangor'
             },
             {
                 kodMukim: '08',
-                namaMukim: 'Mukim Pasangan'
+                namaMukim: 'Pasangan'
             },
             {
                 kodMukim: '09',
-                namaMukim: 'Mukim Tanjong Karang'
+                namaMukim: 'Tanjong Karang'
             },
             {
                 kodMukim: '10',
-                namaMukim: 'Mukim Bestari Jaya'
+                namaMukim: 'Bestari Jaya'
             }
         ]
     },
@@ -263,23 +263,23 @@ export const senaraiDaerahKodMukim = [
         senaraiMukim: [
             {
                 kodMukim: '01',
-                namaMukim: 'Mukim Bagan Nakhoda Omar'
+                namaMukim: 'Bagan Nakhoda Omar'
             },
             {
                 kodMukim: '02',
-                namaMukim: 'Mukim Pachang Bedena'
+                namaMukim: 'Pachang Bedena'
             },
             {
                 kodMukim: '03',
-                namaMukim: 'Mukim Pasir Panjang'
+                namaMukim: 'Pasir Panjang'
             },
             {
                 kodMukim: '04',
-                namaMukim: 'Mukim Sabak'
+                namaMukim: 'Sabak'
             },
             {
                 kodMukim: '05',
-                namaMukim: 'Mukim Sungai Panjang'
+                namaMukim: 'Sungai Panjang'
             }
         ]
     },
@@ -289,31 +289,31 @@ export const senaraiDaerahKodMukim = [
         senaraiMukim: [
             {
                 kodMukim: '01',
-                namaMukim: 'Mukim Beranang'
+                namaMukim: 'Beranang'
             },
             {
                 kodMukim: '02',
-                namaMukim: 'Mukim Cheras'
+                namaMukim: 'Cheras'
             },
             {
                 kodMukim: '03',
-                namaMukim: 'Mukim Ampang'
+                namaMukim: 'Ampang'
             },
             {
                 kodMukim: '04',
-                namaMukim: 'Mukim Ulu Langat'
+                namaMukim: 'Ulu Langat'
             },
             {
                 kodMukim: '05',
-                namaMukim: 'Mukim Ulu Semenyih'
+                namaMukim: 'Ulu Semenyih'
             },
             {
                 kodMukim: '06',
-                namaMukim: 'Mukim Kajang'
+                namaMukim: 'Kajang'
             },
             {
                 kodMukim: '07',
-                namaMukim: 'Mukim Semenyih'
+                namaMukim: 'Semenyih'
             }
         ]
     },
@@ -323,55 +323,55 @@ export const senaraiDaerahKodMukim = [
         senaraiMukim: [
             {
                 kodMukim: '01',
-                namaMukim: 'Mukim Batang Kali'
+                namaMukim: 'Batang Kali'
             },
             {
                 kodMukim: '02',
-                namaMukim: 'Mukim Buloh Telor'
+                namaMukim: 'Buloh Telor'
             },
             {
                 kodMukim: '03',
-                namaMukim: 'Mukim Ampang Pechah'
+                namaMukim: 'Ampang Pechah'
             },
             {
                 kodMukim: '04',
-                namaMukim: 'Mukim Ulu Bernam'
+                namaMukim: 'Ulu Bernam'
             },
             {
                 kodMukim: '05',
-                namaMukim: 'Mukim Ulu Yam'
+                namaMukim: 'Ulu Yam'
             },
             {
                 kodMukim: '06',
-                namaMukim: 'Mukim Kalumpang'
+                namaMukim: 'Kalumpang'
             },
             {
                 kodMukim: '07',
-                namaMukim: 'Mukim Kerling'
+                namaMukim: 'Kerling'
             },
             {
                 kodMukim: '08',
-                namaMukim: 'Mukim Kuala Kalumpang'
+                namaMukim: 'Kuala Kalumpang'
             },
             {
                 kodMukim: '09',
-                namaMukim: 'Mukim Peretak'
+                namaMukim: 'Peretak'
             },
             {
                 kodMukim: '10',
-                namaMukim: 'Mukim Rasa'
+                namaMukim: 'Rasa'
             },
             {
                 kodMukim: '11',
-                namaMukim: 'Mukim Serendah'
+                namaMukim: 'Serendah'
             },
             {
                 kodMukim: '12',
-                namaMukim: 'Mukim Sungai Gumut'
+                namaMukim: 'Sungai Gumut'
             },
             {
                 kodMukim: '13',
-                namaMukim: 'Mukim Sungai Tinggis'
+                namaMukim: 'Sungai Tinggis'
             }
         ]
     },
@@ -381,19 +381,19 @@ export const senaraiDaerahKodMukim = [
         senaraiMukim: [
             {
                 kodMukim: '01',
-                namaMukim: 'Mukim Bukit Raja'
+                namaMukim: 'Bukit Raja'
             },
             {
                 kodMukim: '02',
-                namaMukim: 'Mukim Damansara'
+                namaMukim: 'Damansara'
             },
             {
                 kodMukim: '03',
-                namaMukim: 'Mukim Petaling'
+                namaMukim: 'Petaling'
             },
             {
                 kodMukim: '04',
-                namaMukim: 'Mukim Sungai Buloh'
+                namaMukim: 'Sungai Buloh'
             }
         ]
     },
@@ -403,19 +403,19 @@ export const senaraiDaerahKodMukim = [
         senaraiMukim: [
             {
                 kodMukim: '01',
-                namaMukim: 'Mukim Batu'
+                namaMukim: 'Batu'
             },
             {
                 kodMukim: '02',
-                namaMukim: 'Mukim Ulu Kelang'
+                namaMukim: 'Ulu Kelang'
             },
             {
                 kodMukim: '03',
-                namaMukim: 'Mukim Rawang'
+                namaMukim: 'Rawang'
             },
             {
                 kodMukim: '04',
-                namaMukim: 'Mukim Setapak'
+                namaMukim: 'Setapak'
             }
         ]
     },
@@ -425,15 +425,15 @@ export const senaraiDaerahKodMukim = [
         senaraiMukim: [
             {
                 kodMukim: '01',
-                namaMukim: 'Mukim Dengkil'
+                namaMukim: 'Dengkil'
             },
             {
                 kodMukim: '02',
-                namaMukim: 'Mukim Labu'
+                namaMukim: 'Labu'
             },
             {
                 kodMukim: '03',
-                namaMukim: 'Mukim Sepang'
+                namaMukim: 'Sepang'
             }
         ]
     }
