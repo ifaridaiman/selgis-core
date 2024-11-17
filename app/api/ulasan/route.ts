@@ -55,6 +55,25 @@ export const POST = async (req: Request): Promise<NextResponse> => {
     const tajukSurat = formData.get("tajukSurat") as string;
     const tarikhUlasan = new Date(formData.get("tarikhUlasan") as string);
 
+    if (
+      !lotNumber ||
+      !daerah ||
+      !mukim ||
+      !koordinat_x ||
+      !koordinat_y ||
+      !tajukProjek ||
+      !jenisPermohonan ||
+      !noFail ||
+      !status ||
+      !bahagian ||
+      !rings ||
+      !ulasan ||
+      !tajukSurat ||
+      !tarikhUlasan
+    ) {
+      return NextResponse.json({ error: "Mandatory fields missing." }, { status: 400 });
+    }
+
     
 
     // Create the project in the database

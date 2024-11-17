@@ -107,6 +107,36 @@ const UlasanTeknikalPage = () => {
     const formData = new FormData();
     console.log("FORM DATA AT PAGE START: ", formData);
 
+    if (
+      !ciptaUlasanForm.lotNumber ||
+      !ciptaUlasanForm.daerah ||
+      !ciptaUlasanForm.mukim ||
+      !ciptaUlasanForm.kordinatX ||
+      !ciptaUlasanForm.kordinatY ||
+      !ciptaUlasanForm.tajukProjek ||
+      !ciptaUlasanForm.jenisPermohonan ||
+      !ciptaUlasanForm.noFail ||
+      !ciptaUlasanForm.status ||
+      !ciptaUlasanForm.bahagian ||
+      !ciptaUlasanForm.rings ||
+      !ciptaUlasanForm.ulasan ||
+      !ciptaUlasanForm.tajukSurat ||
+      !ciptaUlasanForm.tarikhUlasan
+    ) {
+      toast.error("Sila isi maklumat bertanda *.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      setUlasanLoad(false); // Stop loading
+      return; // Exit function
+    }
+
     // Append form fields
     formData.append("lotNumber", ciptaUlasanForm.lotNumber || "");
     formData.append("daerah", ciptaUlasanForm.daerah || "");
