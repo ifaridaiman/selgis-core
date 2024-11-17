@@ -114,6 +114,7 @@ const JadualUlasanTable = () => {
             <th className="py-4 px-4 bg-gray-300">Daerah</th>
             <th className="py-4 px-4 bg-gray-300">Mukim</th>
             <th className="py-4 px-4 bg-gray-300">Bahagian</th>
+            <th className="py-4 px-4 bg-gray-300">Tarikh Ulasan</th>
             <th className="py-4 px-4 bg-gray-300">Status</th>
             <th className="py-4 px-4 bg-gray-300 rounded-tr-xl">Action</th>
           </tr>
@@ -131,6 +132,7 @@ const JadualUlasanTable = () => {
               <td className="py-4 px-4 text-center">{projek.daerah}</td>
               <td className="py-4 px-4 text-center">{projek.mukim}</td>
               <td className="py-4 px-4 text-center">{projek.bahagian}</td>
+              <td className="py-4 px-4 text-center">{new Intl.DateTimeFormat('en-GB').format(new Date(projek.tarikhUlasan))}</td>
               <td className="py-4 px-4 text-center">{projek.status}</td>
               <td className="py-4 px-4 text-center">
                 <div className="flex flex-row gap-4 items-center">

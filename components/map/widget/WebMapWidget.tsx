@@ -101,6 +101,15 @@ const   WebMapWidget: React.FC<WebMapWidgetProps> = ({
   const loadLayerFromPortal = () => {
     checkIsAllLayerLoad();
     mapData.forEach((element) => {
+
+      const existingLayer = allGroupLayer.find(
+        (layer) => layer.title === element.title
+      );
+  
+      if (existingLayer) {
+        console.log(`Layer with title "${element.title}" already exists. Skipping.`);
+        return;
+      }
       const portalWebMap = new WebMap({
         portalItem: {
           id: element.id,

@@ -14,6 +14,8 @@ import { useCalculator } from "@/components/calculator/hooks/useCalculator";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { stringify } from "querystring";
+import { toast } from "react-toastify";
+import { CiptaUlasanFormTypeInit } from "@/types/form/form.type";
 const MapComponentLot = dynamic(() => import("@/components/map-lot/MapComponentLot"), {ssr:false, loading: () => (
   <div className="h-full flex justify-center items-center">Loading...</div>
 ),})
@@ -87,7 +89,7 @@ const UlasanTeknikalPage = () => {
     selectedFiles,
     handleFileChange,
   } = useCiptaUlasan();
-  const { mapView, ciptaUlasanForm } = useMapContext();
+  const { mapView, ciptaUlasanForm, setCiptaUlasanForm } = useMapContext();
 
   const searchParams = useSearchParams();
   const noLot = searchParams.get("no_lot");
@@ -144,7 +146,12 @@ const UlasanTeknikalPage = () => {
       if (response.ok) {
         const result = await response.json();
         console.log("Submitted successfully:", result);
-        router.push("/halaman-utama");
+        toast.success("Ulasan telah berjaya disimpan.")
+
+        setCiptaUlasanForm(CiptaUlasanFormTypeInit);
+        setTimeout(() => {
+          router.push("/halaman-utama");
+        }, 3000);
       } else {
         console.error("Failed to submit form:", response.statusText);
       }
@@ -248,7 +255,7 @@ const UlasanTeknikalPage = () => {
                         className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         htmlFor="kordinatX"
                       >
-                        {`Koordinat X`} <span className="text-red-500">*</span>
+                        {`Koordinat X (Lat)`} <span className="text-red-500">*</span>
                       </label>{" "}
                       <div className="mt-1 sm:self-center flex items-center">
                         <input
@@ -267,7 +274,7 @@ const UlasanTeknikalPage = () => {
                         className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         htmlFor="kordinatY"
                       >
-                        {`Koordinat Y`} <span className="text-red-500">*</span>
+                        {`Koordinat Y (Long)`} <span className="text-red-500">*</span>
                       </label>{" "}
                       <div className="mt-1 sm:self-center flex items-center">
                         <input
@@ -319,7 +326,7 @@ const UlasanTeknikalPage = () => {
                       onChange={handleInputChange}
                     />
                   </FormGroup>
-                  <FormGroup label="Panjang (m)" labelId="panjang">
+                  <FormGroup label="Panjang (m)" labelId="panjang" mandatory={false}>
                     <input
                       className="border border-gray-300 rounded-md px-4 py-2 w-full"
                       type="text"
@@ -328,7 +335,7 @@ const UlasanTeknikalPage = () => {
                       onChange={handleInputChange} // Update the form state on change
                     />
                   </FormGroup>
-                  <FormGroup label="Luas (m²)" labelId="luas">
+                  <FormGroup label="Luas (m²/ha/ek)" labelId="luas" mandatory={false}>
                     <input
                       className="border border-gray-300 rounded-md px-4 py-2 w-full"
                       type="text"
@@ -451,7 +458,7 @@ const UlasanTeknikalPage = () => {
                     ></textarea>
                   </FormGroup>
 
-                  <FormGroup label="Fail Sokongan" labelId="failSokongan">
+                  <FormGroup label="Fail Sokongan" labelId="failSokongan" mandatory={false}>
                     <div className="max-w-xl">
                       <label className="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
                         <span className="flex items-center space-x-2">
