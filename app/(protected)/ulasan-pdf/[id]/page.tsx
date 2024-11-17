@@ -129,10 +129,19 @@ const UlasanPrint = () => {
     setMapImage(dataUrl); // Save the image for display or further processing
   };
 
+  const handlePrint = () => {
+    window.print(); // Trigger the browser's print dialog
+  };
   
 
   return (
     <div>
+      <div className="flex justify-between items-center my-8 print:hidden">
+        <p className="text-black font-bold text-2xl">Cetak Ulasan</p>
+        <button onClick={handlePrint} className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+          Print PDF
+        </button>
+      </div>
       
 
       {/* Generate the map image */}
