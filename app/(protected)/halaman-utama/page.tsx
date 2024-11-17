@@ -270,16 +270,9 @@ const DashboardPage = () => {
   const [isUlasanLoading, setIsUlasanLoading] = useState(false);
   const router = useRouter();
 
-  const handleNavigation = async () => {
+  const handleNavigation = () => {
     setIsUlasanLoading(true); // Show loading indicator
-    try {
-      // Navigate programmatically
-      await router.push("/cipta-ulasan");
-    } catch (error) {
-      console.error("Navigation error:", error);
-    } finally {
-      setIsUlasanLoading(false); // Hide loading indicator
-    }
+    router.push("/cipta-ulasan");
   };
 
   
@@ -290,6 +283,7 @@ const DashboardPage = () => {
         <h2 className="text-black font-bold text-2xl">Halaman Utama</h2>
         <button
           onClick={handleNavigation}
+          disabled={isUlasanLoading}
           className="flex justify-center items-center gap-2 bg-blue-500 hover:bg-blue-600 transition-all duration-75 py-2 px-3 rounded-md text-white"
         >
           <BiLayerPlus className="text-base" /> {isUlasanLoading ? "Loading...." : "Cipta Ulasan"}
