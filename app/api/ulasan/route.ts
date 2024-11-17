@@ -20,13 +20,22 @@ export const POST = async (req: Request): Promise<NextResponse> => {
 
     // Extract file and ensure it's present
     const file = formData.get("file") as File | null;
-    if (!file) {
-      return NextResponse.json({ error: "No files received." }, { status: 400 });
-    }
+    let folderPath: string | null = null;
 
-    // Convert file to buffer and set up the file path
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const filename = file.name.replaceAll(" ", "_");
+    if (file) {
+      // Process the file if it exists
+      const buffer = Buffer.from(await file.arrayBuffer());
+      const filename = file.name.replaceAll(" ", "_");
+
+      // Save the file to the specified directory
+      await writeFile(
+        path.join(process.cwd(), "public/uploads/" + filename),
+        buffer
+      );
+
+      // Set the file path to save in the database
+      folderPath = `/assets/${filename}`;
+    }
 
     // Extract form fields and cast them to appropriate types
     const lotNumber = formData.get("lotNumber") as string;
@@ -46,11 +55,7 @@ export const POST = async (req: Request): Promise<NextResponse> => {
     const tajukSurat = formData.get("tajukSurat") as string;
     const tarikhUlasan = new Date(formData.get("tarikhUlasan") as string);
 
-    // Save the file to the specified directory
-    await writeFile(
-      path.join(process.cwd(), "public/uploads/" + filename),
-      buffer
-    );
+    
 
     // Create the project in the database
     const projek = await prisma.projek.create({
@@ -78,7 +83,7 @@ export const POST = async (req: Request): Promise<NextResponse> => {
       data: {
         projekId: projek.id,
         ulasan,
-        folderPath: `/assets/${filename}`,
+        folderPath,
       },
     });
 
