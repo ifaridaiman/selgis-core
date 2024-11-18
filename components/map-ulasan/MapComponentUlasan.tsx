@@ -6,6 +6,7 @@ import Polygon from "@arcgis/core/geometry/Polygon";
 import Graphic from "@arcgis/core/Graphic";
 import TextSymbol from "@arcgis/core/symbols/TextSymbol";
 import LayerList from "@arcgis/core/widgets/LayerList";
+import { toast } from "react-toastify";
 
 type MapComponentUlasanProps = {
   kordinatX: string;
@@ -34,8 +35,14 @@ const MapComponentUlasan: React.FC<MapComponentUlasanProps> = ({kordinatX, kordi
     const centerX = parseFloat(kordinatX);
     const centerY = parseFloat(kordinatY);
 
-    const rings = ring ? JSON.parse(ring) : [];
-
+    let rings = [];
+    try {
+      rings = JSON.parse(ring); // Attempt to parse the "ring" JSON string
+    } catch (error) {
+      console.error("Invalid JSON for ring:", error);
+      // Fallback: Replace with a simple default array or subset
+      toast.error("Polygon not closed correctly, please check.")
+    }
     const view = new MapView({
       container: mapDiv.current,
       map: webMap,
