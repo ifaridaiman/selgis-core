@@ -173,7 +173,28 @@ const WebMapWidget: React.FC<WebMapWidgetProps> = ({
   };
 
   const projectDrawFE = new FeatureLayer({
+    title:"Project Draw",
     url: "https://jpsselgis.selangor.gov.my/gis/rest/services/ProjectDraw/MapServer/0", // Service URL
+    visible: false, 
+    labelingInfo: [
+      {
+        labelExpressionInfo: {
+          expression: "$feature.noFail", // Replace 'LabelField' with the field name for labels
+        },
+        symbol: {
+          type: "text", // Text symbol
+          color: "black", // Text color
+          haloColor: "white", // Halo color
+          haloSize: "2px", // Halo size
+          font: {
+            size: "12px", // Font size
+            family: "Arial", // Font family
+            weight: "bold", // Font weight
+          },
+        },
+        labelPlacement: "above-center", // Placement of labels
+      },
+    ],
   });
 
   webMap.add(projectDrawFE);
