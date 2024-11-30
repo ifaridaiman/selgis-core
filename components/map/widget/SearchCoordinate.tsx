@@ -3,6 +3,8 @@ import MapView from "@arcgis/core/views/MapView";
 import Search from "@arcgis/core/widgets/Search";
 import Expand from "@arcgis/core/widgets/Expand";
 import Point from "@arcgis/core/geometry/Point";
+import Graphic from "@arcgis/core/Graphic";
+import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 
 type SearchProps = {
   mapView: MapView;
@@ -13,6 +15,10 @@ const SearchCoordinate: React.FC<SearchProps> = ({ mapView }) => {
 
   useEffect(() => {
     if (!searchWidgetRef.current && mapView) {
+      const graphicsLayer = new GraphicsLayer({
+        listMode:"hide"
+      });
+      mapView.map.add(graphicsLayer);
       searchWidgetRef.current = new Search({
         view: mapView,
         allPlaceholder: "Search by coordinates (e.g., 101.6869, 3.139)",
@@ -28,14 +34,7 @@ const SearchCoordinate: React.FC<SearchProps> = ({ mapView }) => {
       expandContent.style.borderRadius = "5px";
 
       // Create input fields for longitude and latitude
-      const longitudeInput = document.createElement("input");
-      longitudeInput.type = "text";
-      longitudeInput.placeholder = "Longitude";
-      longitudeInput.style.marginRight = "5px";
-      longitudeInput.style.padding = "2px 5px";
-      longitudeInput.style.border = "1px solid #ccc";
-      longitudeInput.style.marginBottom = "5px";
-      longitudeInput.style.borderRadius = "5px";
+      
 
       const latitudeInput = document.createElement("input");
       latitudeInput.type = "text";
@@ -46,6 +45,15 @@ const SearchCoordinate: React.FC<SearchProps> = ({ mapView }) => {
       latitudeInput.style.marginBottom = "5px";
       latitudeInput.style.borderRadius = "5px";
 
+      const longitudeInput = document.createElement("input");
+      longitudeInput.type = "text";
+      longitudeInput.placeholder = "Longitude";
+      longitudeInput.style.marginRight = "5px";
+      longitudeInput.style.padding = "2px 5px";
+      longitudeInput.style.border = "1px solid #ccc";
+      longitudeInput.style.marginBottom = "5px";
+      longitudeInput.style.borderRadius = "5px";
+
       // Create search button
       const searchButton = document.createElement("button");
       searchButton.innerHTML = "Search";
@@ -53,10 +61,11 @@ const SearchCoordinate: React.FC<SearchProps> = ({ mapView }) => {
       searchButton.style.border = "1px solid #ccc";
       searchButton.style.backgroundColor = "#f4f4f4";
       searchButton.style.borderRadius = "5px";
+      searchButton.setAttribute("type", "button"); // Add type="button"
 
-      // Append inputs and button to the expand content
-      expandContent.appendChild(longitudeInput);
+      // Append inputs and button to the expand 
       expandContent.appendChild(latitudeInput);
+      expandContent.appendChild(longitudeInput);
       expandContent.appendChild(searchButton);
 
       // Handle search button click
@@ -70,6 +79,27 @@ const SearchCoordinate: React.FC<SearchProps> = ({ mapView }) => {
             longitude: lon,
             latitude: lat,
           });
+
+           // Create a marker symbol
+           const markerSymbol = {
+            type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+            color: "red",
+            size: "10px",
+            outline: {
+              color: "white",
+              width: 1,
+            },
+          };
+
+          // Create a graphic for the marker
+          const pointGraphic = new Graphic({
+            geometry: point,
+            symbol: markerSymbol,
+          });
+
+          // Clear previous markers and add the new one
+          graphicsLayer.removeAll();
+          graphicsLayer.add(pointGraphic);
 
           // Pan the map to the specified point
           mapView.goTo({

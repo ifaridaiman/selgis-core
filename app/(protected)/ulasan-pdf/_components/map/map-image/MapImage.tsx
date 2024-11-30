@@ -111,6 +111,8 @@ const MapComponentUlasan: React.FC<MapComponentUlasanProps> = ({kordinatX, kordi
 
       
 
+      
+
     }).catch((error) => {
       console.log("Error initializing map: ", error);
     });
@@ -123,7 +125,15 @@ const MapComponentUlasan: React.FC<MapComponentUlasanProps> = ({kordinatX, kordi
     };
   }, [kordinatX, kordinatY, ring]); // Removed dependency array since no props are used
 
-  return <div ref={mapDiv} style={{ height: "100%", width: "100%" }} />;
+  return (
+    <>
+    <div ref={mapDiv} style={{ height: "100%", width: "100%" }}>
+      
+    </div>
+    <div id="boundary" className=" border-4 border-red-500 w-[790px] h-[315px] relative -top-[40rem] print:hidden"></div>
+    
+    </>
+  );
 };
 
 export default MapComponentUlasan;

@@ -150,7 +150,7 @@ const UlasanPrint = () => {
       </div>
 
       {/* Generate the map image */}
-      <div className="bg-gray-500 md:h-[40rem] print:h-[20rem] print:w-full">
+      <div className="bg-gray-500 md:h-[40rem] print:h-[20rem] print:w-full relative">
         <MapImageUlasan
           kordinatX={kordinatX}
           kordinatY={kordinatY}

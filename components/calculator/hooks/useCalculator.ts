@@ -20,7 +20,8 @@ export const useCalculator = () => {
         return degrees + minutes / 60 + seconds / 3600;
     };
 
-    const handleConvertToDecimal = () => {
+    const handleConvertToDecimal = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
         const latDegrees = parseFloat(latitudeDegrees) || 0;
         const latMinutes = parseFloat(latitudeMinutes) || 0;
         const latSeconds = parseFloat(latitudeSeconds) || 0;
@@ -36,7 +37,8 @@ export const useCalculator = () => {
         setDecimalLongitude(decimalLong.toFixed(6));
     };
 
-    const copyToClipboard = (text: string) => {
+    const copyToClipboard = (text: string, e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
         navigator.clipboard.writeText(text);
         toast.success(`Copied: ${text}`);
     };

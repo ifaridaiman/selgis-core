@@ -93,6 +93,7 @@ const DsmCalculator = () => {
 
         <div className="flex justify-center items-center mt-4">
           <button
+            type="button"
             className="bg-blue-400 w-full rounded p-2"
             onClick={handleConvertToDecimal}
           >
@@ -104,7 +105,7 @@ const DsmCalculator = () => {
           <div>
             <div className="flex items-center gap-2">
               <label className="text-sm">Latitude</label>
-              <button onClick={() => copyToClipboard(decimalLatitude)}>
+              <button type="button" onClick={(e) => copyToClipboard(decimalLatitude, e)}>
                 <MdCopyAll />
               </button>
             </div>
@@ -113,7 +114,7 @@ const DsmCalculator = () => {
           <div>
             <div className="flex items-center gap-2">
               <label className="text-sm">Longitude</label>
-              <button onClick={() => copyToClipboard(decimalLongitude)}>
+              <button type="button" onClick={(e) => copyToClipboard(decimalLongitude,e)}>
                 <MdCopyAll />
               </button>
             </div>

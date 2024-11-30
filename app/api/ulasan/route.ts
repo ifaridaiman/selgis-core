@@ -6,7 +6,11 @@ import path from "path";
 const prisma = new PrismaClient();
 
 export async function GET() {
-  const ulasans = await prisma.projek.findMany({});
+  const ulasans = await prisma.projek.findMany({
+    orderBy:{
+      id: 'desc'
+    }
+  });
 
   return NextResponse.json({
     ulasans
@@ -27,14 +31,17 @@ export const POST = async (req: Request): Promise<NextResponse> => {
       const buffer = Buffer.from(await file.arrayBuffer());
       const filename = file.name.replaceAll(" ", "_");
 
+      // Define the directory to save the file
+      const uploadDir = path.join("E:", "Ulasan", "uploads");
+
       // Save the file to the specified directory
       await writeFile(
-        path.join(process.cwd(), "public/uploads/" + filename),
+        path.join(uploadDir, filename),
         buffer
       );
 
       // Set the file path to save in the database
-      folderPath = `/assets/${filename}`;
+      folderPath = `/docs/${filename}`;
     }
 
     // Extract form fields and cast them to appropriate types

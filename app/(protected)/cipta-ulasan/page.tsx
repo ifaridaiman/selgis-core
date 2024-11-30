@@ -241,6 +241,7 @@ const UlasanTeknikalPage = () => {
                         )}
                         <div>
                           <button
+                            type="button"
                             onClick={() => setShowCalcultor(!showCalculator)}
                             className="p-2 hover:bg-gray-200 transition-all duration-100 rounded-full"
                           >

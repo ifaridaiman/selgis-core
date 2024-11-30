@@ -6,6 +6,7 @@ import {
   IoTrashBinOutline,
 } from "react-icons/io5";
 import { AiOutlineFilePdf } from "react-icons/ai";
+import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
 
 const JadualUlasanTable = () => {
   const [jadualUlasanData, setJadualUlasanData] = useState<any[]>([]);
@@ -14,6 +15,8 @@ const JadualUlasanTable = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [sortField, setSortField] = useState<string>(""); // Field to sort by
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc"); // Sorting order
   const itemsPerPage = 10;
 
   const fetchJadualUlasan = async () => {
@@ -52,6 +55,32 @@ const JadualUlasanTable = () => {
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
+  };
+
+  const handleSort = (field: string) => {
+    const order = sortField === field && sortOrder === "asc" ? "desc" : "asc";
+    setSortField(field);
+    setSortOrder(order);
+
+    const sortedData = [...filteredData].sort((a, b) => {
+      if (field === "tarikhUlasan") {
+        const dateA = new Date(a[field]).getTime();
+        const dateB = new Date(b[field]).getTime();
+        return order === "asc" ? dateA - dateB : dateB - dateA;
+      }
+      if (a[field] < b[field]) return order === "asc" ? -1 : 1;
+      if (a[field] > b[field]) return order === "asc" ? 1 : -1;
+      return 0;
+    });
+
+    setFilteredData(sortedData);
+  };
+
+  const getSortIcon = (field: string) => {
+    if (sortField === field) {
+      return sortOrder === "asc" ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />;
+    }
+    return null;
   };
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -109,14 +138,14 @@ const JadualUlasanTable = () => {
             <th className="rounded-tl-xl bg-gray-300">
               <input type="checkbox" />
             </th>
-            <th className="py-4 px-4 bg-gray-300 text-left">Nama Projek</th>
-            <th className="py-4 px-4 bg-gray-300">Jenis Permohonan</th>
-            <th className="py-4 px-4 bg-gray-300">Daerah</th>
-            <th className="py-4 px-4 bg-gray-300">Mukim</th>
-            <th className="py-4 px-4 bg-gray-300">Bahagian</th>
-            <th className="py-4 px-4 bg-gray-300">Tarikh Ulasan</th>
-            <th className="py-4 px-4 bg-gray-300">Status</th>
-            <th className="py-4 px-4 bg-gray-300 rounded-tr-xl">Action</th>
+            <th className="py-4 px-4 bg-gray-300 text-left cursor-not-allowed">Nama Projek</th>
+            <th className="py-4 px-4 bg-gray-300 cursor-pointer" onClick={() => handleSort("jenisPermohonan")}><span className="flex flex-row gap-3 items-center justify-center">Jenis Permohonan {getSortIcon("jenisPermohonan")}</span></th>
+            <th className="py-4 px-4 bg-gray-300 cursor-pointer" onClick={() => handleSort("daerah")}><span className="flex flex-row gap- items-center justify-center">Daerah {getSortIcon("daerah")}</span></th>
+            <th className="py-4 px-4 bg-gray-300 cursor-pointer" onClick={() => handleSort("mukim")}><span className="flex flex-row gap- items-center justify-center">Mukim {getSortIcon("mukim")}</span></th>
+            <th className="py-4 px-4 bg-gray-300 cursor-pointer" onClick={() => handleSort("bahagian")}><span className="flex flex-row gap- items-center justify-center">Bahagian {getSortIcon("bahagian")}</span> </th>
+            <th className="py-4 px-4 bg-gray-300 cursor-pointer" onClick={() => handleSort("tarikhUlasan")}><span className="flex flex-row gap-3 items-center justify-center">Tarikh Ulasan {getSortIcon("tarikhUlasan")}</span></th>
+            <th className="py-4 px-4 bg-gray-300 cursor-pointer" onClick={() => handleSort("status")}><span className="flex flex-row gap-3 items-center justify-center">Status {getSortIcon("status")}</span></th>
+            <th className="py-4 px-4 bg-gray-300 rounded-tr-xl cursor-not-allowed">Action</th>
           </tr>
         </thead>
         <tbody>
