@@ -165,7 +165,13 @@ const MapComponentLot: React.FC<MapComponentLotProps> = ({ lot, rings }) => {
           folderPath: [], // Assuming folderPath is set elsewhere
           rings: ringsWGS84,
           tajukSurat: "",
-          tarikhUlasan: new Date()
+          tarikhUlasan: new Date(),
+          namaPemohon:"",
+          namaPerunding: "",
+          sempadanMulaLat: "",
+          sempadanMulaLong:"",
+          sempadanAkhirLat:"",
+          sempadanAkhirLong:""
         });
       })
       .catch((error) => {

@@ -139,6 +139,7 @@ const JadualUlasanTable = () => {
               <input type="checkbox" />
             </th>
             <th className="py-4 px-4 bg-gray-300 text-left cursor-not-allowed">Nama Projek</th>
+            <th className="py-4 px-4 bg-gray-300 text-left cursor-not-allowed">No. Lot</th>
             <th className="py-4 px-4 bg-gray-300 cursor-pointer" onClick={() => handleSort("jenisPermohonan")}><span className="flex flex-row gap-3 items-center justify-center">Jenis Permohonan {getSortIcon("jenisPermohonan")}</span></th>
             <th className="py-4 px-4 bg-gray-300 cursor-pointer" onClick={() => handleSort("daerah")}><span className="flex flex-row gap- items-center justify-center">Daerah {getSortIcon("daerah")}</span></th>
             <th className="py-4 px-4 bg-gray-300 cursor-pointer" onClick={() => handleSort("mukim")}><span className="flex flex-row gap- items-center justify-center">Mukim {getSortIcon("mukim")}</span></th>
@@ -155,6 +156,7 @@ const JadualUlasanTable = () => {
                 <input type="checkbox" />
               </td>
               <td className="py-4 px-4">{projek.tajukProjek}</td>
+              <td className="py-4 px-4">{projek.lotNumber}</td>
               <td className="py-4 px-4 text-center">
                 {projek.jenisPermohonan}
               </td>

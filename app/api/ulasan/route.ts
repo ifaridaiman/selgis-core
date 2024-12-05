@@ -61,6 +61,12 @@ export const POST = async (req: Request): Promise<NextResponse> => {
     const ulasan = formData.get("ulasan") as string;
     const tajukSurat = formData.get("tajukSurat") as string;
     const tarikhUlasan = new Date(formData.get("tarikhUlasan") as string);
+    const namaPemohon = formData.get("namaPemohon") as string;
+    const namaPerunding = formData.get("namaPerunding") as string;
+    const sempadanMulaLat = formData.get("sempadanMulaLat") as string;
+    const sempadanMulaLong = formData.get("sempadanMulaLong") as string;
+    const sempadanAkhirLat = formData.get("sempadanAkhirLat") as string;
+    const sempadanAkhirLong = formData.get("sempadanAkhirLong") as string;
 
     if (
       !lotNumber ||
@@ -76,7 +82,9 @@ export const POST = async (req: Request): Promise<NextResponse> => {
       !rings ||
       !ulasan ||
       !tajukSurat ||
-      !tarikhUlasan
+      !tarikhUlasan || 
+      !namaPemohon ||
+      !namaPerunding
     ) {
       return NextResponse.json({ error: "Mandatory fields missing." }, { status: 400 });
     }
@@ -101,6 +109,13 @@ export const POST = async (req: Request): Promise<NextResponse> => {
         luas,
         tajukSurat,
         tarikhUlasan,
+        namaPemohon,
+        namaPerunding,
+        sempadanMulaLat,
+        sempadanMulaLong,
+        sempadanAkhirLat,
+        sempadanAkhirLong
+
       },
     });
 

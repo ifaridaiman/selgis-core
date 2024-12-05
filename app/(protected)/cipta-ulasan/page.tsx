@@ -16,9 +16,15 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { stringify } from "querystring";
 import { toast } from "react-toastify";
 import { CiptaUlasanFormTypeInit } from "@/types/form/form.type";
-const MapComponentLot = dynamic(() => import("@/components/map-lot/MapComponentLot"), {ssr:false, loading: () => (
-  <div className="h-full flex justify-center items-center">Loading...</div>
-),})
+const MapComponentLot = dynamic(
+  () => import("@/components/map-lot/MapComponentLot"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-full flex justify-center items-center">Loading...</div>
+    ),
+  }
+);
 const MapContainer = dynamic(() => import("@/components/map/MapContainer"), {
   ssr: false,
   loading: () => (
@@ -121,7 +127,9 @@ const UlasanTeknikalPage = () => {
       !ciptaUlasanForm.rings ||
       !ciptaUlasanForm.ulasan ||
       !ciptaUlasanForm.tajukSurat ||
-      !ciptaUlasanForm.tarikhUlasan
+      !ciptaUlasanForm.tarikhUlasan ||
+      !ciptaUlasanForm.namaPemohon ||
+      !ciptaUlasanForm.namaPerunding
     ) {
       toast.error("Sila isi maklumat bertanda *.", {
         position: "top-right",
@@ -159,6 +167,12 @@ const UlasanTeknikalPage = () => {
         ? ciptaUlasanForm.tarikhUlasan.toISOString()
         : new Date(ciptaUlasanForm.tarikhUlasan).toISOString()
     );
+    formData.append("namaPemohon", ciptaUlasanForm.namaPemohon || "");
+    formData.append("namaPerunding", ciptaUlasanForm.namaPerunding || "");
+    formData.append("sempadanMulaLat", ciptaUlasanForm.sempadanMulaLat || "");
+    formData.append("sempadanMulaLong", ciptaUlasanForm.sempadanMulaLong || "");
+    formData.append("sempadanAkhirLat", ciptaUlasanForm.sempadanAkhirLat || "");
+    formData.append("sempadanAkhirLong", ciptaUlasanForm.sempadanAkhirLong || "");
 
     // Append files if there are any
     selectedFiles.forEach((file) => {
@@ -176,7 +190,7 @@ const UlasanTeknikalPage = () => {
       if (response.ok) {
         const result = await response.json();
         console.log("Submitted successfully:", result);
-        toast.success("Ulasan telah berjaya disimpan.")
+        toast.success("Ulasan telah berjaya disimpan.");
 
         setCiptaUlasanForm(CiptaUlasanFormTypeInit);
         setTimeout(() => {
@@ -257,7 +271,7 @@ const UlasanTeknikalPage = () => {
                       <div className="mt-1 sm:self-center flex items-center md:w-[50rem]">
                         <div className="w-full md:h-[30rem] border border-gray-400">
                           {noLot ? (
-                            <MapComponentLot lot={noLot} rings={rings}  />
+                            <MapComponentLot lot={noLot} rings={rings} />
                           ) : (
                             <MapContainer mapData={mapData}>
                               {mapView && <HomeWidget mapView={mapView} />}
@@ -286,7 +300,8 @@ const UlasanTeknikalPage = () => {
                         className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         htmlFor="kordinatX"
                       >
-                        {`Koordinat X (Lat)`} <span className="text-red-500">*</span>
+                        {`Koordinat X (Lat)`}{" "}
+                        <span className="text-red-500">*</span>
                       </label>{" "}
                       <div className="mt-1 sm:self-center flex items-center">
                         <input
@@ -305,7 +320,8 @@ const UlasanTeknikalPage = () => {
                         className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         htmlFor="kordinatY"
                       >
-                        {`Koordinat Y (Long)`} <span className="text-red-500">*</span>
+                        {`Koordinat Y (Long)`}{" "}
+                        <span className="text-red-500">*</span>
                       </label>{" "}
                       <div className="mt-1 sm:self-center flex items-center">
                         <input
@@ -347,6 +363,26 @@ const UlasanTeknikalPage = () => {
                       onChange={handleInputChange}
                     />
                   </FormGroup>
+                  <FormGroup label="Nama Pemohon/Tetuan" labelId="namaPemohon">
+                    <input
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      type="text"
+                      name="namaPemohon"
+                      id="namaPemohon"
+                      value={ciptaUlasanForm.namaPemohon || ""}
+                      onChange={handleInputChange}
+                    />
+                  </FormGroup>
+                  <FormGroup label="Nama Perunding/Operator" labelId="namaPerunding">
+                    <input
+                      className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                      type="text"
+                      name="namaPerunding"
+                      id="namaPerunding"
+                      value={ciptaUlasanForm.namaPerunding || ""}
+                      onChange={handleInputChange}
+                    />
+                  </FormGroup>
                   <FormGroup label="Tajuk Surat" labelId="tajukSurat">
                     <input
                       className="border border-gray-300 rounded-md px-4 py-2 w-full"
@@ -357,7 +393,11 @@ const UlasanTeknikalPage = () => {
                       onChange={handleInputChange}
                     />
                   </FormGroup>
-                  <FormGroup label="Panjang (m)" labelId="panjang" mandatory={false}>
+                  <FormGroup
+                    label="Panjang (m)"
+                    labelId="panjang"
+                    mandatory={false}
+                  >
                     <input
                       className="border border-gray-300 rounded-md px-4 py-2 w-full"
                       type="text"
@@ -366,7 +406,11 @@ const UlasanTeknikalPage = () => {
                       onChange={handleInputChange} // Update the form state on change
                     />
                   </FormGroup>
-                  <FormGroup label="Luas (m²/ha/ek)" labelId="luas" mandatory={false}>
+                  <FormGroup
+                    label="Luas (m²/ha/ek)"
+                    labelId="luas"
+                    mandatory={false}
+                  >
                     <input
                       className="border border-gray-300 rounded-md px-4 py-2 w-full"
                       type="text"
@@ -375,6 +419,97 @@ const UlasanTeknikalPage = () => {
                       onChange={handleInputChange} // Update the form state on change
                     />
                   </FormGroup>
+
+                  <div className="space-y-6 sm:space-y-5">
+                    <div className="sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
+                    <p>Sempadan Mula</p>
+                    </div>
+                    
+                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5 mb-4">
+                      <label
+                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                        htmlFor="sempadanMulaLat"
+                      >
+                        {`Koordinat X (Lat)`}{" "}
+                        {/* <span className="text-red-500">*</span> */}
+                      </label>{" "}
+                      <div className="mt-1 sm:self-center flex items-center">
+                        <input
+                          type="text"
+                          className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                          name="sempadanMulaLat"
+                          value={ciptaUlasanForm.sempadanMulaLat || ""}
+                          onChange={handleInputChange}
+                        />
+                        
+                      </div>
+                    </div>
+                  </div>
+                  <div className="">
+                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-starts mb-4">
+                      <label
+                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                        htmlFor="sempadanMulaLong"
+                      >
+                        {`Koordinat Y (Long)`}{" "}
+                        {/* <span className="text-red-500">*</span> */}
+                      </label>{" "}
+                      <div className="mt-1 sm:self-center flex items-center">
+                        <input
+                          type="text"
+                          className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                          name="sempadanMulaLong"
+                          value={ciptaUlasanForm.sempadanMulaLong || ""}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-6 sm:space-y-5">
+                    <div className="sm:border-t sm:border-gray-200 sm:pt-5 mb-4">
+                    <p>Sempadan Akhir</p>
+                    </div>
+                    
+                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5 mb-4">
+                      <label
+                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                        htmlFor="sempadanAkhirLat"
+                      >
+                        {`Koordinat X (Lat)`}{" "}
+                        {/* <span className="text-red-500">*</span> */}
+                      </label>{" "}
+                      <div className="mt-1 sm:self-center flex items-center">
+                        <input
+                          type="text"
+                          className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                          name="sempadanAkhirLat"
+                          value={ciptaUlasanForm.sempadanAkhirLat || ""}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="">
+                    <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-starts mb-4">
+                      <label
+                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                        htmlFor="sempadanAkhirLong"
+                      >
+                        {`Koordinat Y (Long)`}{" "}
+                        {/* <span className="text-red-500">*</span> */}
+                      </label>{" "}
+                      <div className="mt-1 sm:self-center flex items-center">
+                        <input
+                          type="text"
+                          className="border border-gray-300 rounded-md px-4 py-2 w-full"
+                          name="sempadanAkhirLong"
+                          value={ciptaUlasanForm.sempadanAkhirLong || ""}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                    </div>
+                  </div>
 
                   <FormGroup label="Daerah" labelId="daerah">
                     <select
@@ -489,7 +624,11 @@ const UlasanTeknikalPage = () => {
                     ></textarea>
                   </FormGroup>
 
-                  <FormGroup label="Fail Sokongan" labelId="failSokongan" mandatory={false}>
+                  <FormGroup
+                    label="Fail Sokongan"
+                    labelId="failSokongan"
+                    mandatory={false}
+                  >
                     <div className="max-w-xl">
                       <label className="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
                         <span className="flex items-center space-x-2">

@@ -35,6 +35,8 @@ const UlasanPrint = () => {
   const [jenisPermohonan, setJenisPermohonan] = useState("");
   const [noFail, setNoFail] = useState("");
   const [status, setStatus] = useState("");
+  const [namaPemohon, setNamaPemohon] = useState("");
+  const [namaPerunding, setNamaPerunding] = useState("");
   const [filteredStatus, setFilteredStatus] = useState<
     { label: string; value: string }[]
   >([]);
@@ -78,6 +80,8 @@ const UlasanPrint = () => {
           "Koordinat Y (Long)": result.projek.koordinat_y || "",
           "Jenis Permohonan": result.projek.jenisPermohonan || "",
           "No. Fail": result.projek.noFail || "",
+          "Nama Pemohon": result.projek.namaPemohon || "",
+          "Nama Perunding": result.projek.namaPerunding || "",
         });
         // Set your form fields or state here, e.g.:
         setLotNumber(result.projek.lotNumber || "");
@@ -92,6 +96,8 @@ const UlasanPrint = () => {
         setJenisPermohonan(result.projek.jenisPermohonan || "");
         setNoFail(result.projek.noFail || "");
         setRings(result.projek.rings || "");
+        setNamaPemohon(result.projek.namaPemohon || "");
+        setNamaPerunding(result.projek.namaPerunding || "");
 
         setBahagian(result.projek.bahagian || "");
 

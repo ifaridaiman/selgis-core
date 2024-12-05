@@ -37,7 +37,7 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
       drawDiv.current = new Sketch({
         view: mapView,
         layer: graphicLayer,
-        availableCreateTools: ["polygon", "point"],
+        availableCreateTools: ["polygon", "point", "polyline"],
         creationMode: "update",
       });
 
@@ -57,16 +57,21 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
           ring = polygon.rings;
 
           // if(polygon.spatialReference.wkid !== 4326){
-            const ringsWGS84 = polygon.rings.map((ring) =>
-              ring.map((coords) => {
-                const pointWebMercator = new Point({ x: coords[0], y: coords[1], spatialReference: { wkid: 3857 } });
-                const pointWGS84 = webMercatorUtils.webMercatorToGeographic(pointWebMercator) as Point;
-                return [pointWGS84.x, pointWGS84.y];
-              })
-            );
+          const ringsWGS84 = polygon.rings.map((ring) =>
+            ring.map((coords) => {
+              const pointWebMercator = new Point({
+                x: coords[0],
+                y: coords[1],
+                spatialReference: { wkid: 3857 },
+              });
+              const pointWGS84 = webMercatorUtils.webMercatorToGeographic(
+                pointWebMercator
+              ) as Point;
+              return [pointWGS84.x, pointWGS84.y];
+            })
+          );
           // s}
           ringsWGS84Ref.current = ringsWGS84;
-          
 
           // Create a text symbol to label the polygon
           const textSymbol = new TextSymbol({
@@ -97,9 +102,6 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
           // ymax = extent.ymax;
 
           if (centroid.spatialReference.wkid !== 4326) {
-
-
-
             const centroidWGS84 =
               webMercatorUtils.webMercatorToGeographic(centroid);
             const centroidWGS84Json = centroidWGS84.toJSON();
@@ -123,7 +125,13 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
               folderPath: [], // Assuming folderPath is set elsewhere
               rings: ringsWGS84Ref.current,
               tajukSurat: currentTajukSurat,
-              tarikhUlasan: new Date()
+              tarikhUlasan: new Date(),
+              namaPemohon: "",
+              namaPerunding: "",
+              sempadanMulaLat: "",
+              sempadanMulaLong: "",
+              sempadanAkhirLat: "",
+              sempadanAkhirLong: "",
             });
           }
 
@@ -182,7 +190,13 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
                 folderPath: [], // Assuming folderPath is set elsewhere
                 rings: ringsWGS84Ref.current,
                 tajukSurat: currentTajukSurat,
-                tarikhUlasan: new Date()
+                tarikhUlasan: new Date(),
+                namaPemohon: "",
+                namaPerunding: "",
+                sempadanMulaLat: "",
+                sempadanMulaLong: "",
+                sempadanAkhirLat: "",
+                sempadanAkhirLong: "",
               });
 
               console.log("Sketch Info:", {
