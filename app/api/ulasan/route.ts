@@ -41,7 +41,7 @@ export const POST = async (req: Request): Promise<NextResponse> => {
       );
 
       // Set the file path to save in the database
-      folderPath = `/docs/${filename}`;
+      folderPath = `/uploads/${filename}`;
     }
 
     // Extract form fields and cast them to appropriate types
