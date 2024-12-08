@@ -64,6 +64,7 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
                 y: coords[1],
                 spatialReference: { wkid: 3857 },
               });
+
               const pointWGS84 = webMercatorUtils.webMercatorToGeographic(
                 pointWebMercator
               ) as Point;
@@ -72,6 +73,8 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
           );
           // s}
           ringsWGS84Ref.current = ringsWGS84;
+
+          console.log("Centroid: ", centroid)
 
           // Create a text symbol to label the polygon
           const textSymbol = new TextSymbol({
@@ -141,6 +144,89 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
             rings: polygon.rings,
             centroid: centroid.toJSON(),
           });
+        }
+
+        if (
+          event.state === "complete" &&
+          event.graphic.geometry.type === "polyline"
+        ) {
+          console.log("Polyline has been Created");
+
+          const polyline = event.graphic.geometry as __esri.Polyline;
+          ring = polyline.paths;
+
+          const ringsWGS84 = polyline.paths.map((ring) =>
+            ring.map((coords) => {
+              const pointWebMercator = new Point({
+                x: coords[0],
+                y: coords[1],
+                spatialReference: { wkid: 3857 },
+              });
+
+              const pointWGS84 = webMercatorUtils.webMercatorToGeographic(
+                pointWebMercator
+              ) as Point;
+              return [pointWGS84.x, pointWGS84.y];
+            })
+          );
+          // Create a text symbol to label the polygon
+          const textSymbol = new TextSymbol({
+            text: "Click to Edit Label", // Default label text
+            color: "black",
+            haloColor: "white",
+            haloSize: "1px",
+            font: {
+              size: 12,
+              family: "sans-serif",
+            },
+          });
+
+          const firstPoint = new Point({
+            x: ringsWGS84[0][0][0],
+            y: ringsWGS84[0][0][1],
+            spatialReference: { wkid: 4326 },
+          });
+
+          // Create a graphic for the label and add it to the graphic layer
+          const labelGraphic = new Graphic({
+            geometry: firstPoint,
+            symbol: textSymbol,
+            attributes: {
+              label: "Click to Edit Label", // Store the label text in attributes for easy access
+            },
+          });
+
+          graphicLayer.add(labelGraphic);
+
+          kordinatX = JSON.stringify(ringsWGS84[0][0][0])
+          kordinatY = JSON.stringify(ringsWGS84[0][0][1])
+
+          setCiptaUlasanForm({
+            lotNumber: "", // Keep this empty initially
+            daerah: "", // Assuming daerah is set elsewhere
+            mukim: "", // Assuming mukim is set elsewhere
+            kordinatX: kordinatX,
+            kordinatY: kordinatY,
+            tajukProjek: currentTajukProjek, // Assuming tajukProjek is set elsewhere
+            jenisPermohonan: "", // Assuming jenisPermohonan is set elsewhere
+            noFail: "", // Assuming noFail is set elsewhere
+            status: "", // Assuming status is set elsewhere
+            bahagian: "", // Assuming bahagian is set elsewhere
+            ulasan: "", // Assuming ulasan is set elsewhere
+            folderPath: [], // Assuming folderPath is set elsewhere
+            rings: ringsWGS84Ref.current,
+            tajukSurat: currentTajukSurat,
+            tarikhUlasan: new Date(),
+            namaPemohon: "",
+            namaPerunding: "",
+            sempadanMulaLat: "",
+            sempadanMulaLong: "",
+            sempadanAkhirLat: "",
+            sempadanAkhirLong: "",
+          });
+        
+
+          console.log("POLYLINE: ", ringsWGS84);
         }
       });
 
