@@ -42,6 +42,7 @@ const UlasanPrint = () => {
   >([]);
   const [bahagian, setBahagian] = useState("");
   const [ulasan, setUlasan] = useState<UlasanItem[]>([]); // Updated to handle array of ulasan
+  const [type, setType] = useState<string>("")
 
   const { id } = useParams();
 
@@ -98,6 +99,7 @@ const UlasanPrint = () => {
         setRings(result.projek.rings || "");
         setNamaPemohon(result.projek.namaPemohon || "");
         setNamaPerunding(result.projek.namaPerunding || "");
+        setType(result.projek.type || "")
 
         setBahagian(result.projek.bahagian || "");
 
@@ -162,6 +164,7 @@ const UlasanPrint = () => {
           kordinatY={kordinatY}
           ring={rings}
           lot={lotNumber}
+          type={type}
         />
       </div>
 

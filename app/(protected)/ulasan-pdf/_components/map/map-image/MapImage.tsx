@@ -6,15 +6,17 @@ import Polygon from "@arcgis/core/geometry/Polygon";
 import Graphic from "@arcgis/core/Graphic";
 import TextSymbol from "@arcgis/core/symbols/TextSymbol";
 import LayerList from "@arcgis/core/widgets/LayerList";
+import Polyline from "@arcgis/core/geometry/Polyline";
 
 type MapComponentUlasanProps = {
   kordinatX: string;
   kordinatY: string;
   ring: string;
-  lot:string
+  lot:string;
+  type: string;
 };
 
-const MapComponentUlasan: React.FC<MapComponentUlasanProps> = ({kordinatX, kordinatY, ring, lot}) => {
+const MapComponentUlasan: React.FC<MapComponentUlasanProps> = ({kordinatX, kordinatY, ring, lot, type}) => {
   const mapDiv = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -64,53 +66,104 @@ const MapComponentUlasan: React.FC<MapComponentUlasanProps> = ({kordinatX, kordi
 
     view.when(() => {
       console.log("Map is ready");
-      const polygon = new Polygon({
-        rings: rings,
-        spatialReference: { wkid: 4326 }, // Set to the correct spatial reference
-      });
-
-      let polylineSymbol = {
-        type: "simple-fill", // autocasts as new SimpleFillSymbol()
-        color: [51, 51, 204, 0.5], // semi-transparent blue
-        outline: {
-          color: [255, 255, 255], // white outline
-          width: 1,
-        },
+      if(type === "polygon"){
+        const polygon = new Polygon({
+          rings: rings,
+          spatialReference: { wkid: 4326 }, // Set to the correct spatial reference
+        });
+  
+        let polylineSymbol = {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: [51, 51, 204, 0.5], // semi-transparent blue
+          outline: {
+            color: [255, 255, 255], // white outline
+            width: 1,
+          },
+        }
+  
+        const polygonGraphic = new Graphic({
+          geometry: polygon,
+          symbol: polylineSymbol,
+        });
+  
+        graphicLayer.add(polygonGraphic);
+  
+        // Calculate the centroid of the polygon for placing the text symbol
+        const centroid = polygon.extent.center;
+  
+        // Define the text symbol for the lot text
+        const textSymbol = new TextSymbol({
+          text: lot,
+          color: "black",
+          haloColor: "white",
+          haloSize: "1px",
+          font: {
+            size: 12,
+            family: "sans-serif",
+          },
+        });
+  
+        // Create a graphic for the lot text and place it at the centroid
+        const textGraphic = new Graphic({
+          geometry: centroid,
+          symbol: textSymbol,
+        });
+  
+        // Add the text graphic to the graphics layer
+        graphicLayer.add(textGraphic);
+  
+        
+  
+        
       }
 
-      const polygonGraphic = new Graphic({
-        geometry: polygon,
-        symbol: polylineSymbol,
-      });
-
-      graphicLayer.add(polygonGraphic);
-
-      // Calculate the centroid of the polygon for placing the text symbol
-      const centroid = polygon.extent.center;
-
-      // Define the text symbol for the lot text
-      const textSymbol = new TextSymbol({
-        text: lot,
-        color: "black",
-        haloColor: "white",
-        haloSize: "1px",
-        font: {
-          size: 12,
-          family: "sans-serif",
-        },
-      });
-
-      // Create a graphic for the lot text and place it at the centroid
-      const textGraphic = new Graphic({
-        geometry: centroid,
-        symbol: textSymbol,
-      });
-
-      // Add the text graphic to the graphics layer
-      graphicLayer.add(textGraphic);
-
-      
-
+      if(type === "polyline"){
+        const polyline = new Polyline({
+          paths: rings,
+          spatialReference: { wkid: 4326 }, // Set to the correct spatial reference
+        });
+  
+        let polylineSymbol = {
+          type: "simple-line", // autocasts as new SimpleFillSymbol()
+          color: [51, 51, 204, 0.5], // semi-transparent blue
+          width:5
+        }
+  
+        const polygonGraphic = new Graphic({
+          geometry: polyline,
+          symbol: polylineSymbol,
+        });
+  
+        graphicLayer.add(polygonGraphic);
+  
+        // Calculate the centroid of the polygon for placing the text symbol
+        const centroid = polyline.extent.center;
+  
+        // Define the text symbol for the lot text
+        const textSymbol = new TextSymbol({
+          text: lot,
+          color: "black",
+          haloColor: "white",
+          haloSize: "1px",
+          font: {
+            size: 12,
+            family: "sans-serif",
+          },
+        });
+  
+        // Create a graphic for the lot text and place it at the centroid
+        const textGraphic = new Graphic({
+          geometry: centroid,
+          symbol: textSymbol,
+        });
+  
+        // Add the text graphic to the graphics layer
+        graphicLayer.add(textGraphic);
+  
+        
+  
+        
+      }
       
 
     }).catch((error) => {
