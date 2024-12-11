@@ -67,6 +67,7 @@ export const POST = async (req: Request): Promise<NextResponse> => {
     const sempadanMulaLong = formData.get("sempadanMulaLong") as string;
     const sempadanAkhirLat = formData.get("sempadanAkhirLat") as string;
     const sempadanAkhirLong = formData.get("sempadanAkhirLong") as string;
+    const type = formData.get("type") as string;
 
     if (
       !lotNumber ||
@@ -114,8 +115,8 @@ export const POST = async (req: Request): Promise<NextResponse> => {
         sempadanMulaLat,
         sempadanMulaLong,
         sempadanAkhirLat,
-        sempadanAkhirLong
-
+        sempadanAkhirLong,
+        type
       },
     });
 

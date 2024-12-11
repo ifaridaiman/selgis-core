@@ -18,13 +18,14 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
   const drawDiv = useRef<Sketch | null>(null);
   const ringsWGS84Ref = useRef<number[][][]>([]); // Use ref to store rings in WGS84 format
   const { graphicLayer, setCiptaUlasanForm, ciptaUlasanForm } = useMapContext();
-
+  const [typeGraphic, setTypeGraphic] = useState<string>("")
   const currentTajukProjek = ciptaUlasanForm.tajukProjek;
   const currentTajukSurat = ciptaUlasanForm.tajukSurat;
 
   let kordinatX = "";
   let kordinatY = "";
   let ring: number[][][] = [];
+  let graphicType = "";
 
   useEffect(() => {
     if (!drawDiv.current && mapView) {
@@ -112,6 +113,7 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
             console.log("Centroid WGS84 X:", centroidWGS84Json.x);
             kordinatX = centroidWGS84Json.x;
             kordinatY = centroidWGS84Json.y;
+            
 
             setCiptaUlasanForm({
               lotNumber: "", // Keep this empty initially
@@ -135,6 +137,7 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
               sempadanMulaLong: "",
               sempadanAkhirLat: "",
               sempadanAkhirLong: "",
+              type: event.graphic.geometry.type
             });
           }
 
@@ -169,6 +172,8 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
               return [pointWGS84.x, pointWGS84.y];
             })
           );
+
+          ringsWGS84Ref.current = ringsWGS84;
           // Create a text symbol to label the polygon
           const textSymbol = new TextSymbol({
             text: "Click to Edit Label", // Default label text
@@ -201,6 +206,7 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
           kordinatX = JSON.stringify(ringsWGS84[0][0][0])
           kordinatY = JSON.stringify(ringsWGS84[0][0][1])
 
+
           setCiptaUlasanForm({
             lotNumber: "", // Keep this empty initially
             daerah: "", // Assuming daerah is set elsewhere
@@ -223,11 +229,16 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
             sempadanMulaLong: "",
             sempadanAkhirLat: "",
             sempadanAkhirLong: "",
+            type: event.graphic.geometry.type
           });
         
 
           console.log("POLYLINE: ", ringsWGS84);
         }
+
+        graphicType = event.graphic.geometry.type;
+        setTypeGraphic(event.graphic.geometry.type)
+        console.log("Check Graphic TYPE: ", graphicType)
       });
 
       // Enable label editing on click
@@ -283,6 +294,7 @@ const DrawWidget: React.FC<DrawWidgetProps> = ({ mapView }) => {
                 sempadanMulaLong: "",
                 sempadanAkhirLat: "",
                 sempadanAkhirLong: "",
+                type: graphicType
               });
 
               console.log("Sketch Info:", {

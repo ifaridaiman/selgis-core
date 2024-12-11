@@ -23,6 +23,7 @@ export type CiptaUlasanFormType = {
   sempadanMulaLong?:string;
   sempadanAkhirLat?: string;
   sempadanAkhirLong?: string;
+  type?:string;
 };
 
 export const CiptaUlasanFormTypeInit:CiptaUlasanFormType = {
@@ -48,5 +49,6 @@ export const CiptaUlasanFormTypeInit:CiptaUlasanFormType = {
   sempadanMulaLat: "",
   sempadanMulaLong: "",
   sempadanAkhirLat: "",
-  sempadanAkhirLong: ""
+  sempadanAkhirLong: "",
+  type: ""
 }

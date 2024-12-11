@@ -173,6 +173,7 @@ const UlasanTeknikalPage = () => {
     formData.append("sempadanMulaLong", ciptaUlasanForm.sempadanMulaLong || "");
     formData.append("sempadanAkhirLat", ciptaUlasanForm.sempadanAkhirLat || "");
     formData.append("sempadanAkhirLong", ciptaUlasanForm.sempadanAkhirLong || "");
+    formData.append("type", ciptaUlasanForm.type || "");
 
     // Append files if there are any
     selectedFiles.forEach((file) => {

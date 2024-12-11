@@ -171,7 +171,8 @@ const MapComponentLot: React.FC<MapComponentLotProps> = ({ lot, rings }) => {
           sempadanMulaLat: "",
           sempadanMulaLong:"",
           sempadanAkhirLat:"",
-          sempadanAkhirLong:""
+          sempadanAkhirLong:"",
+          type:""
         });
       })
       .catch((error) => {
